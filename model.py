@@ -43,9 +43,3 @@ def init():
 def gen_hash(password):
     return hashlib.sha512(str(password).encode('utf-8')).hexdigest()
 
-
-
-#baju = Tukon.create(category='sandang', description='beli baju keperluan lebaran', prices=50000)
-#roti = Tukon.create(category='pangan', description='beli roti buat makan', prices=4000)
-#tempe = Tukon.create(category='lauk', description='lauk pauk', prices=500)
-

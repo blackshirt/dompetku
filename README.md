@@ -1,4 +1,4 @@
 dompetku
 ========
 
-Di mana keuangan pribadi sebaiknya di-'jujurkan' 
+Di mana keuangan pribadi sebaiknya di-'jujurkan'
