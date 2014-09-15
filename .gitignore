@@ -49,6 +49,8 @@ coverage.xml
 *.log
 *.pot
 
+#jetbrains ide
+.idea/
 # Sphinx documentation
 docs/_build/
 
