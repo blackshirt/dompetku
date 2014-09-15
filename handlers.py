@@ -1,18 +1,51 @@
 import tornado.web
 import tornado.wsgi
 
+import model
+
+class Application(tornado.web.Application):
+    def __init__(self):
+        handlers = [
+            (r"/", HomeHandler),
+            (r"/archive", ArchiveHandler),
+            (r"/feed", FeedHandler),
+            (r"/entry/([^/]+)", EntryHandler),
+            (r"/compose", ComposeHandler),
+            (r"/auth/login", AuthLoginHandler),
+            (r"/auth/logout", AuthLogoutHandler),
+        ]
+        settings = dict(
+            blog_title=u"Tornado Blog",
+            template_path=os.path.join(os.path.dirname(__file__), "templates"),
+            static_path=os.path.join(os.path.dirname(__file__), "static"),
+            ui_modules={"Entry": EntryModule},
+            xsrf_cookies=True,
+            cookie_secret="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
+            login_url="/auth/login",
+            debug=True,
+        )
+        tornado.web.Application.__init__(self, handlers, **settings)
+
+        # Have one global connection to the blog DB across all handlers
+        self.db = model.database
+
 class BaseHandler(tornado.web.RequestHandler):
- 
-    def initialize(self, db):
-        self.db = config.database['path']
+    @property
+    def db(self):
+        return self.application.db
+
+    def get_current_user(self):
+        user_id = self.get_secure_cookie("blogdemo_user")
+        if not user_id: return None
+        return self.db.get("SELECT * FROM authors WHERE id = %s", int(user_id))
         
 class IndexHandler(BaseHandler):
  
     def get(self):
         #get random news from database
-        blog = self.db.blogs.find_one({"_id":int(blogid)})
+        randomnews = model.Message.select().order_by(fn.Random()).limit(1)
         self.set_header('Content-Type', 'application/json')
-        self.write(dumps(blog))
+        self.write(dumps(randomnews))
 
     def post(self):
         _id = () + 1

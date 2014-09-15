@@ -1,74 +1,76 @@
-from peewee import *
+import peewee
 import hashlib
 import datetime
+
+__all__ = [database, User, Message, Category, Transaksi, TeansaksiDetail]
 
 db = '/storage/sdcard1/database/dompetku.sqlite'
 #db = config['dbpath']
 
-database = SqliteDatabase(db)
+database = peewee.SqliteDatabase(db)
 
 def gen_hash(password):
     return hashlib.sha512(str(password).encode('utf-8')).hexdigest()
 
 
-class Base(Model):
+class Base(peewee.Model):
     class Meta:
         database = database
 
 class User(Base):
-    uid = PrimaryKeyField()
-    name = CharField(unique=True)
-    password = CharField()
-    email = CharField()
-    currentbalance = DecimalField(default=0)
-    created = DateTimeField(default=datetime.datetime.now)
-    lastactive = DateTimeField(default=datetime.datetime.now)
+    uid = peewee.PrimaryKeyField()
+    name = peewee.CharField(unique=True)
+    password = peewee.CharField()
+    email = peewee.CharField()
+    currentbalance = peewee.DecimalField(default=0)
+    created = peewee.DateTimeField(default=datetime.datetime.now)
+    lastactive = peewee.DateTimeField(default=datetime.datetime.now)
     
     class Meta:
         order_by = ('name',)
 
 class Message(Base):
-    mid = PrimaryKeyField()
-    title = CharField()
-    body = TextField()
-    author = CharField()
-    created = DateTimeField()
+    mid = peewee.PrimaryKeyField()
+    title = peewee.CharField()
+    body = peewee.TextField()
+    author = peewee.ForeignKeyField (User)
+    created = peewee.DateTimeField()
     
 class Category(Base):
-    cid = PrimaryKeyField()
-    category = CharField(unique=True)
-    desc = CharField(default='Deskripsi')
+    cid = peewee.PrimaryKeyField()
+    category = peeweeCharField(unique=True)
+    desc = peewee.CharField(default='Deskripsi')
 
 class TipeTransaksi(Base):
-    ttid = PrimaryKeyField()
-    type = CharField()
-    desc = CharField()
+    ttid = peewee.PrimaryKeyField()
+    type = peewee.CharField()
+    desc = peewee.CharField()
 
 class Transaksi(Base):
-    tid = PrimaryKeyField()
-    user = ForeignKeyField(User)
-    type = ForeignKeyField(TipeTransaksi)
-    info = CharField()
-    amount = DecimalField()
-    transdate = DateTimeField(default=datetime.datetime.now)
-    memo = CharField()
+    tid = peewee.PrimaryKeyField()
+    user = peewee.ForeignKeyField(User)
+    type = peewee.ForeignKeyField(TipeTransaksi)
+    info = peewee.CharField()
+    amount = peewee.DecimalField()
+    transdate = peewee.DateTimeField(default=datetime.datetime.now)
+    memo = peewee.CharField()
 
 class TransaksiDetail(Base):
-    tdid = PrimaryKeyField()
-    transid = ForeignKeyField(Transaksi)
-    item = CharField()
-    category = ForeignKeyField(Category)
-    prices = DecimalField()
-    times = DateTimeField(default=datetime.datetime.now)
-    notes = CharField()
+    tdid = peewee.PrimaryKeyField()
+    transid = peewee.ForeignKeyField(Transaksi)
+    item = peewee.CharField()
+    category = peewee.ForeignKeyField(Category)
+    prices = peewee.DecimalField()
+    times = peewee.DateTimeField(default=datetime.datetime.now)
+    notes = peewee.CharField()
 
 userdata = [
     {'name':'paijo','password':gen_hash('paijo'),'email':'paijo@none'},
     {'name':'black','password':gen_hash('black'),'email':'black@none'},
 ]
 
-def insert_user(db):
-    with db.transaction():
+def insert_user(database):
+    with database.transaction():
         User.insert_many(userdata).execute()
 
 tipe_trans_data= [
@@ -79,8 +81,8 @@ tipe_trans_data= [
     {'type':'OTH', 'desc':'Transaksi Lain'},
 ]
 
-def insert_tipe_trans(db):
-    with db.transaction():
+def insert_tipe_trans(database):
+    with database.transaction():
         TipeTransaksi.insert_many(tipe_trans_data).execute()
    
 category_data = [
@@ -96,8 +98,8 @@ category_data = [
     {'category':'lain','desc':'kebutuhan lain'},
 ] 
 
-def insert_category_data(db):
-    with db.transaction():
+def insert_category_data(database):
+    with database.transaction():
         Category.insert_many(category_data).execute()
 
 def init():
