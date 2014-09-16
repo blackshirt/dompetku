@@ -4,8 +4,8 @@ import datetime
 
 __all__ = ['database', 'User', 'Message', 'Category', 'Transaksi', 'TransaksiDetail']
 
-#db = '/storage/sdcard1/database/dompetku.sqlite'
-db = r"D:\My Documents\db\dompetku.sqlite"
+db = '/storage/sdcard1/database/dompetku.sqlite'
+#db = r"D:\My Documents\db\dompetku.sqlite"
 # db = config['dbpath']
 
 database = peewee.SqliteDatabase(db)
@@ -37,7 +37,7 @@ class Message(Base):
     mid = peewee.PrimaryKeyField()
     title = peewee.CharField()
     body = peewee.TextField()
-    author = peewee.ForeignKeyField(User)
+    author = peewee.ForeignKeyField(User, db_column='author')
     created = peewee.DateTimeField()
 
 

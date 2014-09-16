@@ -19,7 +19,7 @@ class Application(tornado.web.Application):
         ]
 
         settings = dict(
-            blog_title=u"Tornado Blog",
+            blog_title="Tornado Blog",
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             # ui_modules={"Entry": EntryModule},
@@ -51,10 +51,10 @@ class BaseHandler(tornado.web.RequestHandler):
 class IndexHandler(BaseHandler):
     def get(self):
         # get random news from database
-        news = model.Message.select().order_by(fn.Random()).limit(1).get()
-        news = tornado.escape.json_encode(news)
+        news = model.Category.select().order_by(fn.Random()).limit(1).get()
+        data = news._data
         self.set_header('Content-Type', 'application/json')
-        self.write(json.dumps(str(news)))
+        self.write(json.dumps(data))
 
     def post(self):
         _id = () + 1
