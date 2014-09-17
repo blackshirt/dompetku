@@ -4,6 +4,7 @@ import tornado.wsgi
 import model
 from peewee import fn
 import json
+import os
 
 __all__ = ['application', 'Application', 'IndexHandler', 'NewsHandler', 'EntryHandler', 'ComposeHandler', 'AuthLogoutHandler']
 
@@ -34,6 +35,9 @@ class Application(tornado.wsgi.WSGIApplication):
         # Have one global connection to the blog DB across all handlers
         self.db = model.database
 
+#from http://blog.codevariety.com/2012/01/06/python-serializing-dates-datetime-datetime-into-json/
+def date_handler(obj):
+    return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 
 class BaseHandler(tornado.web.RequestHandler):
     @property
@@ -51,10 +55,16 @@ class BaseHandler(tornado.web.RequestHandler):
 class IndexHandler(BaseHandler):
     def get(self):
         # get random news from database
-        news = model.Category.select().order_by(fn.Random()).limit(1).get()
-        data = news._data
-        self.set_header('Content-Type', 'application/json')
-        self.write(json.dumps(data))
+        news = model.Message.select().order_by(fn.Random()).limit(1).get()
+        msg = {
+            'id' : news.mid,
+            'title': news.title,
+            'body': news.body,
+            'author': news.author.name,
+            'created': news.created,
+            }
+        # self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(msg, default=date_handler))
 
     def post(self):
         _id = () + 1
