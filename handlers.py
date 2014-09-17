@@ -1,7 +1,6 @@
 import datetime
 import tornado.web, tornado.escape
 import tornado.wsgi
-import os
 import model
 from peewee import fn
 import json
