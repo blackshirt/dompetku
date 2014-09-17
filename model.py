@@ -4,10 +4,10 @@ import datetime
 
 __all__ = ['database', 'User', 'Message', 'Category', 'Transaksi', 'TransaksiDetail']
 
-#db = '/storage/sdcard1/database/dompetku.sqlite'
+db = '/storage/sdcard1/database/dompetku.sqlite'
 #db = r"D:\My Documents\db\dompetku.sqlite"
 # db = config['dbpath']
-db = '/home/blackshirt/dompetku/data/dompetku.sqlite'
+#db = '/home/blackshirt/dompetku/data/dompetku.sqlite'
 database = peewee.SqliteDatabase(db)
 
 
@@ -73,16 +73,10 @@ class TransaksiDetail(Base):
     notes = peewee.CharField()
 
 
-userdata = [
+user_data = [
     {'name': 'paijo', 'password': gen_hash('paijo'), 'email': 'paijo@none'},
     {'name': 'black', 'password': gen_hash('black'), 'email': 'black@none'},
 ]
-
-
-def insert_user(database):
-    with database.transaction():
-        User.insert_many(userdata).execute()
-
 
 tipe_trans_data = [
     {'type': 'MSK', 'desc': 'Transaksi Masuk'},
@@ -91,11 +85,6 @@ tipe_trans_data = [
     {'type': 'BLN', 'desc': 'Transaksi Balance'},
     {'type': 'OTH', 'desc': 'Transaksi Lain'},
 ]
-
-
-def insert_tipe_trans(database):
-    with database.transaction():
-        TipeTransaksi.insert_many(tipe_trans_data).execute()
 
 
 category_data = [
@@ -111,11 +100,17 @@ category_data = [
     {'category': 'lain', 'desc': 'kebutuhan lain'},
 ]
 
+msg_data = [
+    {'title':'Introduction to Peewe', 'body':'Introduction about peewee, lightweight python orm', 'author':1},
+    {'title':'Tutorial about Peewe', 'body':'Some technical introduction about peewee, lightweight python orm', 'author':2},
+]
 
-def insert_category_data(database):
+def insert_sample_data(database):
     with database.transaction():
         Category.insert_many(category_data).execute()
-
+        TipeTransaksi.insert_many(tipe_trans_data).execute()
+        Message.insert_many(msg_data).execute()
+        User.insert_many(user_data).execute()
 
 def init():
     database.connect()

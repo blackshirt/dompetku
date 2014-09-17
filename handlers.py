@@ -6,34 +6,8 @@ import model
 from peewee import fn
 import json
 
-__all__ = ['application', 'Application', 'IndexHandler', 'NewsHandler', 'EntryHandler', 'ComposeHandler', 'AuthLogoutHandler']
+__all__ = ['IndexHandler', 'NewsHandler', 'EntryHandler', 'ComposeHandler', 'AuthLogoutHandler']
 
-class Application(tornado.wsgi.WSGIApplication):
-    def __init__(self):
-        handlers = [
-            (r"/", IndexHandler),
-            (r"/news", NewsHandler),
-            (r"/entry/([^/]+)", EntryHandler),
-            (r"/compose", ComposeHandler),
-            (r"/auth/login", AuthLoginHandler),
-            (r"/auth/logout", AuthLogoutHandler),
-        ]
-
-        settings = dict(
-            blog_title="Tornado Blog",
-            template_path=os.path.join(os.path.dirname(__file__), "templates"),
-            static_path=os.path.join(os.path.dirname(__file__), "static"),
-            # ui_modules={"Entry": EntryModule},
-            xsrf_cookies=True,
-            cookie_secret="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
-            login_url="/auth/login",
-            debug=True,
-        )
-
-        tornado.wsgi.WSGIApplication.__init__(self, handlers, **settings)
-
-        # Have one global connection to the blog DB across all handlers
-        self.db = model.database
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -127,6 +101,5 @@ class AuthLoginHandler(BaseHandler):
 class AuthLogoutHandler(BaseHandler):
     pass
 
-application = Application()
 
 

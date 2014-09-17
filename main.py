@@ -2,9 +2,6 @@ import tornado.web
 import tornado.wsgi
 import handlers
 
-#class MainHandler(tornado.web.RequestHandler):
-#    def get(self):
-#        self.write("Hello  from second Tornado")
 
 
 class Application(tornado.wsgi.WSGIApplication):
@@ -34,7 +31,8 @@ class Application(tornado.wsgi.WSGIApplication):
         # Have one global connection to the blog DB across all handlers
         self.db = model.database
 
-application = Application()
-#application = tornado.wsgi.WSGIApplication([
-#    (r"/", handlers.IndexHandler),
-#])
+
+if __name__ : '__main__':
+    application = Application()
+    application.listen(8888)
+    tornado.ioloop.instance(application).start()
