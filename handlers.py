@@ -37,7 +37,7 @@ class Application(tornado.wsgi.WSGIApplication):
 
 #from http://blog.codevariety.com/2012/01/06/python-serializing-dates-datetime-datetime-into-json/
 def date_handler(obj):
-    return obj.isoformat() if hasattr(obj, 'isoformat') else obj
+    return obj.isoformat() if hasattr(obj, 'isoformat') else json.JSONEncoder.default(obj)
 
 class BaseHandler(tornado.web.RequestHandler):
     @property
@@ -56,13 +56,7 @@ class IndexHandler(BaseHandler):
     def get(self):
         # get random news from database
         news = model.Message.select().order_by(fn.Random()).limit(1).get()
-        msg = {
-            'id' : news.mid,
-            'title': news.title,
-            'body': news.body,
-            'author': news.author.name,
-            'created': news.created,
-            }
+        msg = news._data
         # self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(msg, default=date_handler))
 
@@ -79,24 +73,25 @@ class IndexHandler(BaseHandler):
             "category": body['category'],
             "timestamp": timestamp
         }
-        self.db.blogs.insert(blog)
+        self.db.Messageblogs.insert(blog)
         location = "/blog/" + str(_id)
         self.set_header('Content-Type', 'application/json')
         self.set_header('Location', location)
         self.set_status(201)
         self.write(dumps(blog))
 
-    def put(self, blogid):
+    def put(self, id):
         # # Convert unicode to int
-        _id = int(blogid)
+        mid = int(id)
         timestamp = datetime.now()
         body = urlparse.parse_qs(self.request.body)
         for key in body:
             body[key] = body[key][0]
         blog = {
+            'mid': mid,
             "title": body['title'],
-            "tags": body['tags'],
-            "category": body['category'],
+            "body": body['body'],
+            "author": self.current_user,
             "timestamp": timestamp
         }
         self.db.blogs.update({"_id": _id}, {"$set": blog})
@@ -118,7 +113,32 @@ class IndexHandler(BaseHandler):
 
 
 class NewsHandler(BaseHandler):
-    pass
+     def get(self):
+        # get random user from database
+        news = model.User.select().order_by(fn.Random()).limit(1).get()
+        msg = news._data
+        #self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(msg, default=date_handler))
+
+     def post(self):
+        _id = () + 1
+        timestamp = datetime.now()
+        body = urlparse.parse_qs(self.request.body)
+        for key in body:
+            body[key] = body[key][0]
+        blog = {
+            "_id": _id,
+            "title": body['title'],
+            "tags": body['tags'],
+            "category": body['category'],
+            "timestamp": timestamp
+        }
+        self.db.Messageblogs.insert(blog)
+        location = "/blog/" + str(_id)
+        self.set_header('Content-Type', 'application/json')
+        self.set_header('Location', location)
+        self.set_status(201)
+        self.write(dumps(blog))
 
 
 class EntryHandler(BaseHandler):
