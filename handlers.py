@@ -12,6 +12,7 @@ class Application(tornado.wsgi.WSGIApplication):
     def __init__(self):
         handlers = [
             (r"/", IndexHandler),
+            (r"/home", HomeHandler),
             (r"/news", NewsHandler),
             (r"/entry/([^/]+)", EntryHandler),
             (r"/compose", ComposeHandler),
@@ -111,6 +112,10 @@ class IndexHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(dumps(blog))
 
+
+class HomeHandler(BaseHandler):
+     def get(self):
+        self.render("base.html")
 
 class NewsHandler(BaseHandler):
      def get(self):
