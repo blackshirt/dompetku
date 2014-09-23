@@ -5,6 +5,7 @@ import model
 from peewee import fn
 import json
 import os
+import peewee
 
 __all__ = ['application', 'Application', 'IndexHandler', 'NewsHandler', 'EntryHandler', 'ComposeHandler', 'AuthLogoutHandler']
 
@@ -119,11 +120,9 @@ class HomeHandler(BaseHandler):
 
 class NewsHandler(BaseHandler):
      def get(self):
-        # get random user from database
-        news = model.User.select().order_by(fn.Random()).limit(1).get()
-        msg = news._data
-        #self.set_header('Content-Type', 'application/json')
-        self.write(json.dumps(msg, default=date_handler))
+        news = model.Message.select()
+        data = news.iterator()
+        self.render("news.html", data=data)
 
      def post(self):
         _id = () + 1
