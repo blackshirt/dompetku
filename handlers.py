@@ -44,7 +44,8 @@ class HomeHandler(BaseHandler):
 class NewsHandler(BaseHandler):
      def get(self):
         news = model.Message.select()
-        self.render("news.html", data=news)
+        title = "Informasi Terbaru"
+        self.render("news.html", title=title, data=news)
 
 
 class EntryHandler(BaseHandler):
