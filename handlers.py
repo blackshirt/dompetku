@@ -1,41 +1,14 @@
 import datetime
 import tornado.web, tornado.escape
 import tornado.wsgi
+import peewee
 import model
 from peewee import fn
 import json
-import os
-import peewee
 
-__all__ = ['application', 'Application', 'IndexHandler', 'NewsHandler', 'EntryHandler', 'ComposeHandler', 'AuthLogoutHandler']
+__all__ = ['IndexHandler', 'NewsHandler', 'EntryHandler', 'ComposeHandler', 'AuthLogoutHandler']
 
-class Application(tornado.wsgi.WSGIApplication):
-    def __init__(self):
-        handlers = [
-            (r"/", IndexHandler),
-            (r"/home", HomeHandler),
-            (r"/news", NewsHandler),
-            (r"/entry/([^/]+)", EntryHandler),
-            (r"/compose", ComposeHandler),
-            (r"/auth/login", AuthLoginHandler),
-            (r"/auth/logout", AuthLogoutHandler),
-        ]
 
-        settings = dict(
-            blog_title="Tornado Blog",
-            template_path=os.path.join(os.path.dirname(__file__), "templates"),
-            static_path=os.path.join(os.path.dirname(__file__), "static"),
-            # ui_modules={"Entry": EntryModule},
-            xsrf_cookies=True,
-            cookie_secret="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
-            login_url="/auth/login",
-            debug=True,
-        )
-
-        tornado.wsgi.WSGIApplication.__init__(self, handlers, **settings)
-
-        # Have one global connection to the blog DB across all handlers
-        self.db = model.database
 
 #from http://blog.codevariety.com/2012/01/06/python-serializing-dates-datetime-datetime-into-json/
 def date_handler(obj):
@@ -62,87 +35,16 @@ class IndexHandler(BaseHandler):
         # self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(msg, default=date_handler))
 
-    def post(self):
-        _id = () + 1
-        timestamp = datetime.now()
-        body = urlparse.parse_qs(self.request.body)
-        for key in body:
-            body[key] = body[key][0]
-        blog = {
-            "_id": _id,
-            "title": body['title'],
-            "tags": body['tags'],
-            "category": body['category'],
-            "timestamp": timestamp
-        }
-        self.db.Messageblogs.insert(blog)
-        location = "/blog/" + str(_id)
-        self.set_header('Content-Type', 'application/json')
-        self.set_header('Location', location)
-        self.set_status(201)
-        self.write(dumps(blog))
-
-    def put(self, id):
-        # # Convert unicode to int
-        mid = int(id)
-        timestamp = datetime.now()
-        body = urlparse.parse_qs(self.request.body)
-        for key in body:
-            body[key] = body[key][0]
-        blog = {
-            'mid': mid,
-            "title": body['title'],
-            "body": body['body'],
-            "author": self.current_user,
-            "timestamp": timestamp
-        }
-        self.db.blogs.update({"_id": _id}, {"$set": blog})
-        self.set_header('Content-Type', 'application/json')
-        self.write(dumps(blog))
-
-    def delete(self, blogid):
-        # # Convert unicode to int
-        _id = int(blogid)
-        blog = {
-            "title": None,
-            "tags": [],
-            "category": [],
-            "timestamp": None,
-        }
-        self.db.blogs.update({"_id": _id}, {"$set": blog})
-        self.set_header('Content-Type', 'application/json')
-        self.write(dumps(blog))
-
-
+    
 class HomeHandler(BaseHandler):
      def get(self):
         self.render("base.html")
 
+
 class NewsHandler(BaseHandler):
      def get(self):
         news = model.Message.select()
-        data = news.iterator()
-        self.render("news.html", data=data)
-
-     def post(self):
-        _id = () + 1
-        timestamp = datetime.now()
-        body = urlparse.parse_qs(self.request.body)
-        for key in body:
-            body[key] = body[key][0]
-        blog = {
-            "_id": _id,
-            "title": body['title'],
-            "tags": body['tags'],
-            "category": body['category'],
-            "timestamp": timestamp
-        }
-        self.db.Messageblogs.insert(blog)
-        location = "/blog/" + str(_id)
-        self.set_header('Content-Type', 'application/json')
-        self.set_header('Location', location)
-        self.set_status(201)
-        self.write(dumps(blog))
+        self.render("news.html", data=news)
 
 
 class EntryHandler(BaseHandler):
@@ -160,6 +62,5 @@ class AuthLoginHandler(BaseHandler):
 class AuthLogoutHandler(BaseHandler):
     pass
 
-application = Application()
 
 

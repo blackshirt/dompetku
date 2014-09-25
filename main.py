@@ -1,15 +1,18 @@
 import tornado.web
 import tornado.wsgi
 import handlers
+import os
+import model
+import tornado.options
+import tornado.httpserver
+from tornado.options import define, options
 
-#class MainHandler(tornado.web.RequestHandler):
-#    def get(self):
-#        self.write("Hello  from second Tornado")
+define("port", default=8888, help="run on the given port", type=int)
 
 
 class Application(tornado.wsgi.WSGIApplication):
     def __init__(self):
-        handlers = [
+        handler = [
             (r"/", handlers.IndexHandler),
             (r"/news", handlers.NewsHandler),
             (r"/entry/([^/]+)", handlers.EntryHandler),
@@ -29,12 +32,28 @@ class Application(tornado.wsgi.WSGIApplication):
             debug=True,
         )
 
-        tornado.web.Application.__init__(self, handlers, **settings)
+        tornado.wsgi.WSGIApplication.__init__(self, handler, **settings)
 
         # Have one global connection to the blog DB across all handlers
         self.db = model.database
 
-application = Application()
-#application = tornado.wsgi.WSGIApplication([
-#    (r"/", handlers.IndexHandler),
-#])
+
+# Issue : locale.Error: local query failed
+# based on this suggestion http://code.google.com/p/python-for-android/issues/detail?id=1
+# and this snippet from http://code.google.com/p/python-for-android/issues/attachmentText?id=1&aid=8862727350419203445&name=monkey_locale.py&token=ABZ6GAcpG3dWuh_F9FOJ5TnNxsz3o_XeGA%3A1411486676371
+def patch_locale():
+    def getlocale(*args, **kwargs):
+        return (None, None)
+    import locale
+    locale.getlocale=getlocale
+
+def main():
+    tornado.options.parse_command_line()
+    http_server = tornado.httpserver.HTTPServer(Application())
+    http_server.listen(options.port)
+    tornado.ioloop.IOLoop.instance().start()
+
+
+if __name__ == "__main__":
+    patch_locale()
+    main()

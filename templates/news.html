@@ -1,9 +1,11 @@
 {%extends "base.html" %}
-
+<div class="container">
 {% block content %}
-    <div class="container">
+    
     {% for item in data %}
-        <li> {{ linkify(item.title) }} {{ item.body }} </li>
+        <li> {{ item.title}} </li> 
+             <blockquote> {{ item.body }} </blockquote>
     {% end %}
-    </div>
+    
 {% end %}
+</div>
