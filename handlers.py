@@ -1,10 +1,10 @@
 import datetime
 import tornado.web, tornado.escape
 import tornado.wsgi
-import peewee
-import model
 from peewee import fn
 import json
+import model
+from form import MessageForm
 
 __all__ = ['IndexHandler', 'NewsHandler', 'EntryHandler', 'ComposeHandler', 'AuthLogoutHandler']
 
@@ -35,21 +35,37 @@ class IndexHandler(BaseHandler):
         # self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(msg, default=date_handler))
 
-    
+
 class HomeHandler(BaseHandler):
      def get(self):
         self.render("base.html")
 
-
 class NewsHandler(BaseHandler):
      def get(self):
-        news = model.Message.select()
-        title = "Informasi Terbaru"
-        self.render("news.html", title=title, data=news)
+        form = MessageForm(self.request.arguments)
+        self.render('create_news.html', form=form)
 
+     def post(self):
+        form = MessageForm(self.request.arguments)
+        self.current_user = 1
+        if form.validate():
+            post = model.Message.create(title=form.data['title'],
+                        body=form.data['body'],
+                        author=self.current_user,
+                        created = datetime.datetime.now())
+            post.save()
+            return self.redirect('/news')
+        self.render('create_news.html', form=form)
+
+class ListNewsHandler(BaseHandler):
+     def get(self):
+        news = model.Message.select()
+        judul = "Informasi Terbaru"
+        self.render("news.html", judul=judul, data=news)
 
 class EntryHandler(BaseHandler):
-    pass
+    def get(self):
+        pass
 
 
 class ComposeHandler(BaseHandler):

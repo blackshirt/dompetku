@@ -1,12 +1,11 @@
 {%extends "base.html" %}
-{% block title %}  {{ title }} {% end %}
 
 <div class="container">
 {% block content %}
     {% for item in data %}
-        <li> {{ item.title}} </li> 
+        <li> {{ item.title}} </li>
              <blockquote> {{ item.body }} </blockquote>
     {% end %}
-    
+
 {% end %}
 </div>
