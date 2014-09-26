@@ -19,12 +19,16 @@ class BaseHandler(tornado.web.RequestHandler):
     def db(self):
         return self.application.db
 
-    def get_current_user(self):
-        user_id = self.get_secure_cookie("blogdemo_user")
+    def get(self):
+        if not self.current_user:
+            self.redirect("/auth/login")
+            return
 
+    def get_current_user(self):
+        user_id = self.get_secure_cookie("demo_user")
         if not user_id:
             return None
-        return self.db.get("SELECT * FROM authors WHERE id = %s", int(user_id))
+        return user_id
 
 
 class IndexHandler(BaseHandler):
@@ -39,6 +43,7 @@ class IndexHandler(BaseHandler):
 class HomeHandler(BaseHandler):
      def get(self):
         self.render("base.html")
+
 
 class NewsHandler(BaseHandler):
      def get(self):
@@ -73,11 +78,21 @@ class ComposeHandler(BaseHandler):
 
 
 class AuthLoginHandler(BaseHandler):
-    pass
+    def get(self):
+        try:
+            errormessage = self.get_argument("error")
+        except:
+            errormessage = ""
+        self.render("login.html", errormessage = errormessage)
 
+    def post(self):
+        self.set_secure_cookie("user", self.get_argument("name"))
+        self.redirect("/")
 
 class AuthLogoutHandler(BaseHandler):
-    pass
+     def get(self):
+        self.clear_cookie("demo_user")
+        self.redirect(self.get_argument("next", "/"))
 
 
 

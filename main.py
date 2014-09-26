@@ -14,7 +14,7 @@ class Application(tornado.wsgi.WSGIApplication):
     def __init__(self):
         handler = [
             (r"/", handlers.IndexHandler),
-            (r"/news/new", handlers.NewsHandler),
+            (r"/news/create", handlers.NewsHandler),
             (r"/news", handlers.ListNewsHandler),
             (r"/entry/([^/]+)", handlers.EntryHandler),
             (r"/compose", handlers.ComposeHandler),
@@ -54,7 +54,7 @@ def main():
     http_server.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
 
-#application = Application()
+application = Application()
 
 if __name__ == "__main__":
     patch_locale()

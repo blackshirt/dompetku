@@ -3,9 +3,11 @@
 <div class="container">
 {% block content %}
     {% for item in data %}
-        <li> {{ item.title}} </li>
-             <blockquote> {{ item.body }} </blockquote>
+    <div class="list-group">
+        <a href="#" class="list-group-item"><span class="glyphicon glyphicon-file"></span>
+            <h4 class="list-group-item-heading">{{ item.title}} </h4>
+            <p class="list-group-item-text">{{ item.body }}</p>
+        </a>
     {% end %}
-
 {% end %}
 </div>
