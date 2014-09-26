@@ -8,7 +8,7 @@ import tornado.httpserver
 from tornado.options import define, options
 
 define("port", default=8888, help="run on the given port", type=int)
-
+#anu aku tes ketik ini yah
 
 class Application(tornado.wsgi.WSGIApplication):
     def __init__(self):
