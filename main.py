@@ -54,7 +54,7 @@ def main():
     http_server.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
 
-application = Application()
+#application = Application()
 
 if __name__ == "__main__":
     patch_locale()
