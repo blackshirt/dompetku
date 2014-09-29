@@ -23,7 +23,7 @@ class Application(tornado.wsgi.WSGIApplication):
         ]
 
         settings = dict(
-            blog_title="Tornado Blog",
+            blog_title="Your online Pocket",
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             # ui_modules={"Entry": EntryModule},

@@ -34,10 +34,9 @@ class BaseHandler(tornado.web.RequestHandler):
 class IndexHandler(BaseHandler):
     def get(self):
         # get random news from database
-        news = model.Message.select().order_by(fn.Random()).limit(1).get()
-        msg = news._data
+        news = model.Message.select().order_by(fn.Random()).limit(1)
         # self.set_header('Content-Type', 'application/json')
-        self.write(json.dumps(msg, default=date_handler))
+        self.render("index.html", news = news)
 
 
 class HomeHandler(BaseHandler):

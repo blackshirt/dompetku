@@ -1,0 +1,14 @@
+{%extends "base.html" %}
+
+<div class="container">
+{% block content %}
+    <div class="list-group">
+        <a href="#" class="list-group-item"><span class="glyphicon glyphicon-file"></span>
+            <p class="list-group-item-heading">{{ escape(news.title)}} </p>
+            <p class="list-group-item-text">{{ escape(news.body) }}</p>
+            <p class="list-group-item-text">{{ escape(news.author.name) }}</p>
+            <p class="list-group-item-text">{{ news.created }}</p>
+        </a>
+    </div>
+{% end %}
+</div>
