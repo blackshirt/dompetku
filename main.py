@@ -16,6 +16,7 @@ class Application(tornado.wsgi.WSGIApplication):
             (r"/", handlers.IndexHandler),
             (r"/news/create", handlers.NewsHandler),
             (r"/news", handlers.ListNewsHandler),
+            (r"/news/([0-9]*)/delete", handlers.DeleteNewsHandler),
             (r"/entry/([^/]+)", handlers.EntryHandler),
             (r"/compose", handlers.ComposeHandler),
             (r"/auth/login", handlers.AuthLoginHandler),

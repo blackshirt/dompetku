@@ -34,22 +34,17 @@ class BaseHandler(tornado.web.RequestHandler):
 class IndexHandler(BaseHandler):
     def get(self):
         # get random news from database
-        news = model.Message.select().order_by(fn.Random()).limit(1)
+        news = model.Message.select().order_by(fn.Random()).limit(1).get()
         # self.set_header('Content-Type', 'application/json')
         self.render("index.html", news = news)
 
 
-class HomeHandler(BaseHandler):
-     def get(self):
-        self.render("base.html")
-
-
 class NewsHandler(BaseHandler):
-     def get(self):
+    def get(self):
         form = MessageForm(self.request.arguments)
         self.render('create_news.html', form=form)
 
-     def post(self):
+    def post(self):
         form = MessageForm(self.request.arguments)
         self.current_user = 1
         if form.validate():
@@ -60,6 +55,16 @@ class NewsHandler(BaseHandler):
             post.save()
             return self.redirect('/news')
         self.render('create_news.html', form=form)
+
+class DeleteNewsHandler(BaseHandler):
+    def get(self, msgid):
+        msgtodelete = model.Message.get(model.Message.mid == int(msgid))
+        if msgtodelete:
+            try:
+                msgtodelete.delete_instance()
+            except model.Message.DoesNotExist:
+                raise tornado.web.HTTPError(404)
+        return self.redirect('/news')
 
 class ListNewsHandler(BaseHandler):
      def get(self):
