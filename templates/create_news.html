@@ -5,16 +5,16 @@
 {% block content %}
 <form role="form form-vertical" action="{{ request.path }}" method="post">
 <div class="row">
-    <div class="form-group col-xs-5 col-lg-15">{{ _("Title") }}
+    <div class="form-group col-xs-15 col-lg-15">{{ _("Title") }}
         <input class="form-control" type="text" name="title"/>
     </div>
 </div>
 <div class="row">
-    <div class="form-group col-xs-5 col-lg-15">{{ _("Body") }}
+    <div class="form-group col-xs-15 col-lg-15">{{ _("Body") }}
         <textarea class="form-control" rows="4" name="body"/></textarea>
     </div>
 </div>
-<div><input type="submit" value="{{ _("Insert") }}"/></div>
+<div><input type="submit" class="btn btn-primary btn-lg" value="{{ _("Insert") }}"/></div>
 {% module xsrf_form_html() %}
 </form>
 {% end %}

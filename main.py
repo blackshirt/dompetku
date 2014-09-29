@@ -31,7 +31,7 @@ class Application(tornado.wsgi.WSGIApplication):
             xsrf_cookies=True,
             cookie_secret="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
             login_url="/auth/login",
-            debug=True,
+            debug=False,
         )
 
         tornado.wsgi.WSGIApplication.__init__(self, handler, **settings)

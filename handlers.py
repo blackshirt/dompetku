@@ -40,10 +40,13 @@ class IndexHandler(BaseHandler):
 
 
 class NewsHandler(BaseHandler):
+
+    @tornado.web.authenticated
     def get(self):
         form = MessageForm(self.request.arguments)
         self.render('create_news.html', form=form)
 
+    @tornado.web.authenticated
     def post(self):
         form = MessageForm(self.request.arguments)
         self.current_user = 1
@@ -57,14 +60,17 @@ class NewsHandler(BaseHandler):
         self.render('create_news.html', form=form)
 
 class DeleteNewsHandler(BaseHandler):
-    def get(self, msgid):
-        msgtodelete = model.Message.get(model.Message.mid == int(msgid))
-        if msgtodelete:
+    @tornado.web.authenticated
+    def post(self, mid):
+        msgtodelete = self.get_argument('mid')
+        msgid = model.Message.get(model.Message.mid == int(msgtodelete))
+        if msgid :
             try:
-                msgtodelete.delete_instance()
+                msgid.delete_instance()
             except model.Message.DoesNotExist:
                 raise tornado.web.HTTPError(404)
         return self.redirect('/news')
+
 
 class ListNewsHandler(BaseHandler):
      def get(self):

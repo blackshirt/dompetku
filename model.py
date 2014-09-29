@@ -62,6 +62,9 @@ class Transaksi(Base):
     transdate = peewee.DateTimeField(default=datetime.datetime.now)
     memo = peewee.CharField()
 
+    class Meta:
+        order_by = ('-transdate',)
+
 
 class TransaksiDetail(Base):
     tdid = peewee.PrimaryKeyField()
