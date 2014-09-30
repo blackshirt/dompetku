@@ -5,9 +5,9 @@ import datetime
 __all__ = ['database', 'User', 'Message', 'Category', 'Transaksi', 'TransaksiDetail']
 
 #db = '/storage/sdcard1/database/dompetku.sqlite'
-#db = r"D:\My Documents\db\dompetku.sqlite"
+db = r"D:\My Documents\db\dompetku.sqlite"
 # db = config['dbpath']
-db = '/home/blackshirt/dompetku/data/dompetku.sqlite'
+#db = '/home/blackshirt/dompetku/data/dompetku.sqlite'
 database = peewee.SqliteDatabase(db)
 
 
@@ -82,8 +82,8 @@ userdata = [
 ]
 
 
-def insert_user(database):
-    with database.transaction():
+def insert_user(dbase):
+    with dbase.transaction():
         User.insert_many(userdata).execute()
 
 
@@ -96,8 +96,8 @@ tipe_trans_data = [
 ]
 
 
-def insert_tipe_trans(database):
-    with database.transaction():
+def insert_tipe_trans(dbase):
+    with dbase.transaction():
         TipeTransaksi.insert_many(tipe_trans_data).execute()
 
 
@@ -115,8 +115,8 @@ category_data = [
 ]
 
 
-def insert_category_data(database):
-    with database.transaction():
+def insert_category_data(dbase):
+    with dbase.transaction():
         Category.insert_many(category_data).execute()
 
 

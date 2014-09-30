@@ -1,7 +1,6 @@
-database = {
+"database" = {
     'driver' = 'sqlite',
     'path' = '',
     'host' = '',
     'user' = '',
-    'password' = '',
-}
+    'password' = ''}

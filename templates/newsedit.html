@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+  <form method="post">
+      {% for field in form %}
+        <div>{{ field(class_="form-group col-xs-15 col-lg-15") }}</div>
+      {% end %}
+  </form>
+
+{% end %}

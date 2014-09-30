@@ -1,18 +1,18 @@
 import datetime
-import tornado.web, tornado.escape
+import tornado.web
+import tornado.escape
 import tornado.wsgi
 from peewee import fn
-import json
 import model
 from form import MessageForm
 
 __all__ = ['IndexHandler', 'NewsHandler', 'EntryHandler', 'ComposeHandler', 'AuthLogoutHandler']
 
 
-
-#from http://blog.codevariety.com/2012/01/06/python-serializing-dates-datetime-datetime-into-json/
+# from http://blog.codevariety.com/2012/01/06/python-serializing-dates-datetime-datetime-into-json/
 def date_handler(obj):
-    return obj.isoformat() if hasattr(obj, 'isoformat') else json.JSONEncoder.default(obj)
+    return obj.isoformat() if hasattr(obj, 'isoformat') else obj
+
 
 class BaseHandler(tornado.web.RequestHandler):
     @property
@@ -36,11 +36,10 @@ class IndexHandler(BaseHandler):
         # get random news from database
         news = model.Message.select().order_by(fn.Random()).limit(1).get()
         # self.set_header('Content-Type', 'application/json')
-        self.render("index.html", news = news)
+        self.render("index.html", news=news)
 
 
 class NewsHandler(BaseHandler):
-
     @tornado.web.authenticated
     def get(self):
         form = MessageForm(self.request.arguments)
@@ -52,19 +51,31 @@ class NewsHandler(BaseHandler):
         self.current_user = 1
         if form.validate():
             post = model.Message.create(title=form.data['title'],
-                        body=form.data['body'],
-                        author=self.current_user,
-                        created = datetime.datetime.now())
+                                        body=form.data['body'],
+                                        author=self.current_user,
+                                        created=datetime.datetime.now())
             post.save()
             return self.redirect('/news')
         self.render('create_news.html', form=form)
+
+class EditNewsHandler(BaseHandler):
+    def get(self, mid):
+        form = MessageForm(self.request.arguments)
+        self.render('newsedit.html', form=form)
+
+    def post(self):
+        msg = model.Message.get(model.Message.mid == int(msgid))
+        form = MessageForm(self.request.arguments)
+        form.populate_obj(msg)
+        self.render('newsedit.html', form=form, msg=msg)
+
 
 class DeleteNewsHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self, mid):
         msgtodelete = self.get_argument('mid')
         msgid = model.Message.get(model.Message.mid == int(msgtodelete))
-        if msgid :
+        if msgid:
             try:
                 msgid.delete_instance()
             except model.Message.DoesNotExist:
@@ -73,10 +84,11 @@ class DeleteNewsHandler(BaseHandler):
 
 
 class ListNewsHandler(BaseHandler):
-     def get(self):
+    def get(self):
         news = model.Message.select()
         judul = "Informasi Terbaru"
         self.render("news.html", judul=judul, data=news)
+
 
 class EntryHandler(BaseHandler):
     def get(self):
@@ -93,14 +105,15 @@ class AuthLoginHandler(BaseHandler):
             errormessage = self.get_argument("error")
         except:
             errormessage = ""
-        self.render("login.html", errormessage = errormessage)
+        self.render("login.html", errormessage=errormessage)
 
     def post(self):
         self.set_secure_cookie("user", self.get_argument("name"))
         self.redirect("/")
 
+
 class AuthLogoutHandler(BaseHandler):
-     def get(self):
+    def get(self):
         self.clear_cookie("demo_user")
         self.redirect(self.get_argument("next", "/"))
 
