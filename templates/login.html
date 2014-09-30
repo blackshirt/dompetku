@@ -1,0 +1,11 @@
+{%extends "base.html" %}
+
+<div class="container">
+{% block content %}
+<form action="{{ request.path }}" method="post" class="">
+    <input name="username" type="text" >
+    <input name="password" type="password" >
+    <input type="submit" name="submit" value="Login" >
+</form>
+{% end %}
+</div>

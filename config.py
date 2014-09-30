@@ -3,5 +3,5 @@ database = {
     'path' = '',
     'host' = '',
     'user' = '',
-    'password' = '',
+    'password' = ''
 }
