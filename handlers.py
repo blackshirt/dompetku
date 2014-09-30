@@ -74,7 +74,8 @@ class EditTransHandler(BaseHandler):
                 return self.redirect('/news')
         else:
             form = TipeTransaksiForm(obj=post)
-        self.render('transsedit.html', form=form)
+        self.render('transedit.html', form=form)
+
 
 class EditNewsHandler(BaseHandler):
     def get(self, msgid):
