@@ -1,9 +1,28 @@
 {% extends "base.html" %}
+
+ <div class="container">
 {% block content %}
-  <form method="post">
-      {% for field in form %}
-        <div>{{ field(class_="form-group col-xs-15 col-lg-15") }}</div>
-      {% end %}
-  </form>
+    <form method="post" action="">
+        {% for field in form %}
+            <div class="clearfix{% if field.errors %} error{% end %}">
+            {{ field.label }}
+                <div class="input">
+                    {% if field.errors %}
+                        {{ field(class_='invalid') }}
+                    {% if field.description %}<span class="help">{{ field.description() }}</span>{% end %}
+                        <ul class="errors">{% for error in field.errors %}<li>{{ error }}</li>{% end %}</ul>
+                    {% else %}
+                    {{ field() }}
+                {% if field.description %}<span class="help">{{ field.description() }}</span>{% end %}
+{% end %}
+</div>
+</div>
+{% end %}
+<div class="actions">
+<button class="btn btn-primary" type="submit">Save</button>
+<a class="btn btn-default" href="/">Cancel</a>
+</div>
+</form>
 
 {% end %}
+</div>

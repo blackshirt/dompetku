@@ -58,16 +58,24 @@ class NewsHandler(BaseHandler):
             return self.redirect('/news')
         self.render('create_news.html', form=form)
 
-class EditNewsHandler(BaseHandler):
-    def get(self, mid):
-        form = MessageForm(self.request.arguments)
-        self.render('newsedit.html', form=form)
 
-    def post(self):
-        msg = model.Message.get(model.Message.mid == int(msgid))
-        form = MessageForm(self.request.arguments)
-        form.populate_obj(msg)
-        self.render('newsedit.html', form=form, msg=msg)
+class EditNewsHandler(BaseHandler):
+    def get(self, msgid):
+        post = model.Message.get(model.Message.mid == msgid)
+        form = MessageForm(obj=post)
+        self.render('newsedit.html', post=post, form=form)
+
+    def post(self, msgid):
+        post = model.Message.get(model.Message.mid == msgid)
+        if post:
+            form = MessageForm(self.request.arguments, obj=post)
+            if form.validate():
+                form.populate_obj(post)
+                post.save()
+                return self.redirect('/news')
+        else:
+            form = MessageForm(obj=post)
+        self.render('newsedit.html', post=post, form=form)
 
 
 class DeleteNewsHandler(BaseHandler):
