@@ -4,5 +4,6 @@ from model import User, Message, TipeTransaksi, Transaksi, Category, TransaksiDe
 from wtfpeewee.orm import model_form
 
 MessageForm = model_form(Message, base_class=Form)
+TipeTransaksiForm = model_form(TipeTransaksi, base_class=Form)
 
-__all__ = ['MessageForm']
+__all__ = ['MessageForm', 'TipeTransaksiForm']

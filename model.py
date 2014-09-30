@@ -5,7 +5,7 @@ import datetime
 __all__ = ['database', 'User', 'Message', 'Category', 'Transaksi', 'TransaksiDetail']
 
 #db = '/storage/sdcard1/database/dompetku.sqlite'
-db = r"D:\My Documents\db\dompetku.sqlite"
+db = r"C:\Users\BKD Kab Kebumen\dompetku\data\dompetku.sqlite"
 # db = config['dbpath']
 #db = '/home/blackshirt/dompetku/data/dompetku.sqlite'
 database = peewee.SqliteDatabase(db)
@@ -104,8 +104,8 @@ category_data = [
 ]
 
 msg_data = [
-    {'title': 'Introduction to Asynchronous python server', 'body': 'Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed. By using non-blocking network I/O, Tornado can scale to tens of thousands of open connections, making it ideal for long polling, WebSockets, and other applications that require a long-lived connection to each user.'},
-    {'title': 'wtf-peewee', 'body': 'WTForms integration for peewee, provides a bridge between peewee models and wtforms, mapping model fields to form fields'},
+    {'title': 'Introduction to Asynchronous python server', 'body': 'Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed. By using non-blocking network I/O, Tornado can scale to tens of thousands of open connections, making it ideal for long polling, WebSockets, and other applications that require a long-lived connection to each user.', 'author':1},
+    {'title': 'wtf-peewee', 'body': 'WTForms integration for peewee, provides a bridge between peewee models and wtforms, mapping model fields to form fields', 'author':2},
 ]
 def insert_data(dbase):
     with dbase.transaction():

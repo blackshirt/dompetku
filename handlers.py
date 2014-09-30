@@ -4,7 +4,7 @@ import tornado.escape
 import tornado.wsgi
 from peewee import fn
 import model
-from form import MessageForm
+from form import MessageForm, TipeTransaksiForm
 
 __all__ = ['IndexHandler', 'NewsHandler', 'EntryHandler', 'ComposeHandler', 'AuthLogoutHandler']
 
@@ -58,6 +58,23 @@ class NewsHandler(BaseHandler):
             return self.redirect('/news')
         self.render('create_news.html', form=form)
 
+class EditTransHandler(BaseHandler):
+    def get(self, tid):
+        trans = model.TipeTransaksi.get(model.TipeTransaksi.ttid == tid)
+        form = TipeTransaksiForm(obj=trans)
+        self.render('newsedit.html', form=form)
+
+    def post(self, tid):
+        post = model.TipeTransaksi.get(model.TipeTransaksi.ttidid == tid)
+        if post:
+            form = TipeTransaksiForm(self.request.arguments, obj=post)
+            if form.validate():
+                form.populate_obj(post)
+                post.save()
+                return self.redirect('/news')
+        else:
+            form = TipeTransaksiForm(obj=post)
+        self.render('newsedit.html', form=form)
 
 class EditNewsHandler(BaseHandler):
     def get(self, msgid):

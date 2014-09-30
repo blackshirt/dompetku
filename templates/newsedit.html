@@ -3,8 +3,9 @@
  <div class="container">
 {% block content %}
     <form role="form form-vertical" method="POST" action="/auth/login">
-    <div>{{ form.title.label }}: {{ form.title(class_="list-group") }}</div>
-    <div>{{ form.body.label }}: {{ form.body(class_="list-group") }}</div>
+    <label for="type">Type</label>: <input class="list-group" id="type" name="type" type="text" value="MSK">
+    <div>{{ form.type.label }}: {{ form.type(class_="list-group") }}</div>
+    <div>{{ form.desc.label }}: {{ form.desc(class_="list-group") }}</div>
 </form>
 {% end %}
 </div>
