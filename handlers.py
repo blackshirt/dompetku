@@ -63,7 +63,7 @@ class EditNewsHandler(BaseHandler):
     def get(self, msgid):
         post = model.Message.get(model.Message.mid == msgid)
         form = MessageForm(obj=post)
-        self.render('newsedit.html', post=post, form=form)
+        self.render('newsedit.html', form=form)
 
     def post(self, msgid):
         post = model.Message.get(model.Message.mid == msgid)
@@ -75,7 +75,7 @@ class EditNewsHandler(BaseHandler):
                 return self.redirect('/news')
         else:
             form = MessageForm(obj=post)
-        self.render('newsedit.html', post=post, form=form)
+        self.render('newsedit.html', form=form)
 
 
 class DeleteNewsHandler(BaseHandler):
