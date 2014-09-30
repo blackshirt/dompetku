@@ -4,6 +4,7 @@ import tornado.wsgi
 #from peewee import fn
 import json
 import model
+from hashlib import sha512
 from form import MessageForm
 
 __all__ = ['IndexHandler', 'NewsHandler', 'EntryHandler', 'ComposeHandler', 'AuthLogoutHandler']
@@ -60,7 +61,7 @@ class AuthLoginHandler(BaseHandler):
 
             if auth:
                 self.set_current_user(uname)
-                self.redirect("/", commoninfo=self.get_common_info())
+                self.redirect("/")
             else:
                 errormessage = "wrong password or username."
                 self.render("login.html", errormessage=errormessage, commoninfo=self.get_common_info())
@@ -75,10 +76,13 @@ class AuthLoginHandler(BaseHandler):
             self.clear_cookie("user")
 
     def authenticate(self, uname, passwd):
-        if (uname == 'a') and (passwd == 'a'):
-            return True
-        else:
-            return False
+        dbpasswd = model.User.select(passwd).where(model.User.name == uname)
+        passwdhash = sha512(passwd.encode('utf-8')).hexdigest()
+        if dbpasswd:
+            if (dbpasswd == passwdhash):
+                return True
+
+        return False
 
 
 class AuthLogoutHandler(BaseHandler):
