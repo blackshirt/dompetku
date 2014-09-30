@@ -36,20 +36,21 @@ class BaseHandler(tornado.web.RequestHandler):
         commoninfo = {
             'user' : self.get_current_user(),
         }
+        return commoninfo
 
 
 class HomeHandler(BaseHandler):
     def get(self):
-        self.render("base.html")
+        self.render("base.html", commoninfo = self.get_common_info())
 
 
 #from: http://stackoverflow.com/questions/6514783/tornado-login-examples-tutorials
 class AuthLoginHandler(BaseHandler):
     def get(self):
         if self.get_current_user() == None:
-            self.render("login.html", commoninfo = self.get_common_info())
+            self.render("login.html", errormessage="", commoninfo=self.get_common_info())
         else:
-            self.render("/")
+            self.redirect("/")
 
     def post(self):
         try:
@@ -63,8 +64,8 @@ class AuthLoginHandler(BaseHandler):
             else:
                 errormessage = "wrong password or username."
                 self.render("login.html", errormessage=errormessage, commoninfo=self.get_common_info())
-        except:
-            errormessage = "Something wrong"
+        except ValueError as errreason:
+            errormessage = "Something wrong"+errreason
             self.render("login.html", errormessage=errormessage, commoninfo=self.get_common_info())
 
     def set_current_user(self, user):
@@ -83,7 +84,7 @@ class AuthLoginHandler(BaseHandler):
 class AuthLogoutHandler(BaseHandler):
     def get(self):
         self.clear_cookie("user")
-        self.redirect("/login")
+        self.redirect("/")
 
 
 
@@ -122,12 +123,6 @@ class EntryHandler(BaseHandler):
 
 class ComposeHandler(BaseHandler):
     pass
-
-
-class AuthLogoutHandler(BaseHandler):
-    def get(self):
-        self.clear_cookie("demo_user")
-        self.redirect(self.get_argument("next", "/"))
 
 
 
