@@ -4,8 +4,8 @@
 {% block content %}
     {% autoescape None %}
     <form role="form form-vertical" method="POST" action="/auth/login">
-    <div>{{ form.title.label }}: {{ form.title(class_="list-group") }}</div>
-    <div>{{ form.body.label }}: {{ form.body(class_="list-group") }}</div>
+    <div>{{ form.type.label }}: {{ form.type(class_="list-group") }}</div>
+    <div>{{ form.desc.label }}: {{ form.desc(class_="list-group") }}</div>
 </form>
 {% end %}
 </div>

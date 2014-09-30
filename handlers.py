@@ -62,7 +62,7 @@ class EditTransHandler(BaseHandler):
     def get(self, tid):
         trans = model.TipeTransaksi.get(model.TipeTransaksi.ttid == tid)
         form = TipeTransaksiForm(obj=trans)
-        self.render('newsedit.html', form=form)
+        self.render('transedit.html', form=form)
 
     def post(self, tid):
         post = model.TipeTransaksi.get(model.TipeTransaksi.ttidid == tid)
@@ -74,7 +74,7 @@ class EditTransHandler(BaseHandler):
                 return self.redirect('/news')
         else:
             form = TipeTransaksiForm(obj=post)
-        self.render('newsedit.html', form=form)
+        self.render('transsedit.html', form=form)
 
 class EditNewsHandler(BaseHandler):
     def get(self, msgid):
