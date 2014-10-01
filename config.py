@@ -1,7 +1,8 @@
 database = {
-    'driver' = 'sqlite',
-    'path' = '',
-    'host' = '',
-    'user' = '',
-    'password' = ''
-}
+    "driver" : "sqlite",
+    "path" : '',
+    "host" : '',
+    "user" : '',
+    "password" : '',
+    }
+

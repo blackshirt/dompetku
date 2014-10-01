@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+ <div class="container">
+{% block content %}
+    {% autoescape None %}
+    <form role="form form-vertical" method="POST" action="/auth/login">
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label(class_="control-label") }} {{ field(class_="form-control", rows="3") }}
+            </div>
+        {% end %}
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" data-dismiss="modal">Save</button>
+        </div>
+    </form>
+{% end %}
+</div>

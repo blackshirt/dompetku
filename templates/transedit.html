@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+ <div class="container">
+{% block content %}
+    {% autoescape None %}
+    <form role="form form-vertical" method="POST" action="/auth/login">
+    <div>{{ form.type.label }}: {{ form.type(class_="list-group") }}</div>
+    <div>{{ form.desc.label }}: {{ form.desc(class_="list-group") }}</div>
+</form>
+{% end %}
+</div>

@@ -1,19 +1,24 @@
 import datetime
-import tornado.web, tornado.escape
+import tornado.web
+import tornado.escape
 import tornado.wsgi
-#from peewee import fn
 import json
 import model
 from hashlib import sha512
 from form import MessageForm
 
+from peewee import fn
+import model
+from form import MessageForm, TipeTransaksiForm
+
+
 __all__ = ['IndexHandler', 'NewsHandler', 'EntryHandler', 'ComposeHandler', 'AuthLogoutHandler']
 
 
-
-#from http://blog.codevariety.com/2012/01/06/python-serializing-dates-datetime-datetime-into-json/
+# from http://blog.codevariety.com/2012/01/06/python-serializing-dates-datetime-datetime-into-json/
 def date_handler(obj):
-    return obj.isoformat() if hasattr(obj, 'isoformat') else json.JSONEncoder.default(obj)
+    return obj.isoformat() if hasattr(obj, 'isoformat') else obj
+
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -91,15 +96,13 @@ class AuthLogoutHandler(BaseHandler):
         self.redirect("/")
 
 
-
-
-
-#__________________________________________________________________________________________________________#_#
 class NewsHandler(BaseHandler):
+    @tornado.web.authenticated
     def get(self):
         form = MessageForm(self.request.arguments)
         self.render('create_news.html', form=form)
 
+    @tornado.web.authenticated
     def post(self):
         form = MessageForm(self.request.arguments)
         self.current_user = 1
@@ -112,6 +115,55 @@ class NewsHandler(BaseHandler):
             return self.redirect('/news')
         self.render('create_news.html', form=form)
 
+class EditTransHandler(BaseHandler):
+    def get(self, tid):
+        trans = model.TipeTransaksi.get(model.TipeTransaksi.ttid == tid)
+        form = TipeTransaksiForm(obj=trans)
+        self.render('transedit.html', form=form)
+
+    def post(self, tid):
+        post = model.TipeTransaksi.get(model.TipeTransaksi.ttidid == tid)
+        if post:
+            form = TipeTransaksiForm(self.request.arguments, obj=post)
+            if form.validate():
+                form.populate_obj(post)
+                post.save()
+                return self.redirect('/news')
+        else:
+            form = TipeTransaksiForm(obj=post)
+        self.render('transedit.html', form=form)
+
+
+class EditNewsHandler(BaseHandler):
+    def get(self, msgid):
+        post = model.Message.get(model.Message.mid == msgid)
+        form = MessageForm(obj=post)
+        self.render('newsedit.html', form=form)
+
+    def post(self, msgid):
+        post = model.Message.get(model.Message.mid == msgid)
+        if post:
+            form = MessageForm(self.request.arguments, obj=post)
+            if form.validate():
+                form.populate_obj(post)
+                post.save()
+                return self.redirect('/news')
+        else:
+            form = MessageForm(obj=post)
+        self.render('newsedit.html', form=form)
+
+
+class DeleteNewsHandler(BaseHandler):
+    @tornado.web.authenticated
+    def post(self, mid):
+        msgtodelete = self.get_argument('mid')
+        msgid = model.Message.get(model.Message.mid == int(msgtodelete))
+        if msgid:
+            try:
+                msgid.delete_instance()
+            except model.Message.DoesNotExist:
+                raise tornado.web.HTTPError(404)
+        return self.redirect('/news')
 
 class ListNewsHandler(BaseHandler):
     def get(self):
@@ -127,6 +179,7 @@ class EntryHandler(BaseHandler):
 
 class ComposeHandler(BaseHandler):
     pass
+
 
 
 

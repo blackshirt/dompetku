@@ -4,8 +4,8 @@ import datetime
 
 __all__ = ['database', 'User', 'Message', 'Category', 'Transaksi', 'TransaksiDetail']
 
-#db = '/storage/sdcard1/database/dompetku.sqlite'
-#db = r"D:\My Documents\db\dompetku.sqlite"
+# db = '/storage/sdcard1/database/dompetku.sqlite'
+# db = r"C:\Users\BKD Kab Kebumen\dompetku\data\dompetku.sqlite"
 # db = config['dbpath']
 db = '/home/blackshirt/dompetku/data/dompetku.sqlite'
 database = peewee.SqliteDatabase(db)
@@ -39,7 +39,7 @@ class Message(Base):
     title = peewee.CharField()
     body = peewee.TextField()
     author = peewee.ForeignKeyField(User, db_column='author')
-    created = peewee.DateTimeField()
+    created = peewee.DateTimeField(default=datetime.datetime.now)
 
 
 class Category(Base):
@@ -63,6 +63,9 @@ class Transaksi(Base):
     transdate = peewee.DateTimeField(default=datetime.datetime.now)
     memo = peewee.CharField()
 
+    class Meta:
+        order_by = ('-transdate',)
+
 
 class TransaksiDetail(Base):
     tdid = peewee.PrimaryKeyField()
@@ -74,16 +77,11 @@ class TransaksiDetail(Base):
     notes = peewee.CharField()
 
 
-userdata = [
+user_data = [
     {'name': 'paijo', 'password': gen_hash('paijo'), 'email': 'paijo@none'},
     {'name': 'black', 'password': gen_hash('black'), 'email': 'black@none'},
+    {'name': 'xbunox', 'password': gen_hash('xbunox'), 'email': 'xbunox@none'},
 ]
-
-
-def insert_user(database):
-    with database.transaction():
-        User.insert_many(userdata).execute()
-
 
 tipe_trans_data = [
     {'type': 'MSK', 'desc': 'Transaksi Masuk'},
@@ -92,12 +90,6 @@ tipe_trans_data = [
     {'type': 'BLN', 'desc': 'Transaksi Balance'},
     {'type': 'OTH', 'desc': 'Transaksi Lain'},
 ]
-
-
-def insert_tipe_trans(database):
-    with database.transaction():
-        TipeTransaksi.insert_many(tipe_trans_data).execute()
-
 
 category_data = [
     {'category': 'sandang', 'desc': 'kebutuhan sandang'},
@@ -112,10 +104,16 @@ category_data = [
     {'category': 'lain', 'desc': 'kebutuhan lain'},
 ]
 
-
-def insert_category_data(database):
-    with database.transaction():
+msg_data = [
+    {'title': 'Introduction to Asynchronous python server', 'body': 'Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed. By using non-blocking network I/O, Tornado can scale to tens of thousands of open connections, making it ideal for long polling, WebSockets, and other applications that require a long-lived connection to each user.', 'author':1},
+    {'title': 'wtf-peewee', 'body': 'WTForms integration for peewee, provides a bridge between peewee models and wtforms, mapping model fields to form fields', 'author':2},
+]
+def insert_data(dbase):
+    with dbase.transaction():
+        User.insert_many(user_data).execute()
+        TipeTransaksi.insert_many(tipe_trans_data).execute()
         Category.insert_many(category_data).execute()
+        Message.insert_many(msg_data).execute()
 
 
 def init():
