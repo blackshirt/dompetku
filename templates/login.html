@@ -1,3 +1,19 @@
+<<<<<<< HEAD
+{%extends "base.html" %}
+
+<div class="container">
+{% block content %}
+    {% if errormessage %}
+        {{ errormessage }}
+    {% end %}
+<form action="{{ request.path }}" method="post" class="">
+    <input name="username" type="text" >
+    <input name="password" type="password" >
+    <input type="submit" name="submit" value="Login" >
+</form>
+{% end %}
+</div>
+=======
 {% extends "base.html" %}
 
 {% block content %}
@@ -14,3 +30,4 @@
   </div>
 
 {% end %}
+>>>>>>> pythonanywhere

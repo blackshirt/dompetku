@@ -23,6 +23,7 @@ class Base(peewee.Model):
 class User(Base):
     uid = peewee.PrimaryKeyField()
     name = peewee.CharField(unique=True)
+    realname = peewee.CharField()
     password = peewee.CharField()
     email = peewee.CharField()
     currentbalance = peewee.DecimalField(default=0)

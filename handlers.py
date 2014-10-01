@@ -2,9 +2,15 @@ import datetime
 import tornado.web
 import tornado.escape
 import tornado.wsgi
+import json
+import model
+from hashlib import sha512
+from form import MessageForm
+
 from peewee import fn
 import model
 from form import MessageForm, TipeTransaksiForm
+
 
 __all__ = ['IndexHandler', 'NewsHandler', 'EntryHandler', 'ComposeHandler', 'AuthLogoutHandler']
 
@@ -12,6 +18,7 @@ __all__ = ['IndexHandler', 'NewsHandler', 'EntryHandler', 'ComposeHandler', 'Aut
 # from http://blog.codevariety.com/2012/01/06/python-serializing-dates-datetime-datetime-into-json/
 def date_handler(obj):
     return obj.isoformat() if hasattr(obj, 'isoformat') else obj
+
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -25,18 +32,68 @@ class BaseHandler(tornado.web.RequestHandler):
             return
 
     def get_current_user(self):
-        user_id = self.get_secure_cookie("demo_user")
-        if not user_id:
+        user_json = self.get_secure_cookie("user")
+        if user_json:
+            return user_json
+        else:
             return None
-        return user_id
+
+    def get_common_info(self):
+        commoninfo = {
+            'user' : self.get_current_user(),
+        }
+        return commoninfo
 
 
-class IndexHandler(BaseHandler):
+class HomeHandler(BaseHandler):
     def get(self):
-        # get random news from database
-        news = model.Message.select().order_by(fn.Random()).limit(1).get()
-        # self.set_header('Content-Type', 'application/json')
-        self.render("index.html", news=news)
+        self.render("base.html", commoninfo = self.get_common_info())
+
+
+#from: http://stackoverflow.com/questions/6514783/tornado-login-examples-tutorials
+class AuthLoginHandler(BaseHandler):
+    def get(self):
+        if self.get_current_user() == None:
+            self.render("login.html", errormessage="", commoninfo=self.get_common_info())
+        else:
+            self.redirect("/")
+
+    def post(self):
+        try:
+            uname = self.get_argument("username", "")
+            passwd = self.get_argument("password", "")
+            auth = self.authenticate(uname, passwd)
+
+            if auth:
+                self.set_current_user(uname)
+                self.redirect("/")
+            else:
+                errormessage = "wrong password or username."
+                self.render("login.html", errormessage=errormessage, commoninfo=self.get_common_info())
+        except ValueError as errreason:
+            errormessage = "Something wrong"+errreason
+            self.render("login.html", errormessage=errormessage, commoninfo=self.get_common_info())
+
+    def set_current_user(self, user):
+        if user:
+            self.set_secure_cookie("user", user)
+        else:
+            self.clear_cookie("user")
+
+    def authenticate(self, uname, passwd):
+        dbpasswd = model.User.select(passwd).where(model.User.name == uname)
+        passwdhash = sha512(passwd.encode('utf-8')).hexdigest()
+        if dbpasswd:
+            if (dbpasswd == passwdhash):
+                return True
+
+        return False
+
+
+class AuthLogoutHandler(BaseHandler):
+    def get(self):
+        self.clear_cookie("user")
+        self.redirect("/")
 
 
 class NewsHandler(BaseHandler):
@@ -108,7 +165,6 @@ class DeleteNewsHandler(BaseHandler):
                 raise tornado.web.HTTPError(404)
         return self.redirect('/news')
 
-
 class ListNewsHandler(BaseHandler):
     def get(self):
         news = model.Message.select()
@@ -124,24 +180,6 @@ class EntryHandler(BaseHandler):
 class ComposeHandler(BaseHandler):
     pass
 
-
-class AuthLoginHandler(BaseHandler):
-    def get(self):
-        try:
-            errormessage = self.get_argument("error")
-        except:
-            errormessage = ""
-        self.render("login.html", errormessage=errormessage)
-
-    def post(self):
-        self.set_secure_cookie("user", self.get_argument("name"))
-        self.redirect("/")
-
-
-class AuthLogoutHandler(BaseHandler):
-    def get(self):
-        self.clear_cookie("demo_user")
-        self.redirect(self.get_argument("next", "/"))
 
 
 
