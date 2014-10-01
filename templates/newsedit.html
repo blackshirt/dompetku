@@ -3,7 +3,7 @@
  <div class="container">
 {% block content %}
     {% autoescape None %}
-    <form role="form form-vertical" method="POST" action="/auth/login">
+    <form role="form form-vertical" method="POST" action="{{ request.uri }}">
         {% for field in form %}
             <div class="form-group">
                 {{ field.label(class_="control-label") }} {{ field(class_="form-control", rows="3") }}

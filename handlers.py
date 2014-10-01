@@ -47,14 +47,14 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class HomeHandler(BaseHandler):
     def get(self):
-        self.render("base.html", commoninfo = self.get_common_info())
+        self.render("base.html")
 
 
 #from: http://stackoverflow.com/questions/6514783/tornado-login-examples-tutorials
 class AuthLoginHandler(BaseHandler):
     def get(self):
         if self.get_current_user() == None:
-            self.render("login.html", errormessage="", commoninfo=self.get_common_info())
+            self.render("login.html", errormessage="")
         else:
             self.redirect("/")
 
@@ -69,10 +69,10 @@ class AuthLoginHandler(BaseHandler):
                 self.redirect("/")
             else:
                 errormessage = "wrong password or username."
-                self.render("login.html", errormessage=errormessage, commoninfo=self.get_common_info())
+                self.render("login.html", errormessage=errormessage)
         except ValueError as errreason:
             errormessage = "Something wrong"+errreason
-            self.render("login.html", errormessage=errormessage, commoninfo=self.get_common_info())
+            self.render("login.html", errormessage=errormessage)
 
     def set_current_user(self, user):
         if user:
@@ -105,11 +105,10 @@ class NewsHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self):
         form = MessageForm(self.request.arguments)
-        self.current_user = 1
         if form.validate():
             post = model.Message.create(title=form.data['title'],
                                         body=form.data['body'],
-                                        author=self.current_user,
+                                        author=2,
                                         created=datetime.datetime.now())
             post.save()
             return self.redirect('/news')
@@ -150,7 +149,7 @@ class EditNewsHandler(BaseHandler):
                 return self.redirect('/news')
         else:
             form = MessageForm(obj=post)
-        self.render('newsedit.html', form=form)
+        self.render('newsedit.html', form=form, obj=post)
 
 
 class DeleteNewsHandler(BaseHandler):
