@@ -1,0 +1,19 @@
+{% extends "../base.html" %}
+
+{% block title %}New transaksi : {% end %}
+
+{% block content %}
+{% autoescape None %}
+<form role="form form-vertical" action="{{ request.path }}" method="post">
+    {% for field in form %}
+        <div class="row">
+            <div class="form-group has-success">
+                {{ field.label(class_="control-label") }} {{ field(class_="form-control", rows="3") }}
+            </div>
+        </div>
+
+    {% end %}
+            <div><input type="submit" class="btn btn-primary btn-sm" value="{{ _("Insert") }}"/></div>
+    {% module xsrf_form_html() %}
+</form>
+{% end %}

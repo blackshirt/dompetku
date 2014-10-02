@@ -1,0 +1,20 @@
+{% extends "../base.html" %}
+
+{% block title %}New Message : {% end %}
+
+{% block content %}
+<form role="form form-vertical" action="{{ request.path }}" method="post">
+<div class="row">
+    <div class="form-group has-success">{{ _("Title") }}
+        <input class="form-control" placeholder="Title berita ...." type="text" name="title"/>
+    </div>
+</div>
+<div class="row">
+    <div class="form-group  has-success">{{ _("Body") }}
+        <textarea class="form-control" rows="4" name="body" placeholder="Placeholder for contents...."></textarea>
+    </div>
+</div>
+<div><input type="submit" class="btn btn-primary btn-sm" value="{{ _("Insert") }}"/></div>
+{% module xsrf_form_html() %}
+</form>
+{% end %}

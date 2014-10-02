@@ -55,9 +55,9 @@
         <ul class="nav navbar-nav navbar-right">
             <li>
             {% if not current_user %}
-                <a href="/auth/login">Login</a>
+                <a href="/auth/login">Login <b class="caret"></b></a>
             {% else %}
-                <a href="/auth/logout">{{  current_user }} Logout</a>
+                <a href="/auth/logout">{{  current_user }}<b class="caret"></b> Logout</a>
             {% end %}
             </li>
         </ul>
@@ -73,13 +73,14 @@
     <hr>
 
     <footer>
-        <p>&copy; {{ _("Dompetku") }} 2013</p>
+        <p>&copy; {{ _("Dompetku") }} 2014</p>
         <a href="/terms">Terms & Conditions</a>
     </footer>
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
+        <script src="{{ static_url("bootstrap/js/jquery-2.1.1.min.js")}}"></script>
+
         <script src="{{ static_url("bootstrap/js/bootstrap.min.js")}}"></script>
     </body>
 </html>
