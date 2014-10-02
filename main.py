@@ -14,13 +14,13 @@ class Application(tornado.wsgi.WSGIApplication):
     def __init__(self):
         handler = [
             (r"/", handlers.HomeHandler),
-            (r"/news/create", handlers.NewsHandler),
             (r"/news", handlers.ListNewsHandler),
+            (r"/news/create", handlers.NewsHandler),
             (r"/news/([0-9]*)/delete", handlers.DeleteNewsHandler),
             (r"/news/([0-9]*)/edit", handlers.EditNewsHandler),
-            (r"/trans/([0-9]*)/edit", handlers.EditTransHandler),
-            (r"/entry/([^/]+)", handlers.EntryHandler),
-            (r"/compose", handlers.ComposeHandler),
+            (r"/trans", handlers.ListTransaksiHandler),
+            (r"/trans/create", handlers.TransaksiHandler),
+            (r"/trans/([0-9]*)/edit", handlers.EditTransaksiHandler),
             (r"/auth/login", handlers.AuthLoginHandler),
             (r"/auth/logout", handlers.AuthLogoutHandler),
         ]
