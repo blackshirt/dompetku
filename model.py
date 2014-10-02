@@ -7,7 +7,7 @@ __all__ = ['database', 'User', 'Message', 'Category', 'Transaksi', 'TransaksiDet
 #db = '/storage/sdcard1/database/dompetku.sqlite'
 #db = r"D:\My Documents\db\dompetku.sqlite"
 # db = config['dbpath']
-db = '/home/blackshirt/dompetku/data/dompetku.sqlite'
+db = '/mnt/data/github/dompetku/data/dompetku.sqlite'
 database = peewee.SqliteDatabase(db)
 
 
@@ -23,7 +23,6 @@ class Base(peewee.Model):
 class User(Base):
     uid = peewee.PrimaryKeyField()
     name = peewee.CharField(unique=True)
-    realname = peewee.CharField()
     password = peewee.CharField()
     email = peewee.CharField()
     currentbalance = peewee.DecimalField(default=0)

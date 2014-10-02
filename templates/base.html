@@ -56,7 +56,7 @@
         </form>
         <ul class="nav navbar-nav navbar-right">
             <li>
-            {% if commoninfo['user'] is  None %}
+            {% if not current_user %}
                 <a href="/auth/login">Login</a>
             {% else %}
                 <a href="/auth/logout">{{  current_user }} Logout</a>
