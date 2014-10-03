@@ -5,8 +5,8 @@ import os
 
 __all__ = ['database', 'User', 'Message', 'Category', 'Transaksi', 'TransaksiDetail']
 
-data_path=os.path.join(os.path.dirname(__file__), "data")
-dbfile = "dompetku.sqlite"
+data_path=os.path.join(os.path.dirname(__file__), 'data')
+dbfile = 'dompetku.sqlite'
 db = os.path.join(data_path, dbfile)
 
 database = peewee.SqliteDatabase(db)
