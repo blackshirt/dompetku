@@ -4,8 +4,13 @@ import datetime
 
 __all__ = ['database', 'User', 'Message', 'Category', 'Transaksi', 'TransaksiDetail']
 
+<<<<<<< HEAD
 # db = '/storage/sdcard1/database/dompetku.sqlite'
 #db = r"C:\Users\BKD Kab Kebumen\dompetku\data\dompetku.sqlite"
+=======
+#db = '/storage/sdcard1/database/dompetku.sqlite'
+db = r"C:\Users\BKD Kab Kebumen\dompetku\data\dompetku.sqlite"
+>>>>>>> 91304499f5c285ad1f850838487ba6c10006aaed
 # db = config['dbpath']
 db = '/home/blackshirt/dompetku/data/dompetku.sqlite'
 database = peewee.SqliteDatabase(db)

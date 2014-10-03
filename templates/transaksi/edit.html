@@ -2,11 +2,11 @@
 
 <div class="container">
 {% block content %}
-    {% for item in trans %}
-    <form action="/trans" method="post">
+    {% autoescape None %}
+    <form action="{{ request.path }}" method="post">
     {% module xsrf_form_html() %}
     <div class="list-group">
-        {% for field in transform %}
+        {% for field in form %}
             <div class="form-group">
                 {{ field.label(class_="control-label") }} {{ field(class_="form-control", rows="3") }}
             </div>
@@ -16,7 +16,6 @@
         </p>
     </div>
     </form>
-    {% end %}
 {% end %}
 </div>
 
