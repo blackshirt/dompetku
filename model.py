@@ -1,15 +1,14 @@
 import peewee
 import hashlib
 import datetime
+import os
 
 __all__ = ['database', 'User', 'Message', 'Category', 'Transaksi', 'TransaksiDetail']
 
-# db = '/storage/sdcard1/database/dompetku.sqlite'
-#db = r"C:\Users\BKD Kab Kebumen\dompetku\data\dompetku.sqlite"
-#db = '/storage/sdcard1/database/dompetku.sqlite'
-#db = r"C:\Users\BKD Kab Kebumen\dompetku\data\dompetku.sqlite"
-# db = config['dbpath']
-db = '/home/blackshirt/dompetku/data/dompetku.sqlite'
+data_path=os.path.join(os.path.dirname(__file__), "data")
+dbfile = "dompetku.sqlite"
+db = os.path.join(data_path, dbfile)
+
 database = peewee.SqliteDatabase(db)
 
 
@@ -80,9 +79,9 @@ class TransaksiDetail(Base):
 
 
 user_data = [
-    {'name': 'paijo', 'password': gen_hash('paijo'), 'email': 'paijo@none'},
-    {'name': 'black', 'password': gen_hash('black'), 'email': 'black@none'},
-    {'name': 'xbunox', 'password': gen_hash('xbunox'), 'email': 'xbunox@none'},
+    {'name': 'paijo', 'realname':'Paijo Ganteng', 'password': gen_hash('paijo'), 'email': 'paijo@none'},
+    {'name': 'black', 'realname':'Blackshirt Ganteng', 'password': gen_hash('black'), 'email': 'black@none'},
+    {'name': 'xbunox', 'realname':'Xbunox', 'password': gen_hash('xbunox'), 'email': 'xbunox@none'},
 ]
 
 tipe_trans_data = [
@@ -110,13 +109,13 @@ msg_data = [
     {'title': 'Introduction to Asynchronous python server', 'body': 'Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed. By using non-blocking network I/O, Tornado can scale to tens of thousands of open connections, making it ideal for long polling, WebSockets, and other applications that require a long-lived connection to each user.', 'author':1},
     {'title': 'wtf-peewee', 'body': 'WTForms integration for peewee, provides a bridge between peewee models and wtforms, mapping model fields to form fields', 'author':2},
 ]
+
 def insert_data(dbase):
     with dbase.transaction():
-        User.insert_many(user_data).execute()
         TipeTransaksi.insert_many(tipe_trans_data).execute()
         Category.insert_many(category_data).execute()
         Message.insert_many(msg_data).execute()
-
+        User.insert_many(user_data).execute()
 
 def init():
     database.connect()
