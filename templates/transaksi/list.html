@@ -6,14 +6,18 @@
     <form action="/trans/{{item.tid}}/delete" method="post">
     {% module xsrf_form_html() %}
     <input type=hidden name="tid" value="{{ item.tid}}"></>
-    <div class="list-group">
-        <h3 class="list-group-item-heading">{{ item.info}}</h3>
-        <p class="list-group-item-text">{{ item.amount }}</p>
-        <p class="list-group-item-text">{{ item.transdate }}</p>
-        <p class="list-group-item-text">{{ item.memo }}</p>
-        <p class="list-group-item-text">
-           <button type=submit class="btn btn-link btn-sm"><i class="glyphicon glyphicon-trash"></i></button>
-        </p>
+    <div class="media">
+        <a href="#" class="pull-left">
+            <img src="{{ static_url("images/dollar.png")}}" class="media-object" alt="Sample Image">
+        </a>
+        <div class="media-body">
+            <h4 class="media-heading">{{ item.info}} <small><i>Record on {{item.transdate}}</i></small></h4>
+            <p>{{ item.memo }}</p>
+            <h5><p><small><i>Posted by :</i>{{ item.user.name }}</small></p></h5>
+            <p>
+                <button type=submit class="btn btn-link btn-sm"><i class="glyphicon glyphicon-trash"></i></button>
+            </p>
+        </div>
     </div>
     </form>
     {% end %}

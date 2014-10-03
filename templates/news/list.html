@@ -6,13 +6,18 @@
     <form action="/news/{{item.mid}}/delete" method="post">
     {% module xsrf_form_html() %}
     <input type=hidden name="mid" value="{{ item.mid}}"></>
-    <div class="list-group">
-        <h3 class="list-group-item-heading">{{ item.title}}</h3>
-        <p class="list-group-item-text">{{ item.body }}</p>
-        <p class="list-group-item-text">
-           <button type=submit class="btn btn-link btn-sm"><i class="glyphicon glyphicon-trash"></i></button>
-        </p>
+
+    <div class="media">
+        <a href="#" class="pull-left">
+            <img src="{{ static_url("images/dollar.png")}}" class="media-object" alt="Sample Image">
+        </a>
+        <div class="media-body">
+            <h4 class="media-heading">{{ item.title}} <small><i>Posted on January 10, 2014</i></small></h4>
+            <p>{{ item.body }}</p>
+            <h5><p><small><i>Posted by :</i>{{ item.author.name }}</small></p></h5>
+        </div>
     </div>
+
     </form>
     {% end %}
 {% end %}
