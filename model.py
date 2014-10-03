@@ -4,7 +4,7 @@ import datetime
 
 __all__ = ['database', 'User', 'Message', 'Category', 'Transaksi', 'TransaksiDetail']
 
-# db = '/storage/sdcard1/database/dompetku.sqlite'
+#db = '/storage/sdcard1/database/dompetku.sqlite'
 db = r"C:\Users\BKD Kab Kebumen\dompetku\data\dompetku.sqlite"
 # db = config['dbpath']
 #db = '/home/blackshirt/dompetku/data/dompetku.sqlite'
