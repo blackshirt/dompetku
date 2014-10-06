@@ -8,11 +8,10 @@ from hashlib import sha512
 #from form import MessageForm
 
 from peewee import fn
-import model
 from form import MessageForm, TipeTransaksiForm, TransaksiForm
 
 
-__all__ = ['IndexHandler', 'NewsHandler', 'EntryHandler', 'ComposeHandler', 'AuthLogoutHandler']
+__all__ = ['HomeHandler', 'NewsHandler', 'AuthLogoutHandler']
 
 
 # from http://blog.codevariety.com/2012/01/06/python-serializing-dates-datetime-datetime-into-json/
@@ -117,8 +116,8 @@ class NewsHandler(BaseHandler):
         if form.validate():
             post = model.Message.create(title=form.data['title'],
                                         body=form.data['body'],
-                                        author=2,
-                                        created=datetime.datetime.now())
+                                        author=4,
+                                        created=form.data['created'],)
             post.save()
             return self.redirect('/news')
         self.render('news/create.html', form=form)

@@ -9,7 +9,7 @@ __all__ = ["MessageForm", "TipeTransaksiForm", "TransaksiForm", "TransaksiDetail
 class MessageForm(Form):
     title = StringField(validators=[DataRequired()])
     body = TextAreaField(validators=[DataRequired()])
-
+    created = DateTimeField()
 
 class TipeTransaksiForm(Form):
     type = StringField(validators=[DataRequired()])

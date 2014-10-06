@@ -7,6 +7,7 @@
       <!-- Bootstrap -->
       <link href="{{static_url("bootstrap/css/bootstrap.min.css")}}" rel="stylesheet" media="screen">
       <link href="{{static_url("bootstrap/css/bootstrap-theme.min.css")}}" rel="stylesheet" type="text/css" media="screen">
+      <link href="{{static_url("bootstrap/css/bootstrap-datetimepicker.css")}}" rel="stylesheet" type="text/css" media="screen">
       <link href="{{static_url("bootstrap/css/bootstrap-datetimepicker.min.css")}}" rel="stylesheet" type="text/css" media="screen">
       <link href="{{static_url("bootstrap/css/bootstrap-table-responsive.min.css")}}" rel="stylesheet" type="text/css" media="screen">
       <link href="{{static_url("bootstrap/css/bootstrapValidator.min.css")}}" rel="stylesheet" type="text/css" media="screen">
@@ -73,20 +74,23 @@
         {% block content %}{% end %}
     </div>
 
-    <hr>
 
-    <footer>
-        <p>&copy; {{ _("Dompetku") }} 2014</p>
-        <a href="/terms">Terms & Conditions</a>
-    </footer>
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
         <script src="{{ static_url("bootstrap/js/jquery-2.1.1.min.js")}}"></script>
         <script src="{{ static_url("bootstrap/js/bootstrap.min.js")}}"></script>
         <script src="{{ static_url("bootstrap/js/bootstrapValidator.min.js")}}"></script>
-        <script src="{{ static_url("bootstrap/js/bootstrap-datetime-picker.min.js")}}"></script>
+        <script src="{{ static_url("bootstrap/js/bootstrap-datetimepicker.min.js")}}"></script>
         <script src="{{ static_url("bootstrap/js/circle-progress.js")}}"></script>
+    <!-- Include spesific js script -->
 
+    {% block script %} {% end %}
+
+    <hr>
+    <footer>
+        <p>&copy; {{ _("Dompetku") }} 2014</p>
+        <a href="/terms">Terms & Conditions</a>
+    </footer>
     </body>
 </html>
