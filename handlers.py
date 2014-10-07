@@ -180,10 +180,10 @@ class ListTransaksiHandler(BaseHandler):
         listtrans = model.Transaksi.select()
         number = listtrans.count()
         kwargs = {}
-        page_number = int(self.get_argument('page', default=1))
+        current_page= int(self.get_argument('page', default=1))
         items_per_page = int(number / 2)
-        kwargs.update(number=number, page_number=page_number, items_per_page=items_per_page)
-        query = listtrans.paginate(page_number, items_per_page)
+        query = listtrans.paginate(current_page , items_per_page)
+        kwargs.update(number=number, current_page = current_page , items_per_page=items_per_page)
         self.render("transaksi/list.html", trans=query, kwargs=kwargs)
 
 
