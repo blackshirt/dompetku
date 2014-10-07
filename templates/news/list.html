@@ -1,7 +1,6 @@
 {% extends "../base.html" %}
-
-<div class="container">
 {% block content %}
+<div class="container">
     {% for item in data %}
     <form action="/news/{{item.mid}}/delete" method="post">
     {% module xsrf_form_html() %}
@@ -20,8 +19,13 @@
         </div>
     </div>
 
+
+
     </form>
     {% end %}
-{% end %}
-</div>
 
+
+
+{% end %}
+
+</div>

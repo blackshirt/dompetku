@@ -7,8 +7,8 @@ __all__ = ["MessageForm", "TipeTransaksiForm", "TransaksiForm", "TransaksiDetail
 
 
 class MessageForm(Form):
-    title = StringField(validators=[DataRequired()])
-    body = TextAreaField(validators=[DataRequired()])
+    title = StringField("Judul", validators=[DataRequired()])
+    body = TextAreaField("Informasi", validators=[DataRequired()])
     created = DateTimeField()
 
 class TipeTransaksiForm(Form):
@@ -21,8 +21,8 @@ class TipeTransaksiForm(Form):
 
 class TransaksiForm(Form):
     info = StringField("Kegunaan", validators=[DataRequired()])
-    amount = DecimalField(validators=[DataRequired()])
-    memo = TextAreaField(validators=[DataRequired()])
+    amount = DecimalField("Jumlah", validators=[DataRequired()])
+    memo = TextAreaField("Catatan transaksi", validators=[DataRequired()])
 
     def __unicode__(self):
         return self.info

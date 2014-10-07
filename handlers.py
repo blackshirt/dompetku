@@ -175,9 +175,16 @@ class EditTransHandler(BaseHandler):
 
 
 class ListTransaksiHandler(BaseHandler):
+
     def get(self):
         listtrans = model.Transaksi.select()
-        self.render("transaksi/list.html", trans=listtrans)
+        number = listtrans.count()
+        kwargs = {}
+        page_number = int(self.get_argument('page', default=1))
+        items_per_page = int(number / 2)
+        kwargs.update(number=number, page_number=page_number, items_per_page=items_per_page)
+        query = listtrans.paginate(page_number, items_per_page)
+        self.render("transaksi/list.html", trans=query, kwargs=kwargs)
 
 
 class TransaksiHandler(BaseHandler):

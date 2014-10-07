@@ -5,7 +5,7 @@ import os
 
 __all__ = ['database', 'User', 'Message', 'Category', 'Transaksi', 'TransaksiDetail']
 
-data_path=os.path.join(os.path.dirname(__file__), 'data')
+data_path = os.path.join(os.path.dirname(__file__), 'data')
 dbfile = 'dompetku.sqlite'
 db = os.path.join(data_path, dbfile)
 
@@ -79,9 +79,9 @@ class TransaksiDetail(Base):
 
 
 user_data = [
-    {'name': 'paijo', 'realname':'Paijo Ganteng', 'password': gen_hash('paijo'), 'email': 'paijo@none'},
-    {'name': 'black', 'realname':'Blackshirt Ganteng', 'password': gen_hash('black'), 'email': 'black@none'},
-    {'name': 'xbunox', 'realname':'Xbunox', 'password': gen_hash('xbunox'), 'email': 'xbunox@none'},
+    {'name': 'paijo', 'realname': 'Paijo Ganteng', 'password': gen_hash('paijo'), 'email': 'paijo@none'},
+    {'name': 'black', 'realname': 'Blackshirt Ganteng', 'password': gen_hash('black'), 'email': 'black@none'},
+    {'name': 'xbunox', 'realname': 'Xbunox', 'password': gen_hash('xbunox'), 'email': 'xbunox@none'},
 ]
 
 tipe_trans_data = [
@@ -106,9 +106,14 @@ category_data = [
 ]
 
 msg_data = [
-    {'title': 'Introduction to Asynchronous python server', 'body': 'Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed. By using non-blocking network I/O, Tornado can scale to tens of thousands of open connections, making it ideal for long polling, WebSockets, and other applications that require a long-lived connection to each user.', 'author':1},
-    {'title': 'wtf-peewee', 'body': 'WTForms integration for peewee, provides a bridge between peewee models and wtforms, mapping model fields to form fields', 'author':2},
+    {'title': 'Introduction to Asynchronous python server',
+     'body': 'Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed. By using non-blocking network I/O, Tornado can scale to tens of thousands of open connections, making it ideal for long polling, WebSockets, and other applications that require a long-lived connection to each user.',
+     'author': 1},
+    {'title': 'wtf-peewee',
+     'body': 'WTForms integration for peewee, provides a bridge between peewee models and wtforms, mapping model fields to form fields',
+     'author': 2},
 ]
+
 
 def insert_data(dbase):
     with dbase.transaction():
@@ -116,6 +121,7 @@ def insert_data(dbase):
         Category.insert_many(category_data).execute()
         Message.insert_many(msg_data).execute()
         User.insert_many(user_data).execute()
+
 
 def init():
     database.connect()

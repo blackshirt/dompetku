@@ -21,8 +21,23 @@
         </div>
     </div>
     </div>
-    </form>
+
     {% end %}
+
+    <ul class="pagination pagination-centered">
+        {% if kwargs['page_number'] > 1 %}
+            <li class="prev"><a href="{{request.path}}?page={{ kwargs['page_number'] - 1 }}">Previous</a></li>
+        {% else %}
+            <li class="prev disabled"><a href="#">Previous</a></li>
+        {% end %}
+        {% if kwargs['number'] > kwargs['page_number'] %}
+            <li class="next"><a href="{{request.path}}?page={{ kwargs['page_number'] + 1 }}">Next,{{kwargs['number']}}, {{kwargs['page_number']}}</a></li>
+        {% else %}
+            <li class="next disabled"><a href="#">Next</a></li>
+        {% end %}
+    </ul>
+
+    </form>
 {% end %}
 </div>
 
