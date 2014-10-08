@@ -43,7 +43,7 @@ class Message(Base):
     created = peewee.DateTimeField(default=datetime.datetime.now)
 
     class Meta:
-        order_by = ('created',)
+        order_by = ('-created',)
 
 class Category(Base):
     cid = peewee.PrimaryKeyField()

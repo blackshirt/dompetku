@@ -2,9 +2,7 @@ import datetime
 import tornado.web
 import tornado.escape
 import tornado.wsgi
-# import json
 import model
-#from form import MessageForm
 
 from peewee import fn
 from form import MessageForm, TipeTransaksiForm, TransaksiForm
@@ -64,7 +62,7 @@ class AuthLoginHandler(BaseHandler):
         try:
             uname = self.get_argument("username", "")
             passwd = self.get_argument("password", "")
-            auth = self.authenticate(uname, passwd)
+            auth = self._authenticate(uname, passwd)
 
             if auth:
                 self.set_current_user(uname)
@@ -82,7 +80,7 @@ class AuthLoginHandler(BaseHandler):
         else:
             self.clear_cookie("user")
 
-    def authenticate(self, uname, passwd):
+    def _authenticate(self, uname, passwd):
         try:
             user = model.User.get(model.User.name == uname)
         except model.User.DoesNotExist:
@@ -162,12 +160,13 @@ class ListTransaksiHandler(BaseHandler):
 
     def get(self):
         listtrans = model.Transaksi.select()
-        number = listtrans.count()
+        jumlah_item = listtrans.count()
         kwargs = {}
         current_page= int(self.get_argument('page', default=1))
-        items_per_page = int(number / 2)
+        items_per_page = 10 if jumlah_item > 10 else 5
+        jumlah_halaman = jumlah_item / items_per_page
         query = listtrans.paginate(current_page , items_per_page)
-        kwargs.update(number=number, current_page = current_page , items_per_page=items_per_page)
+        kwargs.update(jumlah_halaman=jumlah_halaman, jumlah_item=jumlah_item, current_page = current_page , items_per_page=items_per_page)
         self.render("transaksi/list.html", trans=query, kwargs=kwargs)
 
 

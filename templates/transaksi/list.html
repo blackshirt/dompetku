@@ -24,18 +24,20 @@
 
     {% end %}
 
+    <div class="text-center">
     <ul class="pagination pagination-centered">
         {% if kwargs['current_page'] > 1 %}
             <li class="prev"><a href="{{request.path}}?page={{ kwargs['current_page'] - 1 }}">Prev</a></li>
         {% else %}
             <li class="prev disabled"><a href="#">Prev</a></li>
         {% end %}
-        {% if kwargs['number'] > kwargs['current_page'] %}
+        {% if kwargs['jumlah_halaman'] > kwargs['current_page'] %}
             <li class="next"><a href="{{request.path}}?page={{ kwargs['current_page'] + 1 }}">Next</a></li>
         {% else %}
             <li class="next disabled"><a href="#">Next</a></li>
         {% end %}
     </ul>
+    </div>
 
     </form>
 {% end %}
