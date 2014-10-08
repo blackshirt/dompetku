@@ -12,7 +12,7 @@
             <img src="{{ static_url("images/rupiah.png")}}" height=75 width=75 class="media-object" alt="Sample Image">
         </a>
         <div class="media-body">
-            <h4 class="media-heading">{{ item.info}} </h4>
+            <h4 class="media-heading">{{ item.info}} <small><b> (Rp. {{ item.amount }})</b></small></h4>
             <p>{{ item.memo }}</p>
             <h5><p><small><i>Posted by :</i>{{ item.user.realname }} Record on {{item.transdate}}</i></small></p></h5>
             <p>
@@ -26,9 +26,9 @@
 
     <ul class="pagination pagination-centered">
         {% if kwargs['current_page'] > 1 %}
-            <li class="prev"><a href="{{request.path}}?page={{ kwargs['current_page'] - 1 }}">Previous</a></li>
+            <li class="prev"><a href="{{request.path}}?page={{ kwargs['current_page'] - 1 }}">Prev</a></li>
         {% else %}
-            <li class="prev disabled"><a href="#">Previous</a></li>
+            <li class="prev disabled"><a href="#">Prev</a></li>
         {% end %}
         {% if kwargs['number'] > kwargs['current_page'] %}
             <li class="next"><a href="{{request.path}}?page={{ kwargs['current_page'] + 1 }}">Next</a></li>

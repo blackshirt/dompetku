@@ -116,7 +116,7 @@ class NewsHandler(BaseHandler):
         if form.validate():
             post = model.Message.create(title=form.data['title'],
                                         body=form.data['body'],
-                                        author=4,
+                                        author=1,
                                         created=form.data['created'],)
             post.save()
             return self.redirect('/news')

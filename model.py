@@ -42,6 +42,8 @@ class Message(Base):
     author = peewee.ForeignKeyField(User, db_column='author')
     created = peewee.DateTimeField(default=datetime.datetime.now)
 
+    class Meta:
+        order_by = ('created',)
 
 class Category(Base):
     cid = peewee.PrimaryKeyField()
