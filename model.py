@@ -69,6 +69,11 @@ class Transaksi(Base):
     class Meta:
         order_by = ('-transdate',)
 
+transaksi_data = [
+    {'user':1, 'type':1, 'info':'Pembelian kapal selam', 'amount':50000, 'memo':'Kapal selam nuklir bekas'},
+    {'user':2, 'type':2, 'info':'Pembelian kapal barang', 'amount':54500, 'memo':'Kapal selam barang bekas'},
+    {'user':1, 'type':3, 'info':'Pembelian pesawat tempur', 'amount':42000, 'memo':'pesawat tempur bekas'},
+]
 
 class TransaksiDetail(Base):
     tdid = peewee.PrimaryKeyField()
@@ -123,7 +128,7 @@ def insert_data(dbase):
         Category.insert_many(category_data).execute()
         Message.insert_many(msg_data).execute()
         User.insert_many(user_data).execute()
-
+        Transaksi.insert_many(transaksi_data).execute()
 
 def init():
     database.connect()
