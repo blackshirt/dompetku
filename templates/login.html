@@ -5,7 +5,7 @@
     {% if errormessage %}
         {{ errormessage }}
     {% end %}
-<form action="{{ request.path }}" method="post" class="form-signin">
+<form action="{{ request.uri }}" method="post" class="form-signin">
     <h2 class="form-signin-heading">Please sign in</h2>
         <div class="form-group has-success">
             <input name="username" type="text" placeholder="Username" required="True" autofocus="" />

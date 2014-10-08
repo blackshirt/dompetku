@@ -4,7 +4,6 @@ import tornado.escape
 import tornado.wsgi
 # import json
 import model
-from hashlib import sha512
 #from form import MessageForm
 
 from peewee import fn
@@ -55,10 +54,11 @@ class HomeHandler(BaseHandler):
 # from: http://stackoverflow.com/questions/6514783/tornado-login-examples-tutorials
 class AuthLoginHandler(BaseHandler):
     def get(self):
-        if self.get_current_user() is None:
-            self.render("login.html", errormessage="")
-        else:
-            self.redirect("/")
+        if self.get_current_user():
+            self.redirect(self.get_argument('next', '/')) # Change this line
+            return
+        errormessage = "please login"
+        self.render('login.html', errormessage=errormessage)
 
     def post(self):
         try:
@@ -68,7 +68,7 @@ class AuthLoginHandler(BaseHandler):
 
             if auth:
                 self.set_current_user(uname)
-                self.redirect("/news")
+                self.redirect(self.get_argument('next', '/'))
             else:
                 errormessage = "wrong password or username."
                 self.render("login.html", errormessage=errormessage)
@@ -83,10 +83,13 @@ class AuthLoginHandler(BaseHandler):
             self.clear_cookie("user")
 
     def authenticate(self, uname, passwd):
-        dbpasswd = model.User.select(passwd).where(model.User.name == uname)
-        passwdhash = sha512(passwd.encode('utf-8')).hexdigest()
-        if dbpasswd:
-            if dbpasswd == passwdhash:
+        try:
+            user = model.User.get(model.User.name == uname)
+        except model.User.DoesNotExist:
+            raise tornado.web.HTTPError(500)
+
+        if user:
+            if user.password == model.gen_hash(passwd):
                 return True
 
         return False
@@ -95,7 +98,7 @@ class AuthLoginHandler(BaseHandler):
 class AuthLogoutHandler(BaseHandler):
     def get(self):
         self.clear_cookie("user")
-        self.redirect("/news")
+        self.redirect(self.get_argument('next', '/'))
 
 
 class ListNewsHandler(BaseHandler):
@@ -155,25 +158,6 @@ class DeleteNewsHandler(BaseHandler):
         return self.redirect('/news')
 
 
-class EditTransHandler(BaseHandler):
-    def get(self, tid):
-        trans = model.TipeTransaksi.get(model.TipeTransaksi.ttid == tid)
-        form = TipeTransaksiForm(obj=trans)
-        self.render('transedit.html', form=form)
-
-    def post(self, tid):
-        post = model.TipeTransaksi.get(model.TipeTransaksi.ttidid == tid)
-        if post:
-            form = TipeTransaksiForm(self.request.arguments, obj=post)
-            if form.validate():
-                form.populate_obj(post)
-                post.save()
-                return self.redirect('/news')
-        else:
-            form = TipeTransaksiForm(obj=post)
-        self.render('transedit.html', form=form)
-
-
 class ListTransaksiHandler(BaseHandler):
 
     def get(self):
@@ -224,4 +208,23 @@ class EditTransaksiHandler(BaseHandler):
         else:
             form = TransaksiForm(obj=post)
         self.render('transaksi/edit.html', form=form, obj=post)
+
+
+class EditTipeTransaksiHandler(BaseHandler):
+    def get(self, tid):
+        trans = model.TipeTransaksi.get(model.TipeTransaksi.ttid == tid)
+        form = TipeTransaksiForm(obj=trans)
+        self.render('transedit.html', form=form)
+
+    def post(self, tid):
+        post = model.TipeTransaksi.get(model.TipeTransaksi.ttidid == tid)
+        if post:
+            form = TipeTransaksiForm(self.request.arguments, obj=post)
+            if form.validate():
+                form.populate_obj(post)
+                post.save()
+                return self.redirect('/news')
+        else:
+            form = TipeTransaksiForm(obj=post)
+        self.render('transedit.html', form=form)
 
