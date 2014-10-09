@@ -1,7 +1,8 @@
 {%extends "base.html" %}
 
-<div class="container">
+
 {% block content %}
+<div class="container">
     <div class="list-group">
         <a href="#" class="list-group-item"><span class="glyphicon glyphicon-file"></span>
             <p class="list-group-item-heading">{{ escape(news.title)}} </p>
@@ -10,5 +11,46 @@
             <p class="list-group-item-text">{{ news.created }}</p>
         </a>
     </div>
-{% end %}
 </div>
+
+
+
+<div class="container">
+    <div id="myCarousel" data-interval="1500" class="carousel slide">
+        <!-- Carousel indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+        <!-- Carousel items -->
+        <div class="carousel-inner">
+            <div class="item active">
+                <img src="{{static_url("images/logo-3.png")}}" alt="First slide">
+                <div class="carousel-caption">This Caption 1</div>
+            </div>
+            <div class="item">
+                <img src="{{static_url("images/logo-2.png")}}" alt="Second slide">
+                <div class="carousel-caption">This Caption 2</div>
+            </div>
+            <div class="item">
+                <img src="{{static_url("images/logo-4.png")}}" alt="Third slide">
+                <div class="carousel-caption">This Caption 3</div>
+            </div>
+        </div>
+        <!-- Carousel nav -->
+        <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+        <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+    </div>
+</div>
+
+{% end %}
+
+
+{% block script %}
+   <script>
+    $('#myCarousel').carousel('cycle',{
+        interval: 1500
+    })
+</script>
+{% end %}

@@ -34,6 +34,46 @@ class User(Base):
     class Meta:
         order_by = ('name',)
 
+class Account(Base):
+    acid = peewee.PrimaryKeyField()
+    name = peewee.CharField()
+    info = peewee.TextField()
+
+class Hutang(Base):
+    hid = peewee.PrimaryKeyField()
+    tanggal = peewee.DateTimeField()
+    tempo = peewee.DateTimeField()
+    amount = peewee.DecimalField()
+    sisa = peewee.DecimalField(default=0)
+    hutanger = peewee.CharField()
+    deskripsi = peewee.TextField()
+
+    class Meta:
+        order_by = ('-amount', 'tempo')
+
+class Piutang(Base):
+    pid = peewee.PrimaryKeyField()
+    tanggal = peewee.DateTimeField()
+    tempo = peewee.DateTimeField()
+    amount = peewee.DecimalField()
+    sisa = peewee.DecimalField(default=0)
+    piutanger = peewee.CharField()
+    deskripsi = peewee.TextField()
+
+    class Meta:
+        order_by = ('-amount', 'tempo')
+
+class Investasi(Base):
+    invid = peewee.PrimaryKeyField()
+    jenis = peewee.CharField()
+    amount = peewee.DecimalField()
+    tanggal = peewee.DateField()
+
+class Aset(Base):
+    asid = peewee.PrimaryKeyField()
+    name = peewee.CharField()
+    jenis = peewee.CharField()
+    harga_sekarang = peewee.CharField()
 
 class Message(Base):
     mid = peewee.PrimaryKeyField()
@@ -130,6 +170,8 @@ def insert_data(dbase):
         User.insert_many(user_data).execute()
         Transaksi.insert_many(transaksi_data).execute()
 
+all_model = [User, Message, Category, TipeTransaksi, Transaksi, TransaksiDetail, Hutang, Piutang, Investasi, Account, Aset]
+
 def init():
     database.connect()
-    peewee.create_model_tables([User, Message, Category, TipeTransaksi, Transaksi, TransaksiDetail], fail_silently=True)
+    peewee.create_model_tables(all_model, fail_silently=True)
