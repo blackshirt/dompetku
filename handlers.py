@@ -53,7 +53,7 @@ class HomeHandler(BaseHandler):
 class AuthLoginHandler(BaseHandler):
     def get(self):
         if self.get_current_user():
-            self.redirect(self.get_argument('next', '/')) # Change this line
+            self.redirect(self.get_argument('next', '/'))  # Change this line
             return
         errormessage = "please login"
         self.render('login.html', errormessage=errormessage)
@@ -105,6 +105,7 @@ class ListNewsHandler(BaseHandler):
         judul = "Informasi Terbaru"
         self.render("news/list.html", judul=judul, data=news)
 
+
 class NewsHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
@@ -118,7 +119,7 @@ class NewsHandler(BaseHandler):
             post = model.Message.create(title=form.data['title'],
                                         body=form.data['body'],
                                         author=1,
-                                        created=form.data['created'],)
+                                        created=form.data['created'], )
             post.save()
             return self.redirect('/news')
         self.render('news/create.html', form=form)
@@ -157,16 +158,16 @@ class DeleteNewsHandler(BaseHandler):
 
 
 class ListTransaksiHandler(BaseHandler):
-
     def get(self):
         listtrans = model.Transaksi.select()
         jumlah_item = listtrans.count()
         kwargs = {}
-        current_page= int(self.get_argument('page', default=1))
+        current_page = int(self.get_argument('page', default=1))
         items_per_page = 10 if jumlah_item > 10 else 5
         jumlah_halaman = jumlah_item / items_per_page
-        query = listtrans.paginate(current_page , items_per_page)
-        kwargs.update(jumlah_halaman=jumlah_halaman, jumlah_item=jumlah_item, current_page = current_page , items_per_page=items_per_page)
+        query = listtrans.paginate(current_page, items_per_page)
+        kwargs.update(jumlah_halaman=jumlah_halaman, jumlah_item=jumlah_item, current_page=current_page,
+                      items_per_page=items_per_page)
         self.render("transaksi/list.html", trans=query, kwargs=kwargs)
 
 
@@ -181,7 +182,7 @@ class TransaksiHandler(BaseHandler):
         form = TransaksiForm(self.request.arguments)
         if form.validate():
             post = model.Transaksi.create(info=form.data['info'],
-                                          user = 1,
+                                          user=1,
                                           type=2,
                                           amount=form.data['amount'],
                                           transdate=datetime.datetime.now(),
@@ -189,6 +190,7 @@ class TransaksiHandler(BaseHandler):
             post.save()
             return self.redirect('/trans')
         self.render('transaksi/create.html', form=form)
+
 
 class EditTransaksiHandler(BaseHandler):
     def get(self, transid):

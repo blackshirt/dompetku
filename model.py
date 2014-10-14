@@ -27,17 +27,19 @@ class User(Base):
     realname = peewee.CharField(default='guest')
     password = peewee.CharField()
     email = peewee.CharField()
-    currentbalance = peewee.DecimalField(default=0)
     created = peewee.DateTimeField(default=datetime.datetime.now)
     lastactive = peewee.DateTimeField(default=datetime.datetime.now)
 
     class Meta:
         order_by = ('name',)
 
+
 class Account(Base):
     acid = peewee.PrimaryKeyField()
     name = peewee.CharField()
+    amount = peewee.DecimalField()
     info = peewee.TextField()
+
 
 class Hutang(Base):
     hid = peewee.PrimaryKeyField()
@@ -51,6 +53,7 @@ class Hutang(Base):
     class Meta:
         order_by = ('-amount', 'tempo')
 
+
 class Piutang(Base):
     pid = peewee.PrimaryKeyField()
     tanggal = peewee.DateTimeField()
@@ -63,17 +66,20 @@ class Piutang(Base):
     class Meta:
         order_by = ('-amount', 'tempo')
 
+
 class Investasi(Base):
     invid = peewee.PrimaryKeyField()
     jenis = peewee.CharField()
     amount = peewee.DecimalField()
     tanggal = peewee.DateField()
 
+
 class Aset(Base):
     asid = peewee.PrimaryKeyField()
     name = peewee.CharField()
     jenis = peewee.CharField()
-    harga_sekarang = peewee.CharField()
+    harga_sekarang = peewee.DecimalField()
+
 
 class Message(Base):
     mid = peewee.PrimaryKeyField()
@@ -84,6 +90,7 @@ class Message(Base):
 
     class Meta:
         order_by = ('-created',)
+
 
 class Category(Base):
     cid = peewee.PrimaryKeyField()
@@ -109,11 +116,13 @@ class Transaksi(Base):
     class Meta:
         order_by = ('-transdate',)
 
+
 transaksi_data = [
-    {'user':1, 'type':1, 'info':'Pembelian kapal selam', 'amount':50000, 'memo':'Kapal selam nuklir bekas'},
-    {'user':2, 'type':2, 'info':'Pembelian kapal barang', 'amount':54500, 'memo':'Kapal selam barang bekas'},
-    {'user':1, 'type':3, 'info':'Pembelian pesawat tempur', 'amount':42000, 'memo':'pesawat tempur bekas'},
+    {'user': 1, 'type': 1, 'info': 'Pembelian kapal selam', 'amount': 50000, 'memo': 'Kapal selam nuklir bekas'},
+    {'user': 2, 'type': 2, 'info': 'Pembelian kapal barang', 'amount': 54500, 'memo': 'Kapal selam barang bekas'},
+    {'user': 1, 'type': 3, 'info': 'Pembelian pesawat tempur', 'amount': 42000, 'memo': 'pesawat tempur bekas'},
 ]
+
 
 class TransaksiDetail(Base):
     tdid = peewee.PrimaryKeyField()
@@ -170,7 +179,10 @@ def insert_data(dbase):
         User.insert_many(user_data).execute()
         Transaksi.insert_many(transaksi_data).execute()
 
-all_model = [User, Message, Category, TipeTransaksi, Transaksi, TransaksiDetail, Hutang, Piutang, Investasi, Account, Aset]
+
+all_model = [User, Message, Category, TipeTransaksi, Transaksi, TransaksiDetail, Hutang, Piutang, Investasi, Account,
+             Aset]
+
 
 def init():
     database.connect()

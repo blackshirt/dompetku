@@ -12,7 +12,7 @@
             <img src="{{ static_url("images/rupiah.png")}}" height=75 width=75 class="media-object" alt="Sample Image">
         </a>
         <div class="media-body">
-            <h4 class="media-heading">{{ item.info}} <small><b> (Rp. {{ item.amount }})</b></small></h4>
+            <h4 class="media-heading">{{ item.info}} <b> (Rp. <span class="number">{{ item.amount }}</span> )</b></h4>
             <p>{{ item.memo }}</p>
             <h5><p><small><i>Posted by :</i>{{ item.user.realname }} Record on {{item.transdate}}</i></small></p></h5>
             <p>
@@ -41,5 +41,14 @@
 
     </form>
 {% end %}
+
 </div>
+
+{% block script %}
+<script type="text/javascript">
+    $(function () {
+        $('span.number').number(true,2,',','.');
+        });
+</script>
+{% end %}
 
