@@ -1,0 +1,49 @@
+{% extends "../base.html" %}
+
+{% block title %}New transaksi : {% end %}
+
+{% block content %}
+{% autoescape None %}
+<form role="form form-vertical" action="{{ request.path }}" method="post">
+    {% for field in form %}
+        <div class="row">
+            <div class="form-group has-success">
+                {{ field.label(class_="control-label") }}
+                {% if field.name == 'amount' %}
+                    {{field(id="amount", class_="form-control number")}}
+                {% else %}
+                    {{ field(class_="form-control", rows="3") }}
+                {% end %}
+            </div>
+        </div>
+
+    {% end %}
+            <div><input type="submit" id="submit" class="btn btn-primary btn-sm" value="{{ _("Insert") }}" /></div>
+    {% module xsrf_form_html() %}
+</form>
+{% end %}
+
+{% block script %}
+<script type="text/javascript">
+    $(function () {
+        $('input.number').autoNumeric();
+        });
+
+$('form').submit(function(){
+    var form = $(this);
+    $('input').each(function(i){
+        var self = $(this);
+        try{
+            var v = self.autoNumeric('get');
+            self.autoNumeric('destroy');
+            self.val(v);
+        }catch(err){
+            console.log("Not an autonumeric field: " + self.attr("name"));
+        }
+    });
+    return true;
+});
+
+</script>
+{% end %}
+

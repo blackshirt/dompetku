@@ -1,0 +1,39 @@
+{% extends "../base.html" %}
+
+ <div class="container">
+{% block content %}
+    {% autoescape None %}
+    <form role="form form-vertical" method="POST" action="{{ request.uri }}">
+        <div class="well">
+                {{ form.title.label(class_="control-label") }} {{ form.title(class_="form-control") }}
+        </div>
+
+        <div class="well">
+                {{ form.body.label(class_="control-label") }} {{ form.body(class_="form-control", rows="3") }}
+        </div>
+
+        <div class="well">
+            {{ form.created.label(class_="control-label") }} {{ form.created(**{'class_':"input-appends date", 'type':"text", 'data-date-format':"yyyy-mm-dd hh:mm:ss", 'id':"datetimepicker"}) }}
+            <span class="add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" data-dismiss="modal">Save</button>
+        </div>
+    </form>
+
+
+
+</div>
+
+{% block script %}
+<script type="text/javascript">
+  $(function() {
+    $('#datetimepicker').datetimepicker({
+      language: 'en'
+    });
+  });
+</script>
+{% end %}
+
+{% end %}s

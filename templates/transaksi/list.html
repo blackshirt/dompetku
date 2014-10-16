@@ -1,0 +1,54 @@
+{% extends "../base.html" %}
+
+<div class="container">
+{% block content %}
+    {% for item in trans %}
+    <form action="/trans/{{item.tid}}/delete" method="post">
+    {% module xsrf_form_html() %}
+    <input type=hidden name="tid" value="{{ item.tid}}"></>
+    <div class="list-group">
+    <div class="media">
+        <a href="#" class="pull-left">
+            <img src="{{ static_url("images/rupiah.png")}}" height=75 width=75 class="media-object" alt="Sample Image">
+        </a>
+        <div class="media-body">
+            <h4 class="media-heading">{{ item.info}} <b> (Rp. <span class="number">{{ item.amount }}</span> )</b></h4>
+            <p>{{ item.memo }}</p>
+            <h5><p><small><i>Posted by :</i>{{ item.user.realname }} Record on {{item.transdate}}</i></small></p></h5>
+            <p>
+                <button type=submit class="btn btn-link btn-sm"><i class="glyphicon glyphicon-trash"></i></button>
+            </p>
+        </div>
+    </div>
+    </div>
+
+    {% end %}
+
+    <div class="text-center">
+    <ul class="pagination pagination-centered">
+        {% if kwargs['current_page'] > 1 %}
+            <li class="prev"><a href="{{request.path}}?page={{ kwargs['current_page'] - 1 }}">Prev</a></li>
+        {% else %}
+            <li class="prev disabled"><a href="#">Prev</a></li>
+        {% end %}
+        {% if kwargs['jumlah_halaman'] > kwargs['current_page'] %}
+            <li class="next"><a href="{{request.path}}?page={{ kwargs['current_page'] + 1 }}">Next</a></li>
+        {% else %}
+            <li class="next disabled"><a href="#">Next</a></li>
+        {% end %}
+    </ul>
+    </div>
+
+    </form>
+{% end %}
+
+</div>
+
+{% block script %}
+<script type="text/javascript">
+    $(function () {
+        $('span.number').number(true,2,',','.');
+        });
+</script>
+{% end %}
+

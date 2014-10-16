@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+      <title>{% block title %}{% end %}</title>
+      <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+      <link rel="icon" href="/favicon.ico" type="image/x-icon">
+      <!-- Bootstrap -->
+      <link href="{{static_url("bootstrap/css/bootstrap.min.css")}}" rel="stylesheet" media="screen">
+      <link href="{{static_url("bootstrap/css/bootstrap-theme.min.css")}}" rel="stylesheet" type="text/css" media="screen">
+      <link href="{{static_url("bootstrap/css/bootstrap-datetimepicker.css")}}" rel="stylesheet" type="text/css" media="screen">
+      <link href="{{static_url("bootstrap/css/bootstrap-datetimepicker.min.css")}}" rel="stylesheet" type="text/css" media="screen">
+      <link href="{{static_url("bootstrap/css/bootstrap-table-responsive.min.css")}}" rel="stylesheet" type="text/css" media="screen">
+      <link href="{{static_url("bootstrap/css/bootstrapValidator.min.css")}}" rel="stylesheet" type="text/css" media="screen">
+      <link href="{{static_url("bootstrap/css/logo-nav.css")}}" rel="stylesheet" type="text/css" media="screen">
+      <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+      <!--[if lt IE 9]>
+          <script src="../../assets/js/html5shiv.js"></script>
+          <script src="../../assets/js/respond.min.js"></script>
+      <![endif]-->
+    </head>
+    <body>
+
+    <!-- Main navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#"><img src="{{ static_url("images/logo-4.png")}}"  height="50" width="95" text=LOGO" alt=""></a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/">Home</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Messages <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- form search -->
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Link</a></li>
+        <li>{% if not current_user %}
+                <a href="/auth/login">Login <b class="caret"></b></a>
+            {% else %}
+                <a href="/auth/logout">{{  current_user }}<b class="caret"></b> Logout</a>
+            {% end %}
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div>
+</nav>
+
+    <div class="container">
+        {% block content %}{% end %}
+    </div>
+
+
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
+        <script src="{{ static_url("bootstrap/js/jquery-2.1.1.min.js")}}"></script>
+        <script src="{{ static_url("bootstrap/js/bootstrap.min.js")}}"></script>
+        <script src="{{ static_url("bootstrap/js/bootstrapValidator.min.js")}}"></script>
+        <script src="{{ static_url("bootstrap/js/bootstrap-datetimepicker.min.js")}}"></script>
+        <script src="{{ static_url("bootstrap/js/circle-progress.js")}}"></script>
+        <script src="{{ static_url("bootstrap/js/jquery.number.js")}}"></script>
+        <script src="{{ static_url("bootstrap/js/autoNumeric.js")}}"></script>
+
+    <!-- Include spesific js script -->
+
+    {% block script %} {% end %}
+
+    <hr>
+    <footer>
+        <p>&copy; {{ _("Dompetku") }} 2014</p>
+        <a href="/terms">Terms & Conditions</a>
+    </footer>
+    </body>
+</html>
+

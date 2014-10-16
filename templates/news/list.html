@@ -1,0 +1,31 @@
+{% extends "../base.html" %}
+{% block content %}
+<div class="container">
+    {% for item in data %}
+    <form action="/news/{{item.mid}}/delete" method="post">
+    {% module xsrf_form_html() %}
+    <input type=hidden name="mid" value="{{ item.mid}}"></>
+
+    <div class="list-group">
+        <div class="media">
+            <a href="#" class="pull-left">
+                <img src="{{ static_url("images/news.png")}}" class="media-object img-circle img-responsive" alt="Sample Image">
+            </a>
+            <div class="media-body">
+                <h4 class="media-heading">{{ item.title}}</h4>
+                <p>{{ item.body }}</p>
+                <h5><p><small><i>Posted by :</i> {{ item.author.name }} on {{item.created }} </small></p></h5>
+            </div>
+        </div>
+    </div>
+
+
+
+    </form>
+    {% end %}
+
+
+
+{% end %}
+
+</div>

@@ -1,0 +1,40 @@
+{% extends "../base.html" %}
+
+{% block title %}New Message : {% end %}
+
+<div class="container">
+{% block content %}
+
+<form role="form form-vertical" action="{{ request.path }}" method="post">
+<div class="row">
+    <div class="form-group has-success">{{ _("Title") }}
+        <input class="form-control" placeholder="Title berita ...." type="text" name="title"/>
+    </div>
+</div>
+<div class="row">
+    <div class="form-group  has-success">{{ _("Body") }}
+        <textarea class="form-control" rows="4" name="body" placeholder="Placeholder for contents...."></textarea>
+    </div>
+</div>
+
+<div class="row">
+    <div class="form-group  has-success">{{ _("Created") }}
+        <input name="created" class="input-appends date" data-date-format="yyyy-mm-dd hh:mm:ss" id="datetimepicker" />
+        <span class="add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+    </div>
+</div>
+
+
+<div><input type="submit" class="btn btn-primary btn-sm" value="{{ _("Insert") }}"/></div>
+{% module xsrf_form_html() %}
+</form>
+{% end %}
+</div>
+
+{% block script %}
+ <script type="text/javascript">
+    $(function () {
+        $('#datetimepicker').datetimepicker();
+        });
+</script>
+{% end %}
