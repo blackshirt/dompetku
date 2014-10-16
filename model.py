@@ -183,7 +183,6 @@ def insert_data(dbase):
 all_model = [User, Message, Category, TipeTransaksi, Transaksi, TransaksiDetail, Hutang, Piutang, Investasi, Account,
              Aset]
 
-
 def init():
     database.connect()
     peewee.create_model_tables(all_model, fail_silently=True)
