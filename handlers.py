@@ -106,6 +106,17 @@ class ListNewsHandler(BaseHandler):
         judul = "Informasi Terbaru"
         self.render("news/list.html", judul=judul, data=news)
 
+    @tornado.web.authenticated
+    def post(self):
+        form = MessageForm(self.request.arguments)
+        if form.validate():
+            post = model.Message.create(title=form.data['title'],
+                                        body=form.data['body'],
+                                        author=1,
+                                        created=form.data['created'], )
+            post.save()
+            return self.redirect('/news')
+        self.render('news/create.html', form=form)
 
 class NewsHandler(BaseHandler):
     @tornado.web.authenticated
