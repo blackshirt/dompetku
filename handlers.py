@@ -116,13 +116,12 @@ class ListNewsHandler(BaseHandler):
                                         created=form.data['created'], )
             post.save()
             return self.redirect('/news')
-        self.render('news/create.html', form=form)
 
 class NewsHandler(BaseHandler):
-    @tornado.web.authenticated
     def get(self):
+        judul = "Informasi Terbaru"
         form = MessageForm(self.request.arguments)
-        self.render('news/create.html', form=form)
+        self.render('news/create.html', judul=judul, form=form)
 
     @tornado.web.authenticated
     def post(self):
@@ -134,7 +133,7 @@ class NewsHandler(BaseHandler):
                                         created=form.data['created'], )
             post.save()
             return self.redirect('/news')
-        self.render('news/create.html', form=form)
+
 
 
 class EditNewsHandler(BaseHandler):

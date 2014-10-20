@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#rating-modal"> Create</button>
+        <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#news-modal"> Create</button>
     </div>
 </div>
 
@@ -35,35 +35,50 @@
 
 </div>
 
-<div class="modal fade" id="rating-modal" tabindex="-1" role="dialog" aria-labelledby="rating-modal-label" aria-hidden="true">
+
+
+<div class="modal fade" id="news-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">× </button>
-                <h4 class="modal-title" id="ratingmodallabel"> <b>Input new message info </b> </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Create new info</h4>
             </div>
+
             <div class="modal-body">
-                <form id="news-form" class="form-horizontal well" data-async data-target="#rating-modal" action="{{request.path}}" method="post">
-                    <div class="form-group has-success">{{ _("Title") }}
-                        <input class="form-control" placeholder="Title berita ...." type="text" name="title"/>
+                <!-- The form is placed inside the body of modal -->
+                <form id="news-form" method="post" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Title</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" name="title" />
+                        </div>
                     </div>
 
-                    <div class="form-group has-success">{{ _("Body") }}
-                        <textarea class="form-control" rows="4" name="body" placeholder="Placeholder for contents...."></textarea>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Body</label>
+                        <div class="col-sm-5">
+                            <textarea class="form-control" name="body"></textarea>
+                        </div>
                     </div>
 
-                    <div class="form-group has-success">{{ _("Created") }}
-                        <input name="created" class="input-appends date" data-date-format="yyyy-mm-dd hh:mm:ss" id="datetimepicker" />
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Created at</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control input-group date" id="datetimepicker" name="created" data-date-format="yyyy-mm-dd hh:mm:ss" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-5 col-sm-offset-3">
+                            <button type="submit" class="btn btn-default">Insert</button>
+                        </div>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                <button form="news-form" class="btn btn-default btn-sm" type="submit">Submit</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+        </div>
+    </div>
+</div>
 
 
 
@@ -71,32 +86,57 @@
 
 {% block script %}
 <script type="text/javascript">
-jQuery(function($) {
-    $('form[data-async]').on('submit', function(event) {
-        var $form = $(this);
-        var $target = $($form.attr('data-target'));
 
-        $.ajax({
-            type: $form.attr('method'),
-            url: $form.attr('action'),
-            data: $form.serialize(),
 
-            success: function(data, status) {
-                $target.modal('hide');
-            }
-        });
-
-        event.preventDefault();
-    });
-});
- </script>
-
-<script type="text/javascript">
-$(function () {
+$(document).ready(function() {
     $('#datetimepicker').datetimepicker({
-        pickTime : false,
+        pickTime: false
         });
+    $('#news-form').bootstrapValidator({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            title: {
+                validators: {
+                    notEmpty: {
+                        message: 'The title is required'
+                    }
+                }
+            },
+            body: {
+                validators: {
+                    notEmpty: {
+                        message: 'The body is required'
+                    }
+                }
+            },
+            created: {
+                validators: {
+                    notEmpty: {
+                        message: 'Created is required'
+                    },
+                    date: {
+                        format: 'YYYY-MM-DD h:m:s',
+                        message: 'The value is not a valid date'
+                    }
+                }
+            }
+        }
+    });
+    $('#datetimepicker').on('dp.change dp.show', function(e) {
+        $('#news-form').bootstrapValidator('revalidateField', 'meeting');
+    });
+
 });
+
+
+$('#news-modal').on('shown.bs.modal', function() {
+    $('#news-form').bootstrapValidator('resetForm', true);
+});
+
 </script>
 
 {% end %}
