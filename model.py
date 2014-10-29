@@ -9,7 +9,7 @@ data_path = os.path.join(os.path.dirname(__file__), 'data')
 dbfile = 'dompetku.sqlite'
 db = os.path.join(data_path, dbfile)
 
-database = peewee.SqliteDatabase(db)
+database = peewee.SqliteDatabase(db, threadlocals=True)
 
 
 def gen_hash(password):

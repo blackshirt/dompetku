@@ -1,6 +1,6 @@
 import tornado.web
 import tornado.wsgi
-import handlers
+import newhandlers as handlers
 import os
 import model
 import tornado.options
@@ -17,11 +17,13 @@ class Application(tornado.wsgi.WSGIApplication):
             (r"/news/create", handlers.NewsHandler),
             (r"/news/([0-9]*)/delete", handlers.DeleteNewsHandler),
             (r"/news/([0-9]*)/edit", handlers.EditNewsHandler),
-            (r"/trans", handlers.ListTransaksiHandler),
+            (r"/trans", handlers.TransaksiHandler),
+            (r"/trans/([0-9]*)", handlers.TransaksiByIdHandler),
             (r"/trans/create", handlers.TransaksiHandler),
             (r"/trans/([0-9]*)/edit", handlers.EditTransaksiHandler),
             (r"/auth/login", handlers.AuthLoginHandler),
             (r"/auth/logout", handlers.AuthLogoutHandler),
+            (r"/home", handlers.HomeHandler),
         ]
 
         settings = dict(

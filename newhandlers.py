@@ -3,21 +3,36 @@ import tornado.web
 import tornado.escape
 import tornado.wsgi
 import model
+import json
 
 from peewee import fn
 from form import MessageForm, TipeTransaksiForm, TransaksiForm
+from concurrent.futures import ThreadPoolExecutor
+from tornado import concurrent, ioloop
+from tornado import gen
+from utils import jsonify
 
 __all__ = ['HomeHandler', 'NewsHandler', 'AuthLogoutHandler']
 
+class DBContainer(object):
+    def __init__(self, model):
+        self.executor = ThreadPoolExecutor(max_workers=4)
+        self.io_loop = ioloop.IOLoop.current()
+        self.model = model
 
-# from http://blog.codevariety.com/2012/01/06/python-serializing-dates-datetime-datetime-into-json/
-def date_handler(obj):
-    return obj.isoformat() if hasattr(obj, 'isoformat') else obj
+    @concurrent.run_on_executor
+    def get(self, *args, **kwargs):
+        return self.model.get(*args, **kwargs)
 
+    @concurrent.run_on_executor
+    def select(self, *args, **kwargs):
+        return self.model.select(*args, **kwargs).dicts()
+
+    @concurrent.run_on_executor
+    def insert(self, **kwargs):
+        return self.model.insert(**kwargs).execute()
 
 class BaseHandler(tornado.web.RequestHandler):
-    def initialize(self, edit=False):
-        self.edit = edit
 
     def get(self):
         if not self.current_user:
@@ -40,7 +55,6 @@ class BaseHandler(tornado.web.RequestHandler):
             'user': self.get_current_user(),
         }
         return commoninfo
-
 
 class HomeHandler(BaseHandler):
     def get(self):
@@ -92,12 +106,10 @@ class AuthLoginHandler(BaseHandler):
 
         return False
 
-
 class AuthLogoutHandler(BaseHandler):
     def get(self):
         self.clear_cookie("user")
         self.redirect(self.get_argument('next', '/'))
-
 
 class ListNewsHandler(BaseHandler):
     def get(self):
@@ -133,8 +145,6 @@ class NewsHandler(BaseHandler):
             post.save()
             return self.redirect('/news')
 
-
-
 class EditNewsHandler(BaseHandler):
     def get(self, msgid):
         post = model.Message.get(model.Message.mid == msgid)
@@ -153,7 +163,6 @@ class EditNewsHandler(BaseHandler):
             form = MessageForm(obj=post)
         self.render('news/edit.html', form=form, obj=post)
 
-
 class DeleteNewsHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self, mid):
@@ -166,29 +175,53 @@ class DeleteNewsHandler(BaseHandler):
                 raise tornado.web.HTTPError(404)
         return self.redirect('/news')
 
-
 class ListTransaksiHandler(BaseHandler):
     def get(self):
-        listtrans = model.Transaksi.select()
-        jumlah_item = listtrans.count()
-        kwargs = {}
-        current_page = int(self.get_argument('page', default=1))
-        items_per_page = 10 if jumlah_item > 10 else 5
-        jumlah_halaman = jumlah_item / items_per_page
-        query = listtrans.paginate(current_page, items_per_page)
-        kwargs.update(jumlah_halaman=jumlah_halaman, jumlah_item=jumlah_item, current_page=current_page,
-                      items_per_page=items_per_page)
-        self.render("transaksi/list.html", trans=query, kwargs=kwargs)
+        pass
 
 
-class TransaksiHandler(BaseHandler):
-    @tornado.web.authenticated
+class TransaksiBaseHandler(BaseHandler):
+    def initialize(self, dbcontainer=None):
+        if not dbcontainer:
+            self.dbcontainer = DBContainer(model.Transaksi)
+        else:
+            self.dbcontainer = dbcontainer
+
+
+class TransaksiByIdHandler(TransaksiBaseHandler):
+
+    @gen.coroutine
+    def get(self, tid):
+        transid = self.dbcontainer.model.tid
+        data = yield self.dbcontainer.get(transid==int(tid))
+        results = data._data
+        self.set_header('Content-Type', 'application/json')
+        self.write(jsonify(results))
+
+class TransaksiHandler(TransaksiBaseHandler):
+
+    @gen.coroutine
     def get(self):
-        form = TransaksiForm(self.request.arguments)
-        self.render('transaksi/create.html', form=form)
+        data_list = []
+        all_item = yield self.dbcontainer.select()
+        for item in all_item:
+            data_list.append(item)
+        self.set_header('Content-Type', 'application/json')
+        self.write(jsonify(data_list))
 
-    @tornado.web.authenticated
+
     def post(self):
+
+        data = json.loads(self.request.body)
+        for row in data:
+            name = data.get('name')
+            lname = data.get('lname')
+            _execute("""insert into data (name, lname) values ("{0}", "{1}");
+            """.format(name,lname))
+        self.write(json.dumps(dict(result='Ok')))
+
+
+
         form = TransaksiForm(self.request.arguments)
         if form.validate():
             post = model.Transaksi.create(info=form.data['info'],

@@ -1,0 +1,49 @@
+{%extends "base.html" %}
+
+
+{% block content %}
+<div class="bs-example" xmlns="http://www.w3.org/1999/html">
+    <!-- Trigger Button HTML -->
+    <button class="btn btn-sm default" data-toggle="collapse" data-target="#toggleDemo">
+        <i class="glyphicon glyphicon-hand-right"></i><b>Insert</b>
+    </button>
+
+    <!-- Collapsible Element HTML -->
+    <div id="toggleDemo" class="panel-collapse collapse">
+    {% autoescape None %}
+    <form role="form form-vertical" action="/trans/create" method="post">
+    {% for field in form %}
+        <div class="row">
+            <div class="form-group has-success">
+                {{ field.label(class_="control-label") }}
+                {% if field.name == 'amount' %}
+                    {{field(id="amount", class_="form-control number")}}
+                {% else %}
+                    {{ field(class_="form-control", rows="3") }}
+                {% end %}
+            </div>
+        </div>
+
+    {% end %}
+            <div><input type="submit" id="submit" class="btn btn-primary btn-sm" value="{{ _("Insert") }}" /></div>
+    {% module xsrf_form_html() %}
+    </form>
+
+    </div>
+</div>
+
+
+<div class="table-responsive">
+    <table class="table table-striped" data-sort-name="tid" data-card-view="false" data-toggle="table" data-url="/trans" data-cache="false" data-height="299">
+        <thead>
+            <tr>
+                <th data-field="tid">Item ID</th>
+                <th data-field="type">Item type</th>
+                <th data-field="transdate">Item Date</th>
+                <th data-field="user">Item user</th>
+                <th data-field="info">Item info</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+{% end %}
