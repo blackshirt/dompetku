@@ -4,33 +4,13 @@ import tornado.escape
 import tornado.wsgi
 import model
 import json
+import urllib
 
 from peewee import fn
 from form import MessageForm, TipeTransaksiForm, TransaksiForm
-from concurrent.futures import ThreadPoolExecutor
-from tornado import concurrent, ioloop
-from tornado import gen
 from utils import jsonify
 
 __all__ = ['HomeHandler', 'NewsHandler', 'AuthLogoutHandler']
-
-class DBContainer(object):
-    def __init__(self, model):
-        self.executor = ThreadPoolExecutor(max_workers=4)
-        self.io_loop = ioloop.IOLoop.current()
-        self.model = model
-
-    @concurrent.run_on_executor
-    def get(self, *args, **kwargs):
-        return self.model.get(*args, **kwargs)
-
-    @concurrent.run_on_executor
-    def select(self, *args, **kwargs):
-        return self.model.select(*args, **kwargs).dicts()
-
-    @concurrent.run_on_executor
-    def insert(self, **kwargs):
-        return self.model.insert(**kwargs).execute()
 
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -179,60 +159,42 @@ class ListTransaksiHandler(BaseHandler):
     def get(self):
         pass
 
-
 class TransaksiBaseHandler(BaseHandler):
-    def initialize(self, dbcontainer=None):
-        if not dbcontainer:
-            self.dbcontainer = DBContainer(model.Transaksi)
-        else:
-            self.dbcontainer = dbcontainer
-
+    def initialize(self):
+        self.container =  model.Transaksi
 
 class TransaksiByIdHandler(TransaksiBaseHandler):
 
-    @gen.coroutine
     def get(self, tid):
-        transid = self.dbcontainer.model.tid
-        data = yield self.dbcontainer.get(transid==int(tid))
+        data = self.container.get(self.container.tid==int(tid))
         results = data._data
         self.set_header('Content-Type', 'application/json')
         self.write(jsonify(results))
 
 class TransaksiHandler(TransaksiBaseHandler):
 
-    @gen.coroutine
-    def get(self):
-        data_list = []
-        all_item = yield self.dbcontainer.select()
-        for item in all_item:
-            data_list.append(item)
-        self.set_header('Content-Type', 'application/json')
-        self.write(jsonify(data_list))
+    def get(self, transid=None):
+        transid = self.get_argument('transid', None)
+        if transid:
+            try:
+                item = self.container.get(self.container.tid==int(transid))
+                results = item._data
+                self.set_header('Content-Type', 'application/json')
+                self.write(jsonify(results))
+            except self.container.DoesNotExist:
+                results = {'transid' : None}
+                self.write(jsonify(results))
+        else:
+            all_item = self.container.select().dicts()
+            results = [item for item in all_item]
+            self.set_header('Content-Type', 'application/json')
+            self.write(jsonify(results))
 
 
     def post(self):
-
-        data = json.loads(self.request.body)
-        for row in data:
-            name = data.get('name')
-            lname = data.get('lname')
-            _execute("""insert into data (name, lname) values ("{0}", "{1}");
-            """.format(name,lname))
-        self.write(json.dumps(dict(result='Ok')))
-
-
-
-        form = TransaksiForm(self.request.arguments)
-        if form.validate():
-            post = model.Transaksi.create(info=form.data['info'],
-                                          user=1,
-                                          type=2,
-                                          amount=form.data['amount'],
-                                          transdate=datetime.datetime.now(),
-                                          memo=form.data['memo'])
-            post.save()
-            return self.redirect('/trans')
-        self.render('transaksi/create.html', form=form)
+        """Post new data to our rest service as a JSON"""
+        data = json.loads(self.request.body.decode('utf-8'))
+        self.write(data)
 
 
 class EditTransaksiHandler(BaseHandler):

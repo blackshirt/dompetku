@@ -1,5 +1,7 @@
 ## from http://nchls.com/post/serializing-complex-python-data-json/
-
+from concurrent.futures import ThreadPoolExecutor
+from tornado import concurrent, ioloop
+from tornado import gen
 import json
 
 # Some data types we want to check for.
@@ -73,3 +75,25 @@ def clean_decimal(data):
 # Use an isoformat string for dates and times.
 def clean_date(data):
     return data.isoformat()
+
+
+class DBContainer(object):
+    def __init__(self, model):
+        self.executor = ThreadPoolExecutor(max_workers=4)
+        self.io_loop = ioloop.IOLoop.current()
+        self.model = model
+
+    @concurrent.run_on_executor
+    def get(self, *args, **kwargs):
+        return self.model.get(*args, **kwargs)
+
+    @concurrent.run_on_executor
+    def select(self, *args, **kwargs):
+        return self.model.select(*args, **kwargs)
+
+    @concurrent.run_on_executor
+    def to_dicts(self, *args, **kwargs):
+        return self.model.select(*args, **kwargs).dicts()
+
+    def insert(self, **kwargs):
+        return self.model.insert(**kwargs).execute()
