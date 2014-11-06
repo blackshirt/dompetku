@@ -16,8 +16,6 @@ def date_handler(obj):
 
 
 class BaseHandler(tornado.web.RequestHandler):
-    def initialize(self, edit=False):
-        self.edit = edit
 
     def get(self):
         if not self.current_user:

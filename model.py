@@ -3,6 +3,9 @@ import hashlib
 import datetime
 import os
 
+from wtfpeewee.orm import model_form
+from wtforms_tornado import Form
+
 __all__ = ['database', 'User', 'Message', 'Category', 'Transaksi', 'TransaksiDetail']
 
 data_path = os.path.join(os.path.dirname(__file__), 'data')
@@ -33,6 +36,7 @@ class User(Base):
     class Meta:
         order_by = ('name',)
 
+#UserForm = model_form(User, base_class=Form)
 
 class Account(Base):
     acid = peewee.PrimaryKeyField()
@@ -91,6 +95,7 @@ class Message(Base):
     class Meta:
         order_by = ('-created',)
 
+#MessageForm = model_form(Message, base_class=Form)
 
 class Category(Base):
     cid = peewee.PrimaryKeyField()
@@ -103,6 +108,7 @@ class TipeTransaksi(Base):
     type = peewee.CharField()
     desc = peewee.CharField()
 
+#TipeTransaksiForm = model_form(TipeTransaksi, base_class=Form)
 
 class Transaksi(Base):
     tid = peewee.PrimaryKeyField()
@@ -116,6 +122,7 @@ class Transaksi(Base):
     class Meta:
         order_by = ('-transdate',)
 
+#TransaksiForm = model_form(Transaksi, allow_pk=True, base_class=Form)
 
 transaksi_data = [
     {'user': 1, 'type': 1, 'info': 'Pembelian kapal selam', 'amount': 50000, 'memo': 'Kapal selam nuklir bekas'},

@@ -163,10 +163,22 @@ class TransaksiBaseHandler(BaseHandler):
     def initialize(self):
         self.container =  model.Transaksi
 
-class TransaksiByIdHandler(TransaksiBaseHandler):
+    def _get_data(self, id_data):
+        if id_data:
+            try:
+                item = self.container.get(self.container.tid == id_data)
+                results = item._data
+                return results
+            except self.container.DoesNotExist:
+                pass
 
+    def _get_all_data(self):
+        all_item = self.container.select().dicts()
+        return [item for item in all_item]
+
+class TransaksiByIdHandler(TransaksiBaseHandler):
     def get(self, tid):
-        data = self.container.get(self.container.tid==int(tid))
+        data = self.container.get(self.container.tid == tid)
         results = data._data
         self.set_header('Content-Type', 'application/json')
         self.write(jsonify(results))
@@ -176,25 +188,23 @@ class TransaksiHandler(TransaksiBaseHandler):
     def get(self, transid=None):
         transid = self.get_argument('transid', None)
         if transid:
-            try:
-                item = self.container.get(self.container.tid==int(transid))
-                results = item._data
-                self.set_header('Content-Type', 'application/json')
-                self.write(jsonify(results))
-            except self.container.DoesNotExist:
-                results = {'transid' : None}
-                self.write(jsonify(results))
+            item = self._get_data(transid)
+            self.render("transaksi/detail.html", item=item)
         else:
-            all_item = self.container.select().dicts()
-            results = [item for item in all_item]
-            self.set_header('Content-Type', 'application/json')
-            self.write(jsonify(results))
-
+            trans = self._get_all_data()
+            self.render("transaksi/list.html", trans=trans)
 
     def post(self):
-        """Post new data to our rest service as a JSON"""
-        data = json.loads(self.request.body.decode('utf-8'))
-        self.write(data)
+        """Post new data to our rpest service as a JSON"""
+        form = TransaksiForm(self.request.arguments)
+        if form.validate():
+            post = self.container.create(info=form.data['info'],
+                                        amount=form.data['amount'],
+                                        type=2,
+                                        user=1,
+                                        memo=form.data['memo'], )
+            post.save()
+            self.write({'result':'OK'})
 
 
 class EditTransaksiHandler(BaseHandler):

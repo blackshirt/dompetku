@@ -1,0 +1,5 @@
+tornado >= 4.0.2
+peewee >= 2.4
+wtf-peewee >= 0.2.3
+wtforms >= 2.0.1
+wtforms-tornado >= 0.0.2
