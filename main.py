@@ -19,7 +19,7 @@ class Application(tornado.wsgi.WSGIApplication):
             (r"/news/([0-9]*)/edit", handlers.EditNewsHandler),
             (r"/trans", handlers.TransaksiHandler),
             (r"/trans/([0-9]*)", handlers.TransaksiByIdHandler),
-            (r"/trans/create", handlers.TransaksiHandler),
+            (r"/trans/create", handlers.CreateTransaksiHandler),
             (r"/trans/([0-9]*)/edit", handlers.EditTransaksiHandler),
             (r"/auth/login", handlers.AuthLoginHandler),
             (r"/auth/logout", handlers.AuthLogoutHandler),
@@ -34,7 +34,7 @@ class Application(tornado.wsgi.WSGIApplication):
             xsrf_cookies=False,
             cookie_secret="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
             login_url="/auth/login",
-            debug=True,
+            debug=False,
         )
 
         tornado.wsgi.WSGIApplication.__init__(self, handler, **settings)
