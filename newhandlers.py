@@ -207,6 +207,24 @@ class TransaksiHandler(TransaksiBaseHandler):
             self.write({'result':'OK'})
 
 
+class CreateTransaksiHandler(TransaksiBaseHandler):
+
+    def get(self):
+        form = TransaksiForm(self.request.arguments)
+        self.render("transaksi/new.html", form=form)
+
+    def post(self):
+        """Post new data to our rpest service as a JSON"""
+        form = TransaksiForm(self.request.arguments)
+        if form.validate():
+            post = self.container.create(info=form.data['info'],
+                                        amount=form.data['amount'],
+                                        type=2,
+                                        user=1,
+                                        memo=form.data['memo'], )
+            post.save()
+            self.write({'result':'OK'})
+
 class EditTransaksiHandler(BaseHandler):
     def get(self, transid):
         post = model.Transaksi.get(model.Transaksi.tid == transid)

@@ -3,7 +3,7 @@ import hashlib
 import datetime
 import os
 
-from wtfpeewee.orm import model_form
+#from wtfpeewee.orm import model_form
 from wtforms_tornado import Form
 
 __all__ = ['database', 'User', 'Message', 'Category', 'Transaksi', 'TransaksiDetail']
