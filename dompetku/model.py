@@ -31,6 +31,7 @@ class User(Base):
     password = peewee.CharField()
     email = peewee.CharField()
     created = peewee.DateTimeField(default=datetime.datetime.now)
+    active = peewee.BooleanField(default=False)
     lastactive = peewee.DateTimeField(default=datetime.datetime.now)
 
     class Meta:
@@ -89,7 +90,7 @@ class Message(Base):
     mid = peewee.PrimaryKeyField()
     title = peewee.CharField()
     body = peewee.TextField()
-    author = peewee.ForeignKeyField(User, db_column='author')
+    author = peewee.ForeignKeyField(rel_model=User, db_column='author')
     created = peewee.DateTimeField(default=datetime.datetime.now)
 
     class Meta:
@@ -105,18 +106,18 @@ class Category(Base):
 
 class TipeTransaksi(Base):
     ttid = peewee.PrimaryKeyField()
-    type = peewee.CharField()
+    tipe = peewee.CharField()
     desc = peewee.CharField()
 
 #TipeTransaksiForm = model_form(TipeTransaksi, base_class=Form)
 
 class Transaksi(Base):
     tid = peewee.PrimaryKeyField()
-    user = peewee.ForeignKeyField(User)
-    type = peewee.ForeignKeyField(TipeTransaksi)
+    user = peewee.ForeignKeyField(rel_model=User)
+    tipe = peewee.ForeignKeyField(rel_model=TipeTransaksi)
     info = peewee.CharField()
-    amount = peewee.DecimalField()
-    transdate = peewee.DateTimeField(default=datetime.datetime.now)
+    amount = peewee.DecimalField(default=0)
+    transdate = peewee.DateTimeField(default=datetime.datetime.now())
     memo = peewee.CharField()
 
     class Meta:
@@ -124,59 +125,15 @@ class Transaksi(Base):
 
 #TransaksiForm = model_form(Transaksi, allow_pk=True, base_class=Form)
 
-transaksi_data = [
-    {'user': 1, 'type': 1, 'info': 'Pembelian kapal selam', 'amount': 50000, 'memo': 'Kapal selam nuklir bekas'},
-    {'user': 2, 'type': 2, 'info': 'Pembelian kapal barang', 'amount': 54500, 'memo': 'Kapal selam barang bekas'},
-    {'user': 1, 'type': 3, 'info': 'Pembelian pesawat tempur', 'amount': 42000, 'memo': 'pesawat tempur bekas'},
-]
-
-
 class TransaksiDetail(Base):
     tdid = peewee.PrimaryKeyField()
-    transid = peewee.ForeignKeyField(Transaksi)
-    item = peewee.CharField()
-    category = peewee.ForeignKeyField(Category)
-    prices = peewee.DecimalField()
-    times = peewee.DateTimeField(default=datetime.datetime.now)
+    transid = peewee.ForeignKeyField(rel_model=Transaksi)
+    item_transaksi = peewee.CharField()
+    number_of_item = peewee.IntegerField(default=1)
+    category = peewee.ForeignKeyField(rel_model=Category)
+    prices = peewee.DecimalField(default=0)
+    times = peewee.DateTimeField(default=datetime.datetime.now().time())
     notes = peewee.CharField()
-
-
-user_data = [
-    {'name': 'paijo', 'realname': 'Paijo Ganteng', 'password': gen_hash('paijo'), 'email': 'paijo@none'},
-    {'name': 'black', 'realname': 'Blackshirt Ganteng', 'password': gen_hash('black'), 'email': 'black@none'},
-    {'name': 'xbunox', 'realname': 'Xbunox', 'password': gen_hash('xbunox'), 'email': 'xbunox@none'},
-]
-
-tipe_trans_data = [
-    {'type': 'MSK', 'desc': 'Transaksi Masuk'},
-    {'type': 'OUT', 'desc': 'Transaksi Keluar '},
-    {'type': 'TRN', 'desc': 'Transaksi Transfer'},
-    {'type': 'BLN', 'desc': 'Transaksi Balance'},
-    {'type': 'OTH', 'desc': 'Transaksi Lain'},
-]
-
-category_data = [
-    {'category': 'sandang', 'desc': 'kebutuhan sandang'},
-    {'category': 'pangan', 'desc': 'kebutuhan pangan'},
-    {'category': 'papan', 'desc': 'kebutuhan papan'},
-    {'category': 'rumahtangga', 'desc': 'kebutuhan rumah tangga'},
-    {'category': 'transport', 'desc': 'kebutuhan transportasi'},
-    {'category': 'jasa', 'desc': 'kebutuhan jasa'},
-    {'category': 'kerja', 'desc': 'kebutuhan kerja'},
-    {'category': 'masyarakat', 'desc': 'kebutuhan masyarakat'},
-    {'category': 'umum', 'desc': 'kebutuhan umum'},
-    {'category': 'lain', 'desc': 'kebutuhan lain'},
-]
-
-msg_data = [
-    {'title': 'Introduction to Asynchronous python server',
-     'body': 'Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed. By using non-blocking network I/O, Tornado can scale to tens of thousands of open connections, making it ideal for long polling, WebSockets, and other applications that require a long-lived connection to each user.',
-     'author': 1},
-    {'title': 'wtf-peewee',
-     'body': 'WTForms integration for peewee, provides a bridge between peewee models and wtforms, mapping model fields to form fields',
-     'author': 2},
-]
-
 
 def insert_data(dbase):
     with dbase.transaction():
