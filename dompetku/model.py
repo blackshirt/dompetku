@@ -26,10 +26,10 @@ class Base(peewee.Model):
 
 class User(Base):
     uid = peewee.PrimaryKeyField()
-    name = peewee.CharField(unique=True)
-    realname = peewee.CharField(default='guest')
+    name = peewee.CharField(max_length=255, unique=True)
+    realname = peewee.CharField(max_length=255, default='guest')
     password = peewee.CharField()
-    email = peewee.CharField()
+    email = peewee.CharField(max_length=255)
     created = peewee.DateTimeField(default=datetime.datetime.now)
     active = peewee.BooleanField(default=False)
     lastactive = peewee.DateTimeField(default=datetime.datetime.now)
@@ -107,7 +107,7 @@ class Category(Base):
 class TipeTransaksi(Base):
     ttid = peewee.PrimaryKeyField()
     tipe = peewee.CharField()
-    desc = peewee.CharField()
+    desc = peewee.TextField()
 
 #TipeTransaksiForm = model_form(TipeTransaksi, base_class=Form)
 
@@ -118,7 +118,9 @@ class Transaksi(Base):
     info = peewee.CharField()
     amount = peewee.DecimalField(default=0)
     transdate = peewee.DateTimeField(default=datetime.datetime.now())
-    memo = peewee.CharField()
+    amount = peewee.DecimalField()
+    transdate = peewee.DateTimeField(default=datetime.datetime.now)
+    memo = peewee.TextField()
 
     class Meta:
         order_by = ('-transdate',)
@@ -133,7 +135,7 @@ class TransaksiDetail(Base):
     category = peewee.ForeignKeyField(rel_model=Category)
     prices = peewee.DecimalField(default=0)
     times = peewee.DateTimeField(default=datetime.datetime.now().time())
-    notes = peewee.CharField()
+    notes = peewee.TextField()
 
 def insert_data(dbase):
     with dbase.transaction():
