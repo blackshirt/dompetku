@@ -1,29 +1,27 @@
+import os
+
 import tornado.web
 import tornado.wsgi
-import newhandlers as handlers
-import os
-import model
+import tornado.ioloop
 import tornado.options
 import tornado.httpserver
+
+from dompetku import model
+from dompetku.handler import transaksi as handlers
 from tornado.options import define, options
 
 define("port", default=8888, help="run on the given port", type=int)
 
+
 class Application(tornado.wsgi.WSGIApplication):
     def __init__(self):
         handler = [
-            (r"/", handlers.HomeHandler),
-            (r"/news", handlers.ListNewsHandler),
-            (r"/news/create", handlers.NewsHandler),
-            (r"/news/([0-9]*)/delete", handlers.DeleteNewsHandler),
-            (r"/news/([0-9]*)/edit", handlers.EditNewsHandler),
+            (r"/", handlers.ListTransaksiHandler),
             (r"/trans", handlers.TransaksiHandler),
             (r"/trans/([0-9]*)", handlers.TransaksiByIdHandler),
             (r"/trans/create", handlers.CreateTransaksiHandler),
             (r"/trans/([0-9]*)/edit", handlers.EditTransaksiHandler),
-            (r"/auth/login", handlers.AuthLoginHandler),
-            (r"/auth/logout", handlers.AuthLogoutHandler),
-            (r"/home", handlers.HomeHandler),
+
         ]
 
         settings = dict(
@@ -34,7 +32,7 @@ class Application(tornado.wsgi.WSGIApplication):
             xsrf_cookies=False,
             cookie_secret="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
             login_url="/auth/login",
-            debug=False,
+            debug=True,
         )
 
         tornado.wsgi.WSGIApplication.__init__(self, handler, **settings)
@@ -51,7 +49,9 @@ def patch_locale():
     # noinspection PyUnusedLocal,PyUnusedLocal,PyUnusedLocal
     def getlocale(*args, **kwargs):
         return None, None
+
     import locale
+
     locale.getlocale = getlocale
 
 

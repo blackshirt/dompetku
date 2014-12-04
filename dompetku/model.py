@@ -1,19 +1,15 @@
 import peewee
 import hashlib
 import datetime
-import os
 
 from wtfpeewee.orm import model_form
 from wtforms_tornado import Form
 from wtforms.validators import Length
 
-__all__ = ['database', 'User', 'Message', 'Category', 'Transaksi', 'TransaksiDetail']
+from config import dbconfig
 
-data_path = os.path.join(os.path.dirname(__file__), 'data')
-dbfile = 'dompetku.sqlite'
-db = os.path.join(data_path, dbfile)
-
-database = peewee.SqliteDatabase(db, threadlocals=True)
+db = dbconfig['sqlite']['db']
+database = peewee.SqliteDatabase(db)
 
 
 def gen_hash(password):

@@ -1,7 +1,7 @@
 from wtforms_tornado import Form
 from wtforms import HiddenField, StringField, DateTimeField, TextAreaField, DecimalField
 from wtforms.validators import DataRequired
-from model import User, Message, TipeTransaksi, Transaksi, Category, TransaksiDetail
+from dompetku.model import User, Message, TipeTransaksi, Transaksi, Category, TransaksiDetail
 
 __all__ = ["MessageForm", "TipeTransaksiForm", "TransaksiForm", "TransaksiDetailForm"]
 
