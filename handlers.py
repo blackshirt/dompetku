@@ -2,10 +2,9 @@ import datetime
 import tornado.web
 import tornado.escape
 import tornado.wsgi
-import model
+from dompetku import model
 
-from peewee import fn
-from form import MessageForm, TipeTransaksiForm, TransaksiForm
+from dompetku.form import MessageForm, TipeTransaksiForm, TransaksiForm
 
 __all__ = ['HomeHandler', 'NewsHandler', 'AuthLogoutHandler']
 
@@ -16,8 +15,7 @@ def date_handler(obj):
 
 
 class BaseHandler(tornado.web.RequestHandler):
-
-    def get(self):
+    def get(self, *args, **kwargs):
         if not self.current_user:
             self.redirect("/auth/login")
         return
@@ -44,7 +42,7 @@ class HomeHandler(BaseHandler):
     def get(self):
         listtrans = model.Transaksi.select()
         form = TransaksiForm(self.request.arguments)
-        self.render("account.html", form = form, trans = listtrans)
+        self.render("account.html", form=form, trans=listtrans)
 
 
 # from: http://stackoverflow.com/questions/6514783/tornado-login-examples-tutorials
@@ -78,7 +76,8 @@ class AuthLoginHandler(BaseHandler):
         else:
             self.clear_cookie("user")
 
-    def _authenticate(self, uname, passwd):
+    @staticmethod
+    def _authenticate(uname, passwd):
         try:
             user = model.User.get(model.User.name == uname)
         except model.User.DoesNotExist:
@@ -114,6 +113,7 @@ class ListNewsHandler(BaseHandler):
             post.save()
             return self.redirect('/news')
 
+
 class NewsHandler(BaseHandler):
     def get(self):
         judul = "Informasi Terbaru"
@@ -130,7 +130,6 @@ class NewsHandler(BaseHandler):
                                         created=form.data['created'], )
             post.save()
             return self.redirect('/news')
-
 
 
 class EditNewsHandler(BaseHandler):

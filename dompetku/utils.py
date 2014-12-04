@@ -1,7 +1,7 @@
 ## from http://nchls.com/post/serializing-complex-python-data-json/
 from concurrent.futures import ThreadPoolExecutor
 from tornado import concurrent, ioloop
-from tornado import gen
+
 import json
 
 # Some data types we want to check for.

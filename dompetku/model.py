@@ -4,7 +4,6 @@ import datetime
 
 from wtfpeewee.orm import model_form
 from wtforms_tornado import Form
-from wtforms.validators import Length
 
 from config import dbconfig
 
@@ -34,7 +33,8 @@ class User(BaseModel):
     class Meta:
         order_by = ('name',)
 
-#UserForm = model_form(User, base_class=Form)
+
+# UserForm = model_form(User, base_class=Form)
 class Account(BaseModel):
     acid = peewee.PrimaryKeyField()
     name = peewee.CharField()
@@ -92,7 +92,8 @@ class Message(BaseModel):
     class Meta:
         order_by = ('-created',)
 
-#MessageForm = model_form(Message, base_class=Form)
+
+# MessageForm = model_form(Message, base_class=Form)
 
 class Category(BaseModel):
     cid = peewee.PrimaryKeyField()
@@ -105,7 +106,8 @@ class TipeTransaksi(BaseModel):
     tipe = peewee.CharField()
     desc = peewee.TextField()
 
-#TipeTransaksiForm = model_form(TipeTransaksi, base_class=Form)
+
+# TipeTransaksiForm = model_form(TipeTransaksi, base_class=Form)
 
 class Transaksi(BaseModel):
     tid = peewee.PrimaryKeyField()
@@ -119,7 +121,9 @@ class Transaksi(BaseModel):
     class Meta:
         order_by = ('-transdate',)
 
-TransaksiForm = model_form(Transaksi, base_class=Form, exclude=('tid','user','tipe','transdate',))
+
+TransaksiForm = model_form(Transaksi, base_class=Form, exclude=('tid', 'user', 'tipe', 'transdate',))
+
 
 class TransaksiDetail(BaseModel):
     tdid = peewee.PrimaryKeyField()
@@ -131,17 +135,10 @@ class TransaksiDetail(BaseModel):
     times = peewee.DateTimeField(default=datetime.datetime.now().time())
     notes = peewee.TextField()
 
-def insert_data(dbase):
-    with dbase.transaction():
-        TipeTransaksi.insert_many(tipe_trans_data).execute()
-        Category.insert_many(category_data).execute()
-        Message.insert_many(msg_data).execute()
-        User.insert_many(user_data).execute()
-        Transaksi.insert_many(transaksi_data).execute()
-
 
 all_model = [User, Message, Category, TipeTransaksi, Transaksi, TransaksiDetail, Hutang, Piutang, Investasi, Account,
              Aset]
+
 
 def init():
     database.connect()

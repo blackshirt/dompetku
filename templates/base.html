@@ -41,11 +41,21 @@
       <ul class="nav navbar-nav">
         <li class="active"><a href="/">Home</a></li>
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Messages <b class="caret"></b></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="#">Action</a></li>
             <li><a href="#">Another action</a></li>
             <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Transaksi <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Action</a></li>
             <li class="divider"></li>
             <li><a href="#">Separated link</a></li>
             <li class="divider"></li>
@@ -57,11 +67,11 @@
       <!-- form search -->
 
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Link</a></li>
+        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
         <li>{% if not current_user %}
-                <a href="/auth/login">Login <b class="caret"></b></a>
+                <a href="/auth/login"><span class="glyphicon glyphicon-log-in"></span> Login</a>
             {% else %}
-                <a href="/auth/logout">{{  current_user }}<b class="caret"></b> Logout</a>
+                <a href="/auth/logout"><span class="glyphicon glyphicon-logout"></span> {{  current_user }}<b class="caret"></b> Logout</a>
             {% end %}
         </li>
       </ul>
@@ -91,9 +101,15 @@
 
     <hr>
     <footer>
-        <p>&copy; {{ _("Dompetku") }} 2014</p>
-        <a href="/terms">Terms & Conditions</a>
+    <div class="navbar navbar-inner  navbar-fixed-bottom">
+        <center>
+        <p>&copy; {{ _("Dompetku") }} 2014 ver 1.0</p>
+            <a href="/terms">Terms & Conditions</a>
+        </center>
+    </div>
     </footer>
+
+
     </body>
 </html>
 

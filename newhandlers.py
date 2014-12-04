@@ -1,19 +1,14 @@
-import datetime
 import tornado.web
 import tornado.escape
 import tornado.wsgi
-import model
-import json
-import urllib
+from dompetku import model
 
-from peewee import fn
-from form import MessageForm, TipeTransaksiForm, TransaksiForm
-from utils import jsonify
+from dompetku.form import MessageForm, TipeTransaksiForm, TransaksiForm
 
 __all__ = ['HomeHandler', 'NewsHandler', 'AuthLogoutHandler']
 
-class BaseHandler(tornado.web.RequestHandler):
 
+class BaseHandler(tornado.web.RequestHandler):
     def get(self):
         if not self.current_user:
             self.redirect("/auth/login")
@@ -36,11 +31,12 @@ class BaseHandler(tornado.web.RequestHandler):
         }
         return commoninfo
 
+
 class HomeHandler(BaseHandler):
     def get(self):
         listtrans = model.Transaksi.select()
         form = TransaksiForm(self.request.arguments)
-        self.render("account.html", form = form, trans = listtrans)
+        self.render("account.html", form=form, trans=listtrans)
 
 
 # from: http://stackoverflow.com/questions/6514783/tornado-login-examples-tutorials
@@ -74,7 +70,8 @@ class AuthLoginHandler(BaseHandler):
         else:
             self.clear_cookie("user")
 
-    def _authenticate(self, uname, passwd):
+    @staticmethod
+    def _authenticate(uname, passwd):
         try:
             user = model.User.get(model.User.name == uname)
         except model.User.DoesNotExist:
@@ -86,10 +83,12 @@ class AuthLoginHandler(BaseHandler):
 
         return False
 
+
 class AuthLogoutHandler(BaseHandler):
     def get(self):
         self.clear_cookie("user")
         self.redirect(self.get_argument('next', '/'))
+
 
 class ListNewsHandler(BaseHandler):
     def get(self):
@@ -108,6 +107,7 @@ class ListNewsHandler(BaseHandler):
             post.save()
             return self.redirect('/news')
 
+
 class NewsHandler(BaseHandler):
     def get(self):
         judul = "Informasi Terbaru"
@@ -124,6 +124,7 @@ class NewsHandler(BaseHandler):
                                         created=form.data['created'], )
             post.save()
             return self.redirect('/news')
+
 
 class EditNewsHandler(BaseHandler):
     def get(self, msgid):
@@ -142,6 +143,7 @@ class EditNewsHandler(BaseHandler):
         else:
             form = MessageForm(obj=post)
         self.render('news/edit.html', form=form, obj=post)
+
 
 class DeleteNewsHandler(BaseHandler):
     @tornado.web.authenticated

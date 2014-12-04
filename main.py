@@ -21,7 +21,7 @@ class Application(tornado.wsgi.WSGIApplication):
             (r"/trans/([0-9]*)", handlers.TransaksiByIdHandler),
             (r"/trans/create", handlers.CreateTransaksiHandler),
             (r"/trans/([0-9]*)/edit", handlers.EditTransaksiHandler),
-
+            (r"/trans/([0-9]*)/delete", handlers.DeleteTransaksiHandler),
         ]
 
         settings = dict(

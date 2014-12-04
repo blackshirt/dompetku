@@ -89,6 +89,7 @@ class EditTransaksiHandler(BaseHandler):
         form = TransaksiForm(obj=post)
         self.render('transaksi/edit.html', form=form)
 
+    @tornado.web.authenticated
     def post(self, transid):
         post = model.Transaksi.get(model.Transaksi.tid == transid)
         if post:
@@ -104,6 +105,16 @@ class EditTransaksiHandler(BaseHandler):
 
 class DeleteTransaksiHandler(BaseHandler):
     @tornado.web.authenticated
+    def get(self, tid):
+        trans_id = model.Transaksi.get(model.Transaksi.tid == int(tid))
+        if trans_id:
+            try:
+                trans_id.delete_instance()
+            except model.Transaksi.DoesNotExist:
+                return
+        self.redirect('/trans')
+
+    @tornado.web.authenticated
     def post(self, tid):
         trans_to_delete = self.get_argument('tid')
         trans_id = model.Transaksi.get(model.Transaksi.tid == int(trans_to_delete))
@@ -111,5 +122,5 @@ class DeleteTransaksiHandler(BaseHandler):
             try:
                 trans_id.delete_instance()
             except model.Transaksi.DoesNotExist:
-                raise tornado.web.HTTPError(404)
-        return self.redirect('/trans')
+                return
+        self.redirect('/trans')

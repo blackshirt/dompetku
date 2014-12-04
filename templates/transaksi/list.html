@@ -5,7 +5,7 @@
     {% for item in trans %}
     <form action="/trans/{{item['tid']}}/delete" method="post">
     {% module xsrf_form_html() %}
-    <input type=hidden name="tid" value="{{ item['tid']}}"></>
+    <input type=hidden name="tid" value="{{ item['tid']}}"/>
     <div class="list-group">
     <div class="media">
         <a href="#" class="pull-left">
@@ -14,7 +14,7 @@
         <div class="media-body">
             <h4 class="media-heading">{{ item['info']}} <b> (Rp.  <span class="amount">{{ item['amount'] }}</span> )</b></h4>
             <p>{{ item['memo'] }}</p>
-            <h5><p><small><i>Posted by :</i>{{ item['user'] }} Record on {{item['transdate']}}</i></small></p></h5>
+            <h5><p><small><i>Posted by :</i>{{ item['user'] }} Record on {{item['transdate']}}</small></p></h5>
             <p>
                 <button type=submit class="btn btn-link btn-sm"><i class="glyphicon glyphicon-trash"></i></button>
             </p>
