@@ -1,4 +1,5 @@
 import os
+import uuid
 
 import tornado.web
 import tornado.wsgi
@@ -30,7 +31,7 @@ class Application(tornado.wsgi.WSGIApplication):
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             # ui_modules={"Entry": EntryModule},
             xsrf_cookies=False,
-            cookie_secret="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
+            cookie_secret=uuid.uuid4(),
             login_url="/auth/login",
             debug=True,
         )
