@@ -9,6 +9,7 @@ import tornado.httpserver
 
 from dompetku import model
 from dompetku.handler import transaksi as handlers
+from dompetku.handler import login
 from tornado.options import define, options
 
 define("port", default=8888, help="run on the given port", type=int)
@@ -23,6 +24,8 @@ class Application(tornado.wsgi.WSGIApplication):
             (r"/trans/create", handlers.CreateTransaksiHandler),
             (r"/trans/([0-9]*)/edit", handlers.EditTransaksiHandler),
             (r"/trans/([0-9]*)/delete", handlers.DeleteTransaksiHandler),
+            (r"/auth/login", login.AuthLoginHandler),
+            (r"/auth/logout", login.AuthLogoutHandler),
         ]
 
         settings = dict(

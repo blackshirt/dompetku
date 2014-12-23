@@ -56,36 +56,25 @@
 
 {% block script %}
 <script type="text/javascript">
-        $(document).ready(function() {
-    var $validator = $("#transaksi-form").validate({
-    rules: {
-    emailfield: {
-    required: true,
-    email: true,
-    minlength: 3
-    },
-    namefield: {
-    required: true,
-    minlength: 3
-    },
-    urlfield: {
-    required: true,
-    minlength: 3,
-    url: true
-    }
-    }
-    });
+    $(document).ready(function() {
+        $('#transaksi-wizard').bootstrapWizard({onNext: function(tab, navigation, index) {
+        $valid = true;
+        $newUser = $('#transaksi-form').data('bootstrapValidator'); //the validator
+        $wizard = $('#transaksi-wizard').data('bootstrapWizard'); //the wizard
 
-    	$('#transaksi-wizard').bootstrapWizard({
-'tabClass': 'nav nav-pills',
-'onNext': function(tab, navigation, index) {
-var $valid = $("#transaksi-form").valid();
-if(!$valid) {
-$validator.focusInvalid();
-return false;
-}
-}
-});
+        $tab = $('#wizard').find('.tab-content').children().eq($wizard.currentIndex())
+        $tab.find('input:text, input:password, input:file, select, textarea, input:not([type=hidden])')
+            .each(function() {
+                if ($newUser.options.fields[$(this).attr('name')]) {
+                    $newUser.validateField($(this).attr('name'));
+                    if ($(this).closest('.form-group').hasClass('has-error')){
+                        $valid = false;
+                        }
+                    }
+            });
+        return $valid ;
+
+    }});
     });
 </script>
 

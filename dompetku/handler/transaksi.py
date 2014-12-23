@@ -27,6 +27,11 @@ class TransaksiBaseHandler(BaseHandler):
         all_item = self.container.select().dicts()
         return [item for item in all_item]
 
+    def get_current_user(self):
+        user_id = self.get_secure_cookie("user")
+        if not user_id: return None
+        return model.User.get(model.User.uid == int(user_id))
+
 
 class ListTransaksiHandler(TransaksiBaseHandler):
     def get(self):
@@ -68,7 +73,7 @@ class TransaksiHandler(TransaksiBaseHandler):
 class CreateTransaksiHandler(TransaksiBaseHandler):
     def get(self):
         form = TransaksiForm(self.request.arguments)
-        self.render("transaksi/baru.html", form=form)
+        self.render("transaksi/create.html", form=form)
 
     def post(self):
         """Post new data to our rpest service as a JSON"""
@@ -76,7 +81,7 @@ class CreateTransaksiHandler(TransaksiBaseHandler):
         if form.validate():
             post = self.container.create(info=form.data['info'],
                                          amount=form.data['amount'],
-                                         type=2,
+                                         tipe=2,
                                          user=1,
                                          memo=form.data['memo'], )
             post.save()
