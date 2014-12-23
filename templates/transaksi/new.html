@@ -4,13 +4,14 @@
 
 {% block content %}
 {% autoescape None %}
+        <form id="transaksi-form" method="post" class="form-horizontal">
 <div class="container-fluid">
     <div class="fuelux">
         <div id="MyWizard" class="wizard">
     <ul class="steps">
         <li class="active" data-step="1"><span class="badge badge-info">1</span>Campaign<span class="chevron"></span></li>
         <li data-step="2"><span class="badge">2</span>Recipients<span class="chevron"></span></li>
-        <li data-step="5"><span class="badge">5</span>Send<span class="chevron"></span></li>
+
     </ul>
     <div class="actions">
         <button class="btn btn-default btn-prev"><span class="glyphicon glyphicon-arrow-left"></span>Prev</button>
@@ -18,37 +19,72 @@
     </div>
     <div class="step-content">
         <div class="step-pane active sample-pane alert" data-step="1">
-            <h4>Setup Campaign</h4>
-            <p>Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic. Beetroot water spinach okra water chestnut ricebean pea catsear courgette.</p>
+            <div class="control-group">
+                    <label class="control-label">Email</label>
+                    <div class="controls">
+                        <input type="text" id="emailfield" name="emailfield" class="email">
+                    </div>
+            </div>
 
+            <div class="control-group">
+                    <label class="control-label">Name</label>
+                    <div class="controls">
+                        <input type="text" id="namefield" name="namefield" class="">
+                    </div>
+            </div>
         </div>
+
         <div class="step-pane sample-pane bg-info alert" data-step="2">
-            <h4>Choose Recipients</h4>
-            <p>Celery quandong swiss chard chicory earthnut pea potato. Salsify taro catsear garlic gram celery bitterleaf wattle seed collard greens nori. Grape wattle seed kombu beetroot horseradish carrot squash brussels sprout chard. </p>
-
+            <div class="control-group">
+                    <label class="control-label">URL</label>
+                    <div class="controls">
+                        <input type="text" id="urlfield" name="urlfield" class="url">
+                    </div>
+            </div>
         </div>
-        <div class="step-pane sample-pane bg-success alert" data-step="5">
-            <h4>Send Message</h4>
-            <p>Soko radicchio bunya nuts gram dulse silver beet parsnip napa cabbage lotus root sea lettuce brussels sprout cabbage. Catsear cauliflower garbanzo yarrow salsify chicory garlic bell pepper napa cabbage lettuce tomato kale arugula melon sierra leone bologi rutabaga tigernut.</p>
 
-        </div>
+
     </div>
 </div>
     </div>
 </div>
-
+</form>
 
 {% end %}
 
 {% block script %}
 <script type="text/javascript">
-	$(document).ready(function() {
-       $('#MyWizard').wizard();
 
+$(document).ready(function() {
+
+    var $validator = $("#transaksi-form").validate({
+		  rules: {
+		    emailfield: {
+		      required: true,
+		      email: true,
+		      minlength: 3
+		    },
+		    namefield: {
+		      required: true,
+		      minlength: 3
+		    },
+		    urlfield: {
+		      required: true,
+		      minlength: 3,
+		      url: true
+		    }
+		  }
+		});
+
+		$('#MyWizard').wizard().on('change', function(e, data) {
+    var isValid = $('#stepId [required]').valid();
+    if (data.direction === 'next' && !isValid) {
+        e.preventDefault();
+    };
 
  });
 
-
+});
 
 
 

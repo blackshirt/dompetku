@@ -68,7 +68,7 @@ class TransaksiHandler(TransaksiBaseHandler):
 class CreateTransaksiHandler(TransaksiBaseHandler):
     def get(self):
         form = TransaksiForm(self.request.arguments)
-        self.render("transaksi/new.html", form=form)
+        self.render("transaksi/baru.html", form=form)
 
     def post(self):
         """Post new data to our rpest service as a JSON"""
