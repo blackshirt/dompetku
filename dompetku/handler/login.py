@@ -1,14 +1,13 @@
 from dompetku import model
-from dompetku.handler import base
+from dompetku.handler import basehandler
+import tornado.web
 
-__author__ = 'BKD Kab Kebumen'
+__author__ = 'blackshirtmuslim@yahoo.com'
 
 
-class AuthLoginHandler(base.BaseHandler):
+class AuthLoginHandler(basehandler.BaseHandler):
+
     def get(self):
-        if self.get_current_user():
-            self.redirect(self.get_argument('next', '/'))  # Change this line
-            return
         self.render('login.html')
 
     def post(self):
@@ -18,19 +17,13 @@ class AuthLoginHandler(base.BaseHandler):
             auth = self._authenticate(uname, passwd)
 
             if auth:
-                self.set_current_user(uname)
+                self.set_secure_cookie("user_identity", uname)
                 self.redirect(self.get_argument('next', '/'))
             else:
-                self.render("login.html")
-        except ValueError as errreason:
-            errormessage = "Something wrong" + str(errreason)
-            self.render("login.html")
-
-    def set_current_user(self, user):
-        if user:
-            self.set_secure_cookie("user", user)
-        else:
-            self.clear_cookie("user")
+                self.clear_all_cookies()
+                self.write("Error in login")
+        except ValueError:
+            self.clear_all_cookies()
 
     @staticmethod
     def _authenticate(uname, passwd):
@@ -46,7 +39,7 @@ class AuthLoginHandler(base.BaseHandler):
         return False
 
 
-class AuthLogoutHandler(BaseHandler):
+class AuthLogoutHandler(basehandler.BaseHandler):
     def get(self):
-        self.clear_cookie("user")
+        self.clear_all_cookies()
         self.redirect(self.get_argument('next', '/'))

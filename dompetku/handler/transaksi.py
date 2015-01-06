@@ -27,11 +27,6 @@ class TransaksiBaseHandler(BaseHandler):
         all_item = self.container.select().dicts()
         return [item for item in all_item]
 
-    def get_current_user(self):
-        user_id = self.get_secure_cookie("user")
-        if not user_id: return None
-        return model.User.get(model.User.uid == int(user_id))
-
 
 class ListTransaksiHandler(TransaksiBaseHandler):
     def get(self):
