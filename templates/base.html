@@ -23,7 +23,7 @@
           <script src="../../assets/js/respond.min.js"></script>
       <![endif]-->
     </head>
-    <body class="fuelux">
+    <body>
 
     <!-- Main navigation -->
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -74,7 +74,7 @@
         <li>{% if not current_user %}
                 <a href="/auth/login"><span class="glyphicon glyphicon-log-in"></span> Login</a>
             {% else %}
-                <a href="/auth/logout"><span class="glyphicon glyphicon-logout"></span> {{  current_user }}<b class="caret"></b> Logout</a>
+                <a href="/auth/logout"><span class="glyphicon glyphicon-logout"></span> {{ current_user }}<b class="caret"></b> Logout</a>
             {% end %}
         </li>
       </ul>

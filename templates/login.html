@@ -2,7 +2,7 @@
 
 <div class="container">
 {% block content %}
-
+{% module xsrf_form_html() %}
 <form action="{{ request.uri }}" method="post" class="form-signin">
     <h2 class="form-signin-heading">Please sign in</h2>
         <div class="form-group has-success">
