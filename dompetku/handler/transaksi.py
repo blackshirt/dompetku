@@ -9,17 +9,14 @@ import tornado.web
 from dompetku import model
 from dompetku.form import TransaksiForm
 from dompetku.utils import jsonify
-
-__author__ = 'blackshirt'
-
-
-class BaseHandler(tornado.web.RequestHandler):
-    pass
+from dompetku.handler import basehandler
 
 
-class TransaksiBaseHandler(BaseHandler):
+class TransaksiBaseHandler(basehandler.BaseHandler):
+    
     def initialize(self):
         self.transaksi = model.Transaksi
+        self.user = self.get_user_object()
 
     def _get_data(self, id_data):
         if id_data:
@@ -59,6 +56,7 @@ class TransaksiHandler(TransaksiBaseHandler):
             trans = self._get_all_data()
             self.render("transaksi/list.html", trans=trans)
 
+    @tornado.web.authenticated
     def post(self):
         """Post new data to our rpest service as a JSON"""
         form = TransaksiForm(self.request.arguments)
@@ -66,17 +64,20 @@ class TransaksiHandler(TransaksiBaseHandler):
             post = self.transaksi.create(info=form.data['info'],
                                          amount=form.data['amount'],
                                          type=2,
-                                         user=1,
+                                         user=self.user.uid,
                                          memo=form.data['memo'], )
             post.save()
             self.write({'result': 'OK'})
 
 
 class CreateTransaksiHandler(TransaksiBaseHandler):
+    
+    @tornado.web.authenticated
     def get(self):
         form = TransaksiForm(self.request.arguments)
         self.render("transaksi/create.html", form=form)
-
+    
+    @tornado.web.authenticated
     def post(self):
         """Post new data to our rpest service as a JSON"""
         form = TransaksiForm(self.request.arguments)
@@ -84,13 +85,15 @@ class CreateTransaksiHandler(TransaksiBaseHandler):
             post = self.transaksi.create(info=form.data['info'],
                                          amount=form.data['amount'],
                                          tipe=2,
-                                         user=1,
+                                         user=self.user.uid,
                                          memo=form.data['memo'], )
             post.save()
             self.write({'result': 'OK'})
 
 
-class EditTransaksiHandler(BaseHandler):
+class EditTransaksiHandler(TransaksiBaseHandler ):
+    
+    @tornado.web.authenticated
     def get(self, transid):
         post = model.Transaksi.get(model.Transaksi.tid == transid)
         form = TransaksiForm(obj=post)
@@ -110,7 +113,9 @@ class EditTransaksiHandler(BaseHandler):
         self.render('transaksi/edit.html', form=form, obj=post)
 
 
-class DeleteTransaksiHandler(BaseHandler):
+
+class DeleteTransaksiHandler(TransaksiBaseHandler ):
+    
     @tornado.web.authenticated
     def get(self, tid):
         trans_id = model.Transaksi.get(model.Transaksi.tid == int(tid))

@@ -5,18 +5,16 @@ from dompetku import model
 
 
 class BaseHandler(tornado.web.RequestHandler):
-
-    def get(self):
-        if not self.current_user:
-            self.redirect("/auth/login")
-        return
-
     def get_current_user(self):
-        user = self.get_secure_cookie("user")
-        if user:
-            return user
-        else:
-            return None
+        return self.get_secure_cookie('user')
 
+
+    def get_user_object(self):
+        try:
+            user = model.User.get(model.User.name == self.current_user)
+        except model.User.DoesNotExist:
+            user = self.current_user
+
+        return user
 
 

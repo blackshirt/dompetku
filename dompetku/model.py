@@ -2,7 +2,7 @@ import peewee
 import hashlib
 import datetime
 
-from wtfpeewee.orm import model_form
+#from wtfpeewee.orm import model_form
 from wtforms_tornado import Form
 
 from config import dbconfig
@@ -103,7 +103,7 @@ class Category(BaseModel):
 
 class TipeTransaksi(BaseModel):
     ttid = peewee.PrimaryKeyField()
-    tipe = peewee.CharField()
+    tipe = peewee.CharField(default='Not defined')
     desc = peewee.TextField()
 
 
@@ -122,7 +122,7 @@ class Transaksi(BaseModel):
         order_by = ('-transdate',)
 
 
-TransaksiForm = model_form(Transaksi, base_class=Form, exclude=('tid', 'user', 'tipe', 'transdate',))
+#TransaksiForm = model_form(Transaksi, base_class=Form, exclude=('tid', 'user', 'tipe', 'transdate',))
 
 
 class TransaksiDetail(BaseModel):

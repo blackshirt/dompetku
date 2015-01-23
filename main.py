@@ -1,16 +1,23 @@
+#!/usr/bin/env python
+#
+# Copyright @2014 blackshirtmuslim@yahoo.com
+#
+
+"""Main entry for Application"""
+
 import os
 import uuid
+import base64
 
 import tornado.web
 import tornado.wsgi
 import tornado.ioloop
-import tornado.options
 import tornado.httpserver
 
+from tornado.options import define, options
 from dompetku import model
 from dompetku.handler import transaksi as handlers
 from dompetku.handler import login
-from tornado.options import define, options
 
 define("port", default=8888, help="run on the given port", type=int)
 
@@ -28,16 +35,16 @@ class Application(tornado.wsgi.WSGIApplication):
             (r"/auth/logout", login.AuthLogoutHandler),
         ]
 
-        settings = dict(
+        settings = {
             blog_title="Your online Pocket",
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             # ui_modules={"Entry": EntryModule},
-            xsrf_cookies=False,
-            cookie_secret=str(uuid.uuid4()),
+            xsrf_cookies=True,
+            cookie_secret=base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
             login_url="/auth/login",
             debug=True,
-        )
+        }
 
         tornado.wsgi.WSGIApplication.__init__(self, handler, **settings)
 
