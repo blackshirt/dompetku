@@ -5,7 +5,9 @@ from dompetku import model
 
 
 class BaseHandler(tornado.web.RequestHandler):
+
     def get_current_user(self):
+        """Get current_user from cookies"""
         return self.get_secure_cookie('user')
 
 

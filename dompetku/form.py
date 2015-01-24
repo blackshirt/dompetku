@@ -1,6 +1,6 @@
 from wtforms_tornado import Form
-from wtforms import StringField, DateTimeField, TextAreaField, DecimalField
-from wtforms.validators import DataRequired
+from wtforms import StringField, DateTimeField, TextAreaField, DecimalField, TextField, BooleanField, PasswordField
+from wtforms.validators import DataRequired, EqualTo, Length
 
 __all__ = ["MessageForm", "TipeTransaksiForm", "TransaksiForm", "TransaksiDetailForm"]
 
@@ -36,3 +36,14 @@ class TransaksiDetailForm(Form):
 
     def __unicode__(self):
         return self.item
+
+class RegistrasiForm(Form):
+    name = TextField('Username', [Length(min=4, max=25)])
+    realname = TextField('Realname', [Length(min=4, max=50)])
+    email = TextField('Email Address', [Length(min=6, max=35)])
+    password = PasswordField('New Password', [
+        DataRequired(),
+        EqualTo('confirm', message='Passwords must match')
+    ])
+    confirm = PasswordField('Repeat Password')
+    

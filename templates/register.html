@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Signup your self : {% end %}
+
+{% block content %}
+{% autoescape None %}
+<form role="form form-vertical" action="{{ request.path }}" method="post">
+    {% for field in form %}
+        <div class="row">
+            <div class="form-group">
+                {{ field.label(class_="form-label") }}
+                {{ field(class_="form-control" ) }}       
+            </div>
+        </div>
+
+    {% end %}
+            <div><input type="submit" class="btn btn-primary btn-sm" value="{{ _("Insert") }}" /></div>
+    {% module xsrf_form_html() %}
+</form>
+{% end %}
+
+{% block script %}
+{% end %}
+

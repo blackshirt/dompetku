@@ -3,7 +3,7 @@
 # Copyright @2014 blackshirtmuslim@yahoo.com
 #
 
-"""Module to handle Transaction activities."""
+"""Module to handle daily transaction activities."""
 
 import tornado.web
 from dompetku import model
@@ -13,7 +13,7 @@ from dompetku.handler import basehandler
 
 
 class TransaksiBaseHandler(basehandler.BaseHandler):
-    
+    """ Class dasar untuk Transaksi"""
     def initialize(self):
         self.transaksi = model.Transaksi
         self.user = self.get_user_object()

@@ -13,7 +13,7 @@ from dompetku.handler import basehandler
 
 
 class AuthLoginHandler(basehandler.BaseHandler):
-    
+    """ Class untuk menghandle login process """
     def get(self):
         self.render('login.html')
 
@@ -31,6 +31,7 @@ class AuthLoginHandler(basehandler.BaseHandler):
 
     @staticmethod
     def _authenticate(uname, passwd):
+        '''check jika user dan passwordnya match dengan db'''
         try:
             user = model.User.get(model.User.name == uname)
         except model.User.DoesNotExist:
@@ -44,6 +45,7 @@ class AuthLoginHandler(basehandler.BaseHandler):
 
 
 class AuthLogoutHandler(basehandler.BaseHandler):
+    """Class untuk menghandle logout process """
     def get(self):
         self.clear_all_cookies()
         self.redirect("/auth/login")
