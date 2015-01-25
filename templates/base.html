@@ -63,7 +63,7 @@
       <!-- form search -->
 
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+        <li><a href="/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
         <li>{% if not current_user %}
                 <a href="/auth/login"><span class="glyphicon glyphicon-log-in"></span> Login</a>
             {% else %}
@@ -103,7 +103,7 @@
 
 
     <footer>
-    <div class="navbar navbar-inner  navbar-fixed-bottom">
+    <div>
         <center>
         <p>&copy; {{ _("Dompetku") }} 2014 ver 1.0</p>
             <a href="/terms">Terms & Conditions</a>

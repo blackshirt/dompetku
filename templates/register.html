@@ -1,25 +1,23 @@
 {% extends "base.html" %}
 
-{% block title %}Signup your self : {% end %}
+{% block title %}Signup your self {% end %}
 
 {% block content %}
 {% autoescape None %}
 <form role="form form-vertical" action="{{ request.path }}" method="post">
-    {% for field in form %}
-        <div class="row">
+    {% for field in form %}        
             <div class="form-group">
                 {{ field.label(class_="form-label") }}
-                {{ field(class_="form-control" ) }} 
+                {{ field(class_="form-control") }} 
                 {% if field.errors %}
                    {% for error in field.errors %}
-                      <ul class="errors"> <b> {{ error }} </b> </ul>
+                      <div class="form-group help-block has-warning">  {{ error }} </div>
                    {% end %}
                 {% end %}      
-            </div>
-        </div>
-
+            </div>        
     {% end %}
-            <div><input type="submit" class="btn btn-primary btn-sm" value="{{ _("Insert") }}" /></div>
+        
+    <input type="submit" class="btn btn-default btn-md" value="{{ _("Submit") }}" />
     {% module xsrf_form_html() %}
 </form>
 {% end %}

@@ -34,7 +34,7 @@ class Application(tornado.wsgi.WSGIApplication):
             (r"/trans/([0-9]*)/delete", handlers.DeleteTransaksiHandler),
             (r"/auth/login", login.AuthLoginHandler),
             (r"/auth/logout", login.AuthLogoutHandler),
-            (r"/register", register.CreateRegistrasiHandler),
+            (r"/register", register.RegistrasiHandler),
         ]
 
         settings = dict(

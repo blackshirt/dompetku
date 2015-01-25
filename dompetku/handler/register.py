@@ -18,21 +18,8 @@ class RegistrasiBaseHandler(basehandler.BaseHandler):
         self.model = model.User
         self.user = self.get_user_object()
 
-    def _get_data(self, id_data):
-        if id_data:
-            try:
-                item = self.transaksi.get(self.transaksi.tid == id_data)
-                results = item._data
-                return results
-            except self.transaksi.DoesNotExist:
-                pass
 
-    def _get_all_data(self):
-        all_item = self.transaksi.select().dicts()
-        return [item for item in all_item]
-
-
-class CreateRegistrasiHandler(RegistrasiBaseHandler):
+class RegistrasiHandler(RegistrasiBaseHandler):
     
     def get(self):
         form = RegistrasiForm(self.request.arguments)
