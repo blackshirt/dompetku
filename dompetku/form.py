@@ -38,9 +38,9 @@ class TransaksiDetailForm(Form):
         return self.item
 
 class RegistrasiForm(Form):
-    name = TextField('Username', [Length(min=4, max=25)])
-    realname = TextField('Realname', [Length(min=4, max=50)])
-    email = TextField('Email Address', [Length(min=6, max=35)])
+    name = StringField('Username', [Length(min=3, max=25)])
+    realname = StringField('Realname', [Length(min=3, max=50)])
+    email = StringField('Email Address', [Length(min=3, max=35)])
     password = PasswordField('New Password', [
         DataRequired(),
         EqualTo('confirm', message='Passwords must match')

@@ -9,7 +9,12 @@
         <div class="row">
             <div class="form-group">
                 {{ field.label(class_="form-label") }}
-                {{ field(class_="form-control" ) }}       
+                {{ field(class_="form-control" ) }} 
+                {% if field.errors %}
+                   {% for error in field.errors %}
+                      <ul class="errors"> <b> {{ error }} </b> </ul>
+                   {% end %}
+                {% end %}      
             </div>
         </div>
 

@@ -32,30 +32,6 @@ class RegistrasiBaseHandler(basehandler.BaseHandler):
         return [item for item in all_item]
 
 
-class RegistrasiHandler(RegistrasiBaseHandler):
-    def get(self, transid=None):
-        transid = self.get_argument('transid', None)
-        if transid:
-            item = self._get_data(transid)
-            self.render("transaksi/detail.html", item=item)
-        else:
-            trans = self._get_all_data()
-            self.render("transaksi/list.html", trans=trans)
-
-    @tornado.web.authenticated
-    def post(self):
-        """Post new data to our rpest service as a JSON"""
-        form = RegistrasiForm(self.request.arguments)
-        if form.validate():
-            post = self.transaksi.create(info=form.data['info'],
-                                         amount=form.data['amount'],
-                                         type=2,
-                                         user=self.user.uid,
-                                         memo=form.data['memo'], )
-            post.save()
-            self.write({'result': 'OK'})
-
-
 class CreateRegistrasiHandler(RegistrasiBaseHandler):
     
     def get(self):
@@ -75,4 +51,4 @@ class CreateRegistrasiHandler(RegistrasiBaseHandler):
             reg_entry.save()
             #self.write({'result': 'OK'})
             self.redirect('/')
-
+        self.render('register.html', form=form)
