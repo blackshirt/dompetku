@@ -28,6 +28,7 @@ class RegistrasiHandler(RegistrasiBaseHandler):
     def post(self):
         """Post new data to our rpest service as a JSON"""
         form = RegistrasiForm(self.request.arguments)
+        
         if form.validate():
             reg_entry = model.User.create(
                         name = form.data['name'],

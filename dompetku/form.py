@@ -2,6 +2,8 @@ from wtforms_tornado import Form
 from wtforms import StringField, DateTimeField, TextAreaField, DecimalField, TextField, BooleanField, PasswordField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
+from dompetku import model
+
 __all__ = ["MessageForm", "TipeTransaksiForm", "TransaksiForm", "TransaksiDetailForm"]
 
 
@@ -46,4 +48,18 @@ class RegistrasiForm(Form):
         EqualTo('confirm', message='Passwords must match')
     ])
     confirm = PasswordField('Repeat Password')
+    
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+
+    def validate(self):
+        rv = Form.validate(self)
+        if not rv:
+            return False
+
+        user = model.User.select().where(model.User.name == self.name.data)
+        if user.exists():
+           self.name.errors.append('User exists')
+           return False
+        return True
     

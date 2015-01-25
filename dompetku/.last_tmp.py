@@ -103,7 +103,7 @@ class Category(BaseModel):
 
 class TipeTransaksi(BaseModel):
     ttid = peewee.PrimaryKeyField()
-    tipe = peewee.CharField()
+    tipe = peewee.CharField(default='Not defined')
     desc = peewee.TextField()
 
 
