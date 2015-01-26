@@ -1,6 +1,6 @@
 from wtforms_tornado import Form
 from wtforms import StringField, DateTimeField, TextAreaField, DecimalField, TextField, BooleanField, PasswordField
-from wtforms.validators import DataRequired, Email, EqualTo, Length
+from wtforms.validators import DataRequired, Email, EqualTo, Length, InputRequired
 
 from dompetku import model
 
@@ -62,4 +62,21 @@ class RegistrasiForm(Form):
            self.name.errors.append('User exists')
            return False
         return True
-    
+
+class LoginForm(Form):
+    name = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+
+    def validate(self):
+        rv = Form.validate(self)
+        if not rv:
+            return False
+
+        user = model.User.select().where(model.User.name == self.name.data)
+        if not user.exists():
+           self.name.errors.append('User not exists')
+           return False
+        return True

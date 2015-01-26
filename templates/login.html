@@ -3,19 +3,21 @@
 {% block content %}
 
 <form action="{{ request.uri }}" method="post" class="form-signin">
+    {% autoescape None %}
     <h2 class="form-signin-heading">Please sign in</h2>
-        <div class="form-group has-success">
-            <input name="username" type="text" placeholder="Username" required="True" autofocus="" />
-        </div>
-        <div class="form-group has-success">
-            <input type="password" name="password" placeholder="Password" required=""/>
-        </div>
-    
+    {% for field in form %}
         <div class="form-group">
-            <button type="submit" class="btn btn-default">Sign in</button>
+            {{ field.label(class_="form-label") }}
+            {{ field(class_="form-control input-lg") }}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <div class="form-group help-block has-warning"><span style="color: red;"> {{error}} </span> </div>
+                {% end %}
+            {% end %}
         </div>
-
-{% module xsrf_form_html() %}
+    {% end %}
+    <input type="submit" class="btn btn-default btn-md" value="{{ _("Next to Log in") }}" />
+    {% module xsrf_form_html() %}
 </form>
 {% end %}
 

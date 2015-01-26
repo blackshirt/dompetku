@@ -8,16 +8,16 @@
     {% for field in form %}        
             <div class="form-group">
                 {{ field.label(class_="form-label") }}
-                {{ field(class_="form-control") }} 
+                {{ field(class_="form-control input-lg") }}
                 {% if field.errors %}
                    {% for error in field.errors %}
-                      <div class="form-group help-block has-warning">  {{ error }} </div>
+                      <div class="form-group help-block has-warning"><span style="color: red;"> {{error}} </span> </div>
                    {% end %}
                 {% end %}      
             </div>        
     {% end %}
         
-    <input type="submit" class="btn btn-default btn-md" value="{{ _("Submit") }}" />
+    <input type="submit" class="btn btn-default btn-md" value="{{ _("Submit to Register") }}" />
     {% module xsrf_form_html() %}
 </form>
 {% end %}

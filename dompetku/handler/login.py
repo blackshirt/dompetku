@@ -10,24 +10,28 @@ import tornado.escape
 
 from dompetku import model
 from dompetku.handler import basehandler
+from dompetku.form import LoginForm
 
 
 class AuthLoginHandler(basehandler.BaseHandler):
     """ Class untuk menghandle login process """
     def get(self):
-        self.render('login.html')
+        form = LoginForm()
+        self.render('login.html', form=form)
 
     def post(self):
-        username = self.get_argument("username", "")
+        username = self.get_argument("name", "")
         password = self.get_argument("password", "")
-        
-        auth = self._authenticate(username, password)
-        if auth:
-            self.set_secure_cookie("user", username)
-            self.redirect('/trans')
-        else:
-            self.clear_cookie('user')
-            self.redirect("/auth/login")
+        form = LoginForm(self.request.arguments)
+        if form.validate():
+            auth = self._authenticate(username, password)
+            if auth:
+                self.set_secure_cookie("user", username)
+                self.redirect('/trans')
+            else:
+                self.clear_cookie('user')
+
+        self.render('login.html', form=form)
 
     @staticmethod
     def _authenticate(uname, passwd):
