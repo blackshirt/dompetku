@@ -20,6 +20,7 @@ class AuthLoginHandler(basehandler.BaseHandler):
         self.render('login.html', form=form)
 
     def post(self):
+        """ Check login process """
         username = self.get_argument("name", "")
         password = self.get_argument("password", "")
         form = LoginForm(self.request.arguments)

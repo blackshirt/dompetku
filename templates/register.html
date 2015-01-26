@@ -4,7 +4,7 @@
 
 {% block content %}
 {% autoescape None %}
-<form role="form form-vertical" action="{{ request.path }}" method="post">
+<form role="form form-vertical" action="{{ request.path }}" method="post" id="register-form">
     {% for field in form %}        
             <div class="form-group">
                 {{ field.label(class_="form-label") }}
@@ -23,5 +23,50 @@
 {% end %}
 
 {% block script %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#register-form').bootstrapValidator({
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Username is required'
+                        }
+                    }
+                },
+                realname: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Username is required'
+                        }
+                    }
+                },
+                email: {
+                    validators: {
+                        emailAddress: {
+                            message: 'Not valid email'
+                        },
+                        notEmpty: {
+                            message: 'Email is required'
+                        }
+                    }
+
+                },
+                password: {
+                    validators: {
+                        notEmpty: {
+                            message: 'User password is required'
+                        }
+                    }
+                },
+            }
+        })
+    });
+</script>
 {% end %}
 
