@@ -14,6 +14,7 @@ from dompetku.form import LoginForm
 from dompetku.utils import jsonify
 
 class CheckUserHandler(basehandler.BaseHandler):
+    """ to check user exist or not, and return {'valid: True or False}"""
     def get(self):
         username = self.get_argument("name", "")
         results = {}
@@ -22,6 +23,7 @@ class CheckUserHandler(basehandler.BaseHandler):
         self.write(jsonify(results))
 
 class CheckPasswordHandler(basehandler.BaseHandler):
+    """ to check user password, and return {'valid: True or False}"""
     def get(self):
         username = self.get_argument("name", "")
         passwd = self.get_argument("password", "")
