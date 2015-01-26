@@ -38,11 +38,6 @@
 
                         remote: {
                             url: '/api/check/user',
-                            data: function(validator) {
-                                return {
-                                    name: validator.getFieldElements('name').val()
-                                };
-                            },
                             message: 'The username is not available'
                         }
 
@@ -52,6 +47,11 @@
                     validators: {
                         notEmpty: {
                             message: 'User password is required'
+                        },
+
+                        remote: {
+                            url: '/api/check/password',
+                            message: 'Password not match'
                         }
                     }
                 },

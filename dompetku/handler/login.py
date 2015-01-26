@@ -19,7 +19,19 @@ class CheckUserHandler(basehandler.BaseHandler):
         results = {}
         valid = model.User.select().where(model.User.name == username).exists()
         results['valid'] = valid
-        self.set_header('Content-Type', 'application/json')
+        self.write(jsonify(results))
+
+class CheckPasswordHandler(basehandler.BaseHandler):
+    def get(self):
+        username = self.get_argument("name", "")
+        passwd = self.get_argument("password", "")
+        results = {}
+        valid = False
+        sq = model.User.select(model.User.name == username)
+        if sq.where(model.User.password == model.gen_hash(passwd)).exists():
+            valid = True
+
+        results['valid'] = valid
         self.write(jsonify(results))
 
 class AuthLoginHandler(basehandler.BaseHandler):
