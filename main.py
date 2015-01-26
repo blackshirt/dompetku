@@ -35,6 +35,7 @@ class Application(tornado.wsgi.WSGIApplication):
             (r"/auth/login", login.AuthLoginHandler),
             (r"/auth/logout", login.AuthLogoutHandler),
             (r"/register", register.RegistrasiHandler),
+            (r"/api/check/user", login.CheckUserHandler),
         ]
 
         settings = dict(

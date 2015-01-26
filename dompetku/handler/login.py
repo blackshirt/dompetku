@@ -11,7 +11,16 @@ import tornado.escape
 from dompetku import model
 from dompetku.handler import basehandler
 from dompetku.form import LoginForm
+from dompetku.utils import jsonify
 
+class CheckUserHandler(basehandler.BaseHandler):
+    def get(self):
+        username = self.get_argument("name", "")
+        results = {}
+        valid = model.User.select().where(model.User.name == username).exists()
+        results['valid'] = valid
+        self.set_header('Content-Type', 'application/json')
+        self.write(jsonify(results))
 
 class AuthLoginHandler(basehandler.BaseHandler):
     """ Class untuk menghandle login process """
