@@ -10,13 +10,10 @@ import tornado.escape
 from dompetku import model
 
 
-
 class BaseHandler(tornado.web.RequestHandler):
-
     def get_current_user(self):
         """Get current_user from cookies"""
         return self.get_secure_cookie('user')
-
 
     def get_user_object(self):
         try:
@@ -26,7 +23,8 @@ class BaseHandler(tornado.web.RequestHandler):
 
         return user
 
-    def user_exist_in_db(self, user):
+    @staticmethod
+    def user_exist_in_db(user):
         user = model.User.select().where(model.User.name == user)
         if user.exists():
             return True

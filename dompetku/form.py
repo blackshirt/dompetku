@@ -6,8 +6,8 @@
 """Form model for various purpose."""
 
 from wtforms_tornado import Form
-from wtforms import StringField, DateTimeField, TextAreaField, DecimalField, TextField, BooleanField, PasswordField
-from wtforms.validators import DataRequired, Email, EqualTo, Length, InputRequired
+from wtforms import StringField, DateTimeField, TextAreaField, DecimalField, PasswordField
+from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 from dompetku import model
 
@@ -46,6 +46,7 @@ class TransaksiDetailForm(Form):
     def __unicode__(self):
         return self.item
 
+
 class RegistrasiForm(Form):
     name = StringField('Username', [Length(min=3, max=25)])
     realname = StringField('Realname', [Length(min=3, max=50)])
@@ -55,7 +56,7 @@ class RegistrasiForm(Form):
         EqualTo('confirm', message='Passwords must match')
     ])
     confirm = PasswordField('Repeat Password')
-    
+
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
 
@@ -66,9 +67,10 @@ class RegistrasiForm(Form):
 
         user = model.User.select().where(model.User.name == self.name.data)
         if user.exists():
-           self.name.errors.append('User exists')
-           return False
+            self.name.errors.append('User exists')
+            return False
         return True
+
 
 class LoginForm(Form):
     name = StringField('Username', validators=[DataRequired()])
@@ -84,6 +86,6 @@ class LoginForm(Form):
 
         user = model.User.select().where(model.User.name == self.name.data)
         if not user.exists():
-           self.name.errors.append('User not exists')
-           return False
+            self.name.errors.append('User not exists')
+            return False
         return True

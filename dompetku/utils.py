@@ -30,7 +30,6 @@ def verify_password(password, hashed_password, key):
     return computed_hash == hashed_password
 
 
-
 # Some data types we want to check for.
 def jsonify(data):
     # Get all that nasty Python cleaned up.

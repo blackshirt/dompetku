@@ -16,7 +16,6 @@ import tornado.httpserver
 
 from tornado.options import define, options
 
-from dompetku import model
 from dompetku.handler import transaksi as handlers
 from dompetku.handler import login
 from dompetku.handler import register

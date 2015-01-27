@@ -8,14 +8,13 @@
 import datetime
 
 import peewee
-#from wtfpeewee.orm import model_form
-from wtforms_tornado import Form
+# from wtfpeewee.orm import model_form
+# from wtforms_tornado import Form
 
 from config import dbconfig
 
 db = dbconfig['sqlite']['db']
 database = peewee.SqliteDatabase(db)
-
 
 
 class BaseModel(peewee.Model):
