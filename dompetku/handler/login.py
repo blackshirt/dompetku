@@ -33,6 +33,7 @@ class LoginHandler(basehandler.BaseHandler):
                 self.redirect('/trans')
             else:
                 self.clear_cookie('user')
+
         self.render('login.html', form=form)
 
     @staticmethod

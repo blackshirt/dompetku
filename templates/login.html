@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form action="{{ request.path }}" method="post" id="login-form">
+<form action="{{ request.path }}" method="post" id="login-form" class="form-inline">
     {% autoescape None %}
     <h2 class="form-signin-heading">Please sign in</h2>
     {% for field in form %}
         <div class="form-group">
-            {{ field.label(class_="form-label") }}
-            {{ field(class_="form-control input-lg") }}
+            <!--! {{ field.label(class_="form-label") }} -->
+            {{ field(class_="form-control input-lg", placeholder=field.name) }}
             {% if field.errors %}
                 {% for error in field.errors %}
                     <div class="form-group help-block has-warning"><span style="color: blue;"> {{error}} </span> </div>
@@ -15,7 +15,7 @@
             {% end %}
         </div>
     {% end %}
-    <input type="submit" class="btn btn-default btn-md" value="{{ _("Next to Log in") }}" />
+    <input type="submit" class="btn btn-default btn-md" value="{{ _("Log in") }}" />
     {% module xsrf_form_html() %}
 </form>
 {% end %}
