@@ -7,7 +7,6 @@
 
 import hashlib
 import uuid
-import base64
 import json
 
 from datetime import date, datetime
@@ -17,18 +16,19 @@ from concurrent.futures import ThreadPoolExecutor
 from tornado import concurrent, ioloop
 
 
+def generate_hash(password, random_key=None):
+    """Generate hashed password with random key"""
+    if not random_key:
+        random_key = uuid.uuid4().hex
+    hashed_pass = hashlib.sha512(str(password).encode() + random_key.encode()).hexdigest()
+    return hashed_pass, random_key
 
-def gen_hash(password, randkey = None):
-    if rand_key is None:
-        rand_key = uuid.uuid4().hex
 
-    hashed_password = hashlib.sha512(password + rand_key).hexdigest()
-    return hashed_password, salt 
+def verify_password(password, hashed_password, random_key):
+    """Verify password"""
+    computed_hash, random_key = generate_hash(password, random_key)
+    return computed_hash == hashed_password
 
-def verify_password(password, hashed, salt):
-    computed_pass, salt = gen_hash(password, salt)
-
-    return computed_pass == hashed
 
 
 # Some data types we want to check for.
@@ -58,7 +58,7 @@ def json_clean(data):
 
     # Lists and tuples themselves translate into JSON arrays just fine, but
     # the data they contain may not, so we have to recurse through it.
-    if isinstance(data, list) or iisinstance(data, tuple):
+    if isinstance(data, list) or isinstance(data, tuple):
         # Make sure the data is mutable before we try making changes.
         data = list(data)
         for i in range(len(data)):
@@ -100,7 +100,7 @@ def clean_date(data):
     return data.isoformat()
 
 
-## from http://nchls.com/post/serializing-complex-python-data-json/
+# # from http://nchls.com/post/serializing-complex-python-data-json/
 class DBContainer(object):
     def __init__(self, model):
         self.executor = ThreadPoolExecutor(max_workers=4)

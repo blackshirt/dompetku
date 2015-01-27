@@ -84,7 +84,7 @@ class AuthLoginHandler(BaseHandler):
             raise tornado.web.HTTPError(500)
 
         if user:
-            if user.password == model.gen_hash(passwd):
+            if user.password == model.generate_hash(passwd):
                 return True
 
         return False

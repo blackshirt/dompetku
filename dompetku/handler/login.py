@@ -11,15 +11,24 @@ import tornado.escape
 from dompetku import model
 from dompetku.handler import basehandler
 from dompetku.form import LoginForm
-from dompetku.utils import jsonify
+from dompetku.utils import jsonify, generate_hash, verify_password
 
-class CheckUserHandler(basehandler.BaseHandler):
+class CheckUserExistHandler(basehandler.BaseHandler):
     """ to check user exist or not, and return {'valid: True or False}"""
     def get(self):
         username = self.get_argument("name", "")
         results = {}
         valid = model.User.select().where(model.User.name == username).exists()
         results['valid'] = valid
+        self.write(jsonify(results))
+
+class CheckIfUserAvailable(basehandler.BaseHandler):
+    """ to check user exist or not, and return {'valid: True or False}"""
+    def get(self):
+        username = self.get_argument("name", "")
+        results = {}
+        exists = model.User.select().where(model.User.name == username).exists()
+        results['valid'] = not exists
         self.write(jsonify(results))
 
 class CheckPasswordHandler(basehandler.BaseHandler):
@@ -30,7 +39,7 @@ class CheckPasswordHandler(basehandler.BaseHandler):
         results = {}
         valid = False
         sq = model.User.select(model.User.name == username)
-        if sq.where(model.User.password == model.gen_hash(passwd)).exists():
+        if sq.where(model.User.password == model.generate_hash(passwd)).exists():
             valid = True
 
         results['valid'] = valid
@@ -66,7 +75,8 @@ class AuthLoginHandler(basehandler.BaseHandler):
             user = None
 
         if user:
-            if user.password == model.gen_hash(passwd):
+            hashed, key = generate_hash(passwd, user.password[0])
+            if verify_password(passwd, hashed, key):
                 return True
         
         return False

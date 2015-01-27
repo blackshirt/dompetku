@@ -9,8 +9,9 @@ import tornado.web
 
 from dompetku import model
 from dompetku.form import RegistrasiForm
-from dompetku.utils import jsonify
+from dompetku.utils import jsonify, generate_hash
 from dompetku.handler import basehandler
+
 
 
 class RegistrasiBaseHandler(basehandler.BaseHandler):
@@ -31,11 +32,12 @@ class RegistrasiHandler(RegistrasiBaseHandler):
         form = RegistrasiForm(self.request.arguments)
         
         if form.validate():
+            hashed_password = generate_hash(form.data['password'])
             reg_entry = model.User.create(
                         name = form.data['name'],
                         realname = form.data['realname'],
                         email = form.data['email'],
-                        password = model.gen_hash(form.data['password']),
+                        password = hashed_password,
                         )
             reg_entry.save()
             #self.write({'result': 'OK'})

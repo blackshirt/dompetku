@@ -36,6 +36,10 @@
                     validators: {
                         notEmpty: {
                             message: 'Username is required'
+                        },
+                        remote: {
+                            url: '/api/check/user/available',
+                            message: 'The username is not available'
                         }
                     }
                 },
@@ -64,6 +68,7 @@
                         }
                     }
                 },
+
             }
         })
     });

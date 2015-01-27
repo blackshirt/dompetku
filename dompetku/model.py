@@ -12,7 +12,7 @@ import peewee
 from wtforms_tornado import Form
 
 from config import dbconfig
-from .utils import gen_hash
+from .utils import generate_hash
 
 db = dbconfig['sqlite']['db']
 database = peewee.SqliteDatabase(db)

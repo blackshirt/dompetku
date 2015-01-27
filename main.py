@@ -36,7 +36,8 @@ class Application(tornado.wsgi.WSGIApplication):
             (r"/auth/login", login.AuthLoginHandler),
             (r"/auth/logout", login.AuthLogoutHandler),
             (r"/register", register.RegistrasiHandler),
-            (r"/api/check/user", login.CheckUserHandler),
+            (r"/api/check/user", login.CheckUserExistHandler),
+            (r"/api/check/user/available", login.CheckIfUserAvailable),
             (r"/api/check/password", login.CheckPasswordHandler),
         ]
 
