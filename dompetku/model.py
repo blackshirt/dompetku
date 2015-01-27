@@ -1,18 +1,22 @@
-import peewee
-import hashlib
+#!/usr/bin/env python
+#
+# Copyright @2014 blackshirtmuslim@yahoo.com
+#
+
+"""Core model represents data in the database"""
+
 import datetime
 
+import peewee
 #from wtfpeewee.orm import model_form
 from wtforms_tornado import Form
 
 from config import dbconfig
+from .utils import gen_hash
 
 db = dbconfig['sqlite']['db']
 database = peewee.SqliteDatabase(db)
 
-
-def gen_hash(password):
-    return hashlib.sha512(str(password).encode('utf-8')).hexdigest()
 
 
 class BaseModel(peewee.Model):

@@ -15,6 +15,7 @@ import tornado.ioloop
 import tornado.httpserver
 
 from tornado.options import define, options
+
 from dompetku import model
 from dompetku.handler import transaksi as handlers
 from dompetku.handler import login
@@ -53,7 +54,7 @@ class Application(tornado.wsgi.WSGIApplication):
         tornado.wsgi.WSGIApplication.__init__(self, handler, **settings)
 
         # Have one global connection to the blog DB across all handlers
-        self.db = model.database
+        # self.db = model.database
 
 
 # Issue : locale.Error: local query failed

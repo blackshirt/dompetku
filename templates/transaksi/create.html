@@ -7,7 +7,7 @@
 <form role="form form-vertical" action="{{ request.path }}" method="post">
     {% for field in form %}
         <div class="row">
-            <div class="form-group has-success">
+            <div class="form-group">
                 {{ field.label(class_="control-label") }}
                 {% if field.name == 'amount' %}
                     {{field(id="amount", class_="form-control number")}}
@@ -18,7 +18,7 @@
         </div>
 
     {% end %}
-            <div><input type="submit" id="submit" class="btn btn-primary btn-sm" value="{{ _("Insert") }}" /></div>
+            <div><input type="submit" id="submit" class="btn btn-default btn-md" value="{{ _("Insert") }}" /></div>
     {% module xsrf_form_html() %}
 </form>
 {% end %}

@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+#
+# Copyright @2014 blackshirtmuslim@yahoo.com
+#
+
+"""Base handler module"""
+
 import tornado.web
 import tornado.escape
 from dompetku import model

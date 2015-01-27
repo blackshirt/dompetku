@@ -6,6 +6,7 @@
 """Module to handle registration process."""
 
 import tornado.web
+
 from dompetku import model
 from dompetku.form import RegistrasiForm
 from dompetku.utils import jsonify

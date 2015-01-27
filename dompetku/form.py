@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+#
+# Copyright @2014 blackshirtmuslim@yahoo.com
+#
+
+"""Form model for various purpose."""
+
 from wtforms_tornado import Form
 from wtforms import StringField, DateTimeField, TextAreaField, DecimalField, TextField, BooleanField, PasswordField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, InputRequired
