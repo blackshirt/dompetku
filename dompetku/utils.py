@@ -24,9 +24,9 @@ def generate_hash(password, random_key=None):
     return hashed_pass, random_key
 
 
-def verify_password(password, hashed_password, random_key):
+def verify_password(password, hashed_password, key):
     """Verify password"""
-    computed_hash, random_key = generate_hash(password, random_key)
+    computed_hash, key = generate_hash(password, key)
     return computed_hash == hashed_password
 
 

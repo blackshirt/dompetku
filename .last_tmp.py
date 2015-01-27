@@ -32,8 +32,8 @@ class Application(tornado.wsgi.WSGIApplication):
             (r"/trans/create", handlers.CreateTransaksiHandler),
             (r"/trans/([0-9]*)/edit", handlers.EditTransaksiHandler),
             (r"/trans/([0-9]*)/delete", handlers.DeleteTransaksiHandler),
-            (r"/auth/login", login.AuthLoginHandler),
-            (r"/auth/logout", login.AuthLogoutHandler),
+            (r"/auth/login", login.LoginHandler),
+            (r"/auth/logout", login.LogoutHandler),
             (r"/register", register.RegistrasiHandler),
         ]
 

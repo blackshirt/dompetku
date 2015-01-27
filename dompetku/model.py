@@ -12,7 +12,6 @@ import peewee
 from wtforms_tornado import Form
 
 from config import dbconfig
-from .utils import generate_hash
 
 db = dbconfig['sqlite']['db']
 database = peewee.SqliteDatabase(db)
@@ -29,6 +28,7 @@ class User(BaseModel):
     name = peewee.CharField(max_length=255, unique=True)
     realname = peewee.CharField(max_length=255, default='guest')
     password = peewee.CharField()
+    passkey = peewee.CharField()
     email = peewee.CharField(max_length=255)
     created = peewee.DateField(default=datetime.date.today)
     active = peewee.BooleanField(default=False)
@@ -146,4 +146,4 @@ all_model = [User, Message, Category, TipeTransaksi, Transaksi, TransaksiDetail,
 
 def init():
     database.connect()
-    peewee.create_model_tables(all_model, fail_silently=True)
+    peewee.create_model_tables(all_model, fail_silently=False)

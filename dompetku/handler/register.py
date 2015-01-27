@@ -37,7 +37,8 @@ class RegistrasiHandler(RegistrasiBaseHandler):
                         name = form.data['name'],
                         realname = form.data['realname'],
                         email = form.data['email'],
-                        password = hashed_password,
+                        password = hashed_password[0],
+                        passkey = hashed_password[1]
                         )
             reg_entry.save()
             #self.write({'result': 'OK'})
