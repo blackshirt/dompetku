@@ -30,6 +30,7 @@ class Application(tornado.wsgi.WSGIApplication):
             (r"/trans", transaksi.TransaksiHandler),
             (r"/trans/([0-9]*)", transaksi.TransaksiByIdHandler),
             (r"/trans/create", transaksi.CreateTransaksiHandler),
+            (r"/trans/new", transaksi.NewTransaksiHandler),
             (r"/trans/([0-9]*)/edit", transaksi.EditTransaksiHandler),
             (r"/trans/([0-9]*)/delete", transaksi.DeleteTransaksiHandler),
             (r"/auth/login", login.LoginHandler),

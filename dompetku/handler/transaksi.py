@@ -90,6 +90,24 @@ class CreateTransaksiHandler(TransaksiBaseHandler):
             post.save()
             self.write({'result': 'OK'})
 
+class NewTransaksiHandler(TransaksiBaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        form = TransaksiForm(self.request.arguments)
+        self.render("transaksi/new.html", form=form)
+
+    @tornado.web.authenticated
+    def post(self):
+        """Post new data to our rpest service as a JSON"""
+        form = TransaksiForm(self.request.arguments)
+        if form.validate():
+            post = self.transaksi.create(info=form.data['info'],
+                                         amount=form.data['amount'],
+                                         tipe=10,
+                                         user=self.user.uid,
+                                         memo=form.data['memo'], )
+            post.save()
+        self.render("transaksi/new.html", form=form)
 
 class EditTransaksiHandler(TransaksiBaseHandler):
     @tornado.web.authenticated

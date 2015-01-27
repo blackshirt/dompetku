@@ -30,7 +30,7 @@ class LoginHandler(basehandler.BaseHandler):
             auth = self._authenticate(username, password)
             if auth:
                 self.set_secure_cookie("user", username)
-                self.redirect('/trans')
+                self.redirect(self.get_argument('next', '/'))
             else:
                 self.clear_cookie('user')
 
