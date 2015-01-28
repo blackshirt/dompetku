@@ -88,7 +88,8 @@ class CreateTransaksiHandler(TransaksiBaseHandler):
                                          user=self.user.uid,
                                          memo=form.data['memo'], )
             post.save()
-            self.write({'result': 'OK'})
+            #self.write({'result': 'OK'})
+            self.redirect('/trans')
 
 class NewTransaksiHandler(TransaksiBaseHandler):
     @tornado.web.authenticated

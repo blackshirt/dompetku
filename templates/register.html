@@ -7,8 +7,10 @@
 <form role="form form-vertical" action="{{ request.path }}" method="post" id="register-form">
     {% for field in form %}        
             <div class="form-group">
-                {{ field.label(class_="form-label") }}
-                {{ field(class_="form-control input-lg") }}
+                {{ field.label(class_="control-label") }}
+                <div class="input-group input-group-lg">
+                    {{ field(class_="form-control") }}<span class="input-group-addon">*</span>
+                </div>
                 {% if field.errors %}
                    {% for error in field.errors %}
                       <div class="form-group help-block has-warning"><span style="color: red;"> {{error}} </span> </div>
@@ -25,7 +27,7 @@
 {% block script %}
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#register-form').bootstrapValidator({
+        $('#register-form').formValidation({
             feedbackIcons: {
                 valid: 'glyphicon glyphicon-ok',
                 invalid: 'glyphicon glyphicon-remove',

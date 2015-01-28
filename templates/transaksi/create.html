@@ -14,11 +14,16 @@
                 {% else %}
                     {{ field(class_="form-control", rows="3") }}
                 {% end %}
+                {% if field.errors %}
+                   {% for error in field.errors %}
+                      <div class="form-group help-block has-warning"><span style="color: red;"> {{error}} </span> </div>
+                   {% end %}
+                {% end %}
             </div>
         </div>
 
     {% end %}
-            <div><input type="submit" id="submit" class="btn btn-default btn-md" value="{{ _("Insert") }}" /></div>
+            <div><input type="submit" class="btn btn-default btn-md" value="{{ _("Insert") }}" /></div>
     {% module xsrf_form_html() %}
 </form>
 {% end %}
@@ -26,27 +31,48 @@
 {% block script %}
 <script type="text/javascript">
 $(document).ready(function() {
+$('#transaksi-form').formValidation({
+    fields: {
+        info: {
+            validators: {
+                notEmpty: {
+                    message: 'Info dan kegunaan diperlukan'
+                    }
+                }
+            },
+        amount: {
+            validators: {
+                notEmpty: {
+                    message: 'Harga diperlukan'
+                },
+                numeric: {
+                    transformer: function($field, validatorName) {
+                        // $field is the jQuery object presenting the field element
+                        // validatorName is the name of current validator (numeric)
 
-        $(function () {
-        $('input.number').autoNumeric();
-    });
-
-    $('form').submit(function(){
-        var form = $(this);
-        $('input').each(function(i){
-            var self = $(this);
-            try{
-                var v = self.autoNumeric('get');
-                self.autoNumeric('destroy');
-                self.val(v);
-            }catch(err){
-                console.log("Not an autonumeric field: " + self.attr("name"));
+                        // In fact, you might adjust this transformer to suit your usage
+                        // In this case, this function simply replaces comma with blank space
+                        // as a basic usage
+                        var value = $field.val();
+                        return value.replace(',', '');
+                    }
+                }
             }
-        });
-        return true;
-    })
+        },
+        memo: {
+            validators: {
+                notEmpty: {
+                    message: 'Catatan tentang transaksi'
+                }
+
+            }
+        },
+    }
+});
+
 
 });
+
 </script>
 {% end %}
 
