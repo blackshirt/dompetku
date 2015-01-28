@@ -29,9 +29,9 @@ class TipeTransaksiForm(Form):
 
 
 class TransaksiForm(Form):
-    info = StringField("Kegunaan", validators=[DataRequired()])
+    info = StringField("Kegunaan", validators=[DataRequired(), Length(min=10, max=100, message="Isi dengan kalimat lebih dari 10 huruf yang bermakna")])
     amount = DecimalField("Jumlah", validators=[DataRequired()])
-    memo = TextAreaField("Catatan transaksi", validators=[DataRequired()])
+    memo = TextAreaField("Catatan transaksi", validators=[DataRequired(), Length(min=5, max=255, message="Isi dengan kalimat penjelasan yang bermakna")])
 
     def __unicode__(self):
         return self.info

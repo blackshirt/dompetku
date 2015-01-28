@@ -35,6 +35,8 @@
             },
             fields: {
                 name: {
+                    verbose: false,
+                    threshold: 3,
                     validators: {
                         notEmpty: {
                             message: 'Username is required'
@@ -67,9 +69,21 @@
                     validators: {
                         notEmpty: {
                             message: 'User password is required'
+                        },
+                        different: {
+                            field: 'name',
+                            message: 'The username and password cannot be the same as each other'
                         }
                     }
                 },
+                confirm: {
+                    validators: {
+                        identical: {
+                            field: 'password',
+                            message: 'Confirm are not the same with password entered'
+                        }
+                    }
+                }
 
             }
         })

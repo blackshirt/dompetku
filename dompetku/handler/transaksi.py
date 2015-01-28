@@ -90,6 +90,7 @@ class CreateTransaksiHandler(TransaksiBaseHandler):
             post.save()
             #self.write({'result': 'OK'})
             self.redirect('/trans')
+        self.render('transaksi/create.html', form=form)
 
 class NewTransaksiHandler(TransaksiBaseHandler):
     @tornado.web.authenticated

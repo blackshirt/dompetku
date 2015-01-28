@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form action="{{ request.path }}" method="post" id="login-form" class="form-horizontal">
+<form action="{{ request.uri }}" method="post" id="login-form" class="form-horizontal">
     {% autoescape None %}
     <h2 class="form-signin-heading">Please sign in</h2>
     {% for field in form %}
@@ -33,6 +33,8 @@
             },
             fields: {
                 name: {
+                    verbose: false,
+                    threshold: 3,
                     validators: {
                         notEmpty: {
                             message: 'Username is required'
