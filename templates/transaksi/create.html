@@ -6,21 +6,23 @@
 {% autoescape None %}
 <form role="form form-vertical" action="{{ request.uri }}" method="post" id="transaksi-form">
     {% for field in form %}
-        <div class="row">
+
             <div class="form-group">
                 {{ field.label(class_="control-label") }}
+                <div class="input-group-lg">
                 {% if field.name == 'amount' %}
                     {{field(id="amount", class_="form-control number")}}
                 {% else %}
                     {{ field(class_="form-control", rows="3") }}
                 {% end %}
+                </div>
                 {% if field.errors %}
                    {% for error in field.errors %}
                       <div class="form-group help-block has-warning"><span style="color: magenta;"> {{error}} </span> </div>
                    {% end %}
                 {% end %}
             </div>
-        </div>
+
 
     {% end %}
             <div><input type="submit" class="btn btn-default btn-md" value="{{ _("Insert") }}" /></div>
@@ -33,6 +35,11 @@
 <script type="text/javascript">
 $(document).ready(function() {
 $('#transaksi-form').formValidation({
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+        },
     fields: {
         info: {
             validators: {
@@ -41,7 +48,13 @@ $('#transaksi-form').formValidation({
                     }
                 }
             },
-
+        amount: {
+            validators: {
+                notEmpty: {
+                    message: 'Jumlah nominal diperlukan'
+                }
+            }
+        },
         memo: {
             validators: {
                 notEmpty: {

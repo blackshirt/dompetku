@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form action="{{ request.uri }}" method="post" id="login-form" class="form-horizontal">
+<form action="{{ request.uri }}" method="post" id="login-form" class="form-vertical">
     {% autoescape None %}
     <h2 class="form-signin-heading">Please sign in</h2>
     {% for field in form %}
