@@ -6,13 +6,14 @@
 """Module to handle daily transaction activities."""
 
 import tornado.web
+
 from dompetku import model
-from dompetku.form import TransaksiForm
+from dompetku.handler import base
 from dompetku.utils import jsonify
-from dompetku.handler import basehandler
+from dompetku.form import TransaksiForm
 
 
-class TransaksiBaseHandler(basehandler.BaseHandler):
+class TransaksiBaseHandler(base.BaseHandler):
     """ Class dasar untuk Transaksi"""
 
     def initialize(self):
@@ -79,7 +80,7 @@ class CreateTransaksiHandler(TransaksiBaseHandler):
 
     @tornado.web.authenticated
     def post(self):
-        """Post new data to our rpest service as a JSON"""
+        """Post data transaksi baru ke database"""
         form = TransaksiForm(self.request.arguments)
         if form.validate():
             post = self.transaksi.create(info=form.data['info'],
@@ -88,9 +89,10 @@ class CreateTransaksiHandler(TransaksiBaseHandler):
                                          user=self.user.uid,
                                          memo=form.data['memo'], )
             post.save()
-            #self.write({'result': 'OK'})
+            # self.write({'result': 'OK'})
             self.redirect('/trans')
         self.render('transaksi/create.html', form=form)
+
 
 class NewTransaksiHandler(TransaksiBaseHandler):
     @tornado.web.authenticated
@@ -110,6 +112,7 @@ class NewTransaksiHandler(TransaksiBaseHandler):
                                          memo=form.data['memo'], )
             post.save()
         self.render("transaksi/new.html", form=form)
+
 
 class EditTransaksiHandler(TransaksiBaseHandler):
     @tornado.web.authenticated

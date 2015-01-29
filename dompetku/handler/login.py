@@ -6,12 +6,12 @@
 """Module to handle login logout process"""
 
 from dompetku import model
-from dompetku.handler import basehandler
+from dompetku.handler import base
 from dompetku.form import LoginForm
 from dompetku.utils import jsonify, generate_hash, verify_password
 
 
-class LoginHandler(basehandler.BaseHandler):
+class LoginHandler(base.BaseHandler):
     """ Class untuk menghandle login process """
 
     def get(self):
@@ -51,7 +51,7 @@ class LoginHandler(basehandler.BaseHandler):
         return False
 
 
-class LogoutHandler(basehandler.BaseHandler):
+class LogoutHandler(base.BaseHandler):
     """Class untuk menghandle logout process """
 
     def get(self):
@@ -59,7 +59,7 @@ class LogoutHandler(basehandler.BaseHandler):
         self.redirect("/auth/login")
 
 
-class CheckUserExistHandler(basehandler.BaseHandler):
+class CheckUserExistHandler(base.BaseHandler):
     """ to check user exist or not, and return {'valid: True or False}"""
 
     def get(self):
@@ -70,7 +70,7 @@ class CheckUserExistHandler(basehandler.BaseHandler):
         self.write(jsonify(results))
 
 
-class CheckIfUserAvailable(basehandler.BaseHandler):
+class CheckIfUserAvailable(base.BaseHandler):
     """ to check user exist available or not, and return {'valid: True or False}"""
 
     def get(self):
@@ -81,7 +81,7 @@ class CheckIfUserAvailable(basehandler.BaseHandler):
         self.write(jsonify(results))
 
 
-class CheckPasswordHandler(basehandler.BaseHandler):
+class CheckPasswordHandler(base.BaseHandler):
     """ to check user password, and return {'valid: True or False}"""
 
     def get(self):

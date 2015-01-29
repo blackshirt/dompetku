@@ -6,12 +6,12 @@
 """Module to handle registration process."""
 
 from dompetku import model
+from dompetku.handler import base
 from dompetku.form import RegistrasiForm
 from dompetku.utils import generate_hash
-from dompetku.handler import basehandler
 
 
-class RegistrasiBaseHandler(basehandler.BaseHandler):
+class RegistrasiBaseHandler(base.BaseHandler):
     """ Class dasar untuk Registrasi"""
 
     def initialize(self):

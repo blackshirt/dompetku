@@ -3,7 +3,7 @@ import hashlib
 import datetime
 
 #from wtfpeewee.orm import model_form
-from wtforms_tornado import Form
+#from wtforms_tornado import Form
 
 from config import dbconfig
 

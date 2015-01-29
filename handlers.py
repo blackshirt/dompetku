@@ -5,6 +5,7 @@ import tornado.wsgi
 from dompetku import model
 
 from dompetku.form import MessageForm, TipeTransaksiForm, TransaksiForm
+from dompetku.utils import generate_hash
 
 __all__ = ['HomeHandler', 'NewsHandler', 'AuthLogoutHandler']
 
@@ -84,7 +85,7 @@ class AuthLoginHandler(BaseHandler):
             raise tornado.web.HTTPError(500)
 
         if user:
-            if user.password == model.generate_hash(passwd):
+            if user.password == generate_hash(passwd):
                 return True
 
         return False

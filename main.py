@@ -16,9 +16,8 @@ import tornado.httpserver
 
 from tornado.options import define, options
 
-from dompetku.handler import transaksi
-from dompetku.handler import login
-from dompetku.handler import register
+from dompetku.handler import transaksi, login, register, home
+
 
 define("port", default=8888, help="run on the given port", type=int)
 
@@ -26,7 +25,7 @@ define("port", default=8888, help="run on the given port", type=int)
 class Application(tornado.wsgi.WSGIApplication):
     def __init__(self):
         handler = [
-            (r"/", transaksi.ListTransaksiHandler),
+            (r"/", home.HomeHandler),
             (r"/trans", transaksi.TransaksiHandler),
             (r"/trans/([0-9]*)", transaksi.TransaksiByIdHandler),
             (r"/trans/create", transaksi.CreateTransaksiHandler),

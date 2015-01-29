@@ -6,8 +6,8 @@
 """Form model for various purpose."""
 
 from wtforms_tornado import Form
-from wtforms import StringField, DateTimeField, TextAreaField, DecimalField, PasswordField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
+from wtforms import StringField, DateTimeField, TextAreaField, DecimalField, PasswordField
 
 from dompetku import model
 
@@ -29,9 +29,11 @@ class TipeTransaksiForm(Form):
 
 
 class TransaksiForm(Form):
-    info = StringField("Kegunaan", validators=[DataRequired(), Length(min=10, max=100, message="Isi dengan kalimat lebih dari 10 huruf yang bermakna")])
+    info = StringField("Kegunaan", validators=[DataRequired(), Length(min=10, max=100,
+                                                                      message="Isi dengan kalimat lebih dari 10 huruf yang bermakna")])
     amount = DecimalField("Jumlah", validators=[DataRequired()])
-    memo = TextAreaField("Catatan transaksi", validators=[DataRequired(), Length(min=5, max=255, message="Isi dengan kalimat penjelasan yang bermakna")])
+    memo = TextAreaField("Catatan transaksi", validators=[DataRequired(), Length(min=5, max=255,
+                                                                                 message="Isi dengan kalimat penjelasan yang bermakna")])
 
     def __unicode__(self):
         return self.info
