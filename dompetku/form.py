@@ -29,6 +29,7 @@ class TipeTransaksiForm(Form):
 
 
 class TransaksiForm(Form):
+    """Form untuk input transaksi"""
     info = StringField("Kegunaan", validators=[DataRequired(), Length(min=10, max=100,
                                                                       message="Isi dengan kalimat lebih dari 10 huruf yang bermakna")])
     amount = DecimalField("Jumlah", validators=[DataRequired()])
@@ -50,6 +51,7 @@ class TransaksiDetailForm(Form):
 
 
 class RegistrasiForm(Form):
+    """Form registrasi user"""
     name = StringField('Username', [Length(min=3, max=25)])
     realname = StringField('Realname', [Length(min=3, max=50)])
     email = StringField('Email Address', [Email()])
@@ -75,6 +77,7 @@ class RegistrasiForm(Form):
 
 
 class LoginForm(Form):
+    """Form untuk login"""
     name = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
 

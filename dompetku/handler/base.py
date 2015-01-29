@@ -22,10 +22,3 @@ class BaseHandler(tornado.web.RequestHandler):
             user = self.current_user
 
         return user
-
-    @staticmethod
-    def user_exist_in_db(user):
-        user = model.User.select().where(model.User.name == user)
-        if user.exists():
-            return True
-

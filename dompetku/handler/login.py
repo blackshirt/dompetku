@@ -31,6 +31,8 @@ class LoginHandler(base.BaseHandler):
             if auth:
                 self.set_secure_cookie("user", username)
                 self.redirect(self.get_argument('next', '/'))
+                #based on this, https://github.com/tornadoweb/tornado/issues/1315
+                return # thanks ben darnell
             else:
                 self.clear_cookie('user')
 
@@ -45,6 +47,7 @@ class LoginHandler(base.BaseHandler):
             user = None
 
         if user:
+            # verify dengan password dan key yang ada di database
             if verify_password(passwd, user.password, user.passkey):
                 return True
 

@@ -16,46 +16,49 @@ from dompetku.form import TransaksiForm
 class TransaksiBaseHandler(base.BaseHandler):
     """ Class dasar untuk Transaksi"""
 
-    def initialize(self):
-        self.transaksi = model.Transaksi
+    def initialize(self, transaction=model.Transaksi):
+        self.transaction = transaction
         self.user = self.get_user_object()
 
-    def _get_data(self, id_data):
+    def get_data(self, id_data):
         if id_data:
             try:
-                item = self.transaksi.get(self.transaksi.tid == id_data)
+                item = self.transaction.get(self.transaction.tid == id_data)
                 results = item._data
                 return results
-            except self.transaksi.DoesNotExist:
+            except self.transaction.DoesNotExist:
                 pass
 
-    def _get_all_data(self):
-        all_item = self.transaksi.select().dicts()
+    def get_all_data(self):
+        all_item = self.transaction.select().dicts()
         return [item for item in all_item]
 
 
 class ListTransaksiHandler(TransaksiBaseHandler):
+    @tornado.web.authenticated
     def get(self):
-        trans = self._get_all_data()
+        trans = self.get_all_data()
         self.render("transaksi/list.html", trans=trans)
 
 
 class TransaksiByIdHandler(TransaksiBaseHandler):
+    @tornado.web.authenticated
     def get(self, tid):
-        data = self.transaksi.get(self.transaksi.tid == tid)
+        data = self.transaction.get(self.transaction.tid == tid)
         results = data._data
         self.set_header('Content-Type', 'application/json')
         self.write(jsonify(results))
 
 
 class TransaksiHandler(TransaksiBaseHandler):
+    @tornado.web.authenticated
     def get(self, transid=None):
         transid = self.get_argument('transid', None)
         if transid:
-            item = self._get_data(transid)
+            item = self.get_data(transid)
             self.render("transaksi/detail.html", item=item)
         else:
-            trans = self._get_all_data()
+            trans = self.get_all_data()
             self.render("transaksi/list.html", trans=trans)
 
     @tornado.web.authenticated
@@ -63,11 +66,11 @@ class TransaksiHandler(TransaksiBaseHandler):
         """Post new data to our rpest service as a JSON"""
         form = TransaksiForm(self.request.arguments)
         if form.validate():
-            post = self.transaksi.create(info=form.data['info'],
-                                         amount=form.data['amount'],
-                                         tipe=2,
-                                         user=self.user.uid,
-                                         memo=form.data['memo'], )
+            post = self.transaction.create(info=form.data['info'],
+                                           amount=form.data['amount'],
+                                           tipe=2,
+                                           user=self.user.uid,
+                                           memo=form.data['memo'], )
             post.save()
             self.write({'result': 'OK'})
 
@@ -83,14 +86,40 @@ class CreateTransaksiHandler(TransaksiBaseHandler):
         """Post data transaksi baru ke database"""
         form = TransaksiForm(self.request.arguments)
         if form.validate():
-            post = self.transaksi.create(info=form.data['info'],
-                                         amount=form.data['amount'],
-                                         tipe=10,
-                                         user=self.user.uid,
-                                         memo=form.data['memo'], )
+            post = self.transaction.create(info=form.data['info'],
+                                           amount=form.data['amount'],
+                                           tipe=10,
+                                           user=self.user.uid,
+                                           memo=form.data['memo'], )
             post.save()
             # self.write({'result': 'OK'})
             self.redirect('/trans')
+            return
+
+        self.render('transaksi/create.html', form=form)
+
+
+class InsertTransaksiHandler(TransaksiBaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        form = TransaksiForm(self.request.arguments)
+        self.render("transaksi/create.html", form=form)
+
+    @tornado.web.authenticated
+    def post(self):
+        """Insert data transaksi baru ke database"""
+        form = TransaksiForm(self.request.arguments)
+        if form.validate():
+            query = self.transaction.insert(info=form.data['info'],
+                                            amount=form.data['amount'],
+                                            user=self.user.uid,
+                                            memo=form.data['memo'])
+            query.execute()
+
+            # self.write({'result': 'OK'})
+            self.redirect('/trans')
+            return
+
         self.render('transaksi/create.html', form=form)
 
 
@@ -105,11 +134,10 @@ class NewTransaksiHandler(TransaksiBaseHandler):
         """Post new data to our rpest service as a JSON"""
         form = TransaksiForm(self.request.arguments)
         if form.validate():
-            post = self.transaksi.create(info=form.data['info'],
-                                         amount=form.data['amount'],
-                                         tipe=10,
-                                         user=self.user.uid,
-                                         memo=form.data['memo'], )
+            post = self.transaction.create(info=form.data['info'],
+                                           amount=form.data['amount'],
+                                           user=self.user.uid,
+                                           memo=form.data['memo'])
             post.save()
         self.render("transaksi/new.html", form=form)
 

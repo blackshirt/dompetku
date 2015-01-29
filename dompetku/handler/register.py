@@ -21,6 +21,7 @@ class RegistrasiBaseHandler(base.BaseHandler):
 
 class RegistrasiHandler(RegistrasiBaseHandler):
     def get(self):
+        """Render form registrasi"""
         form = RegistrasiForm(self.request.arguments)
         self.render("register.html", form=form)
 

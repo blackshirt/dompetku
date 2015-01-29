@@ -5,9 +5,9 @@
 
 """Utility module"""
 
-import hashlib
-import uuid
 import json
+import uuid
+import hashlib
 
 from decimal import Decimal
 from datetime import date, datetime
@@ -16,7 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 
 def generate_hash(password, random_key=None):
-    """Generate hashed password with random key"""
+    """Membuat password hash dengan random key 'random_key' menggunakan sha512 dari hashlib"""
     if not random_key:
         random_key = uuid.uuid4().hex
     hashed_pass = hashlib.sha512(str(password).encode() + random_key.encode()).hexdigest()

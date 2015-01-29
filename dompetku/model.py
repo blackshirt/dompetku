@@ -18,11 +18,13 @@ database = peewee.SqliteDatabase(db)
 
 
 class BaseModel(peewee.Model):
+    """Base model"""
     class Meta:
         database = database
 
 
 class User(BaseModel):
+    """Model merepresentasikan user"""
     uid = peewee.PrimaryKeyField()
     name = peewee.CharField(max_length=255, unique=True)
     realname = peewee.CharField(max_length=255, default='guest')
@@ -72,6 +74,7 @@ class Piutang(BaseModel):
 
 
 class Investasi(BaseModel):
+    """Model untuk investasi"""
     invid = peewee.PrimaryKeyField()
     jenis = peewee.CharField()
     amount = peewee.DecimalField()
@@ -86,6 +89,7 @@ class Aset(BaseModel):
 
 
 class Message(BaseModel):
+    """Buat pesan dan info"""
     mid = peewee.PrimaryKeyField()
     title = peewee.CharField()
     body = peewee.TextField()
@@ -113,12 +117,13 @@ class TipeTransaksi(BaseModel):
 # TipeTransaksiForm = model_form(TipeTransaksi, base_class=Form)
 
 class Transaksi(BaseModel):
+    """Core model untuk aktifitas transaksi"""
     tid = peewee.PrimaryKeyField()
     user = peewee.ForeignKeyField(rel_model=User)
-    tipe = peewee.ForeignKeyField(rel_model=TipeTransaksi)
+    tipe = peewee.ForeignKeyField(rel_model=TipeTransaksi, default=10)
     info = peewee.CharField()
     amount = peewee.DecimalField(default=0)
-    transdate = peewee.DateTimeField(default=datetime.datetime.now)
+    transdate = peewee.DateTimeField(default=datetime.datetime.now, formats='%Y-%m-%d %H:%M:%S')
     memo = peewee.TextField()
 
     class Meta:
@@ -129,6 +134,7 @@ class Transaksi(BaseModel):
 
 
 class TransaksiDetail(BaseModel):
+    """Detail dari sebuah transaksi"""
     tdid = peewee.PrimaryKeyField()
     transid = peewee.ForeignKeyField(rel_model=Transaksi)
     item_transaksi = peewee.CharField()
