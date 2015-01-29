@@ -3,7 +3,7 @@
 # Copyright @2014 blackshirtmuslim@yahoo.com
 # Licensed : see Python License
 
-"""Module home inde."""
+"""Module home index."""
 
 from dompetku.handler import base
 

@@ -2,6 +2,7 @@
 #
 # Copyright @2014 blackshirtmuslim@yahoo.com
 #
+#License: see Python license
 
 """Module to handle registration process."""
 
@@ -41,4 +42,5 @@ class RegistrasiHandler(RegistrasiBaseHandler):
             reg_entry.save()
             # self.write({'result': 'OK'})
             self.redirect('/')
+            return 
         self.render('register.html', form=form)

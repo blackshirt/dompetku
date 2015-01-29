@@ -139,6 +139,7 @@ class NewTransaksiHandler(TransaksiBaseHandler):
                                            user=self.user.uid,
                                            memo=form.data['memo'])
             post.save()
+            return
         self.render("transaksi/new.html", form=form)
 
 
