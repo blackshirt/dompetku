@@ -29,6 +29,7 @@ class LoginHandler(base.BaseHandler):
             password = form.data['password']
             auth = self._authenticate(username, password)
             if auth:
+                self.clear_all_cookies()
                 self.set_secure_cookie("user", username)
                 self.redirect(self.get_argument('next', '/'))
                 #based on this, https://github.com/tornadoweb/tornado/issues/1315

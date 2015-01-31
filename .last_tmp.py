@@ -15,10 +15,9 @@ import tornado.ioloop
 import tornado.httpserver
 
 from tornado.options import define, options
-from dompetku import model
-from dompetku.handler import transaksi as handlers
-from dompetku.handler import login
-from dompetku.handler import register
+
+from dompetku.handler import transaksi, login, register, home
+
 
 define("port", default=8888, help="run on the given port", type=int)
 
@@ -26,15 +25,21 @@ define("port", default=8888, help="run on the given port", type=int)
 class Application(tornado.wsgi.WSGIApplication):
     def __init__(self):
         handler = [
-            (r"/", handlers.ListTransaksiHandler),
-            (r"/trans", handlers.TransaksiHandler),
-            (r"/trans/([0-9]*)", handlers.TransaksiByIdHandler),
-            (r"/trans/create", handlers.CreateTransaksiHandler),
-            (r"/trans/([0-9]*)/edit", handlers.EditTransaksiHandler),
-            (r"/trans/([0-9]*)/delete", handlers.DeleteTransaksiHandler),
+            (r"/", home.HomeHandler),
+            (r"/trans", transaksi.ListTransaksiHandler),
+            (r"/trans/all", transaksi.TransaksiHandler),
+            (r"/trans/([0-9]*)", transaksi.TransaksiByIdHandler),
+            (r"/trans/create", transaksi.CreateTransaksiHandler),
+            (r"/trans/new", transaksi.NewTransaksiHandler),
+            (r"/trans/insert", transaksi.InsertTransaksiHandler),
+            (r"/trans/([0-9]*)/edit", transaksi.EditTransaksiHandler),
+            (r"/trans/([0-9]*)/delete", transaksi.DeleteTransaksiHandler),
             (r"/auth/login", login.LoginHandler),
             (r"/auth/logout", login.LogoutHandler),
             (r"/register", register.RegistrasiHandler),
+            (r"/api/check/user", login.CheckUserExistHandler),
+            (r"/api/check/user/available", login.CheckIfUserAvailable),
+            (r"/api/check/password", login.CheckPasswordHandler),
         ]
 
         settings = dict(
@@ -51,7 +56,7 @@ class Application(tornado.wsgi.WSGIApplication):
         tornado.wsgi.WSGIApplication.__init__(self, handler, **settings)
 
         # Have one global connection to the blog DB across all handlers
-        self.db = model.database
+        # self.db = model.database
 
 
 # Issue : locale.Error: local query failed

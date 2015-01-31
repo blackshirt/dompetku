@@ -26,7 +26,8 @@ class Application(tornado.wsgi.WSGIApplication):
     def __init__(self):
         handler = [
             (r"/", home.HomeHandler),
-            (r"/trans", transaksi.TransaksiHandler),
+            (r"/trans", transaksi.ListTransaksiHandler),
+            (r"/trans/all", transaksi.TransaksiHandler),
             (r"/trans/([0-9]*)", transaksi.TransaksiByIdHandler),
             (r"/trans/create", transaksi.CreateTransaksiHandler),
             (r"/trans/new", transaksi.NewTransaksiHandler),

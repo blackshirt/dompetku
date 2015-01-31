@@ -4,7 +4,7 @@
 #
 
 """Module to handle daily transaction activities."""
-
+import peewee
 import tornado.web
 
 from dompetku import model
@@ -20,6 +20,13 @@ class TransaksiBaseHandler(base.BaseHandler):
         self.transaction = transaction
         self.user = self.get_user_object()
 
+    def get_transaksi_list(self, user, *filter):
+        """Get transaksi data for current user with some filter"""
+        active_user = model.User.get(model.User.name == user)
+        data = model.Transaksi.select().where(model.Transaksi.user == active_user.uid, filter).dicts()
+        
+        return data
+    
     def get_data(self, id_data):
         if id_data:
             try:
@@ -37,29 +44,48 @@ class TransaksiBaseHandler(base.BaseHandler):
 class ListTransaksiHandler(TransaksiBaseHandler):
     @tornado.web.authenticated
     def get(self):
-        trans = self.get_all_data()
-        self.render("transaksi/list.html", trans=trans)
-
+        #trans = self.get_all_data()
+        active_user= model.User.get(model.User.name == self.current_user)
+        # self.curent_user was available, because this method was decorated
+        data = model.Transaksi.select().where(model.Transaksi.user == active_user.uid)
+        
+        if data:
+            #trans = data._data
+            self.render("transaksi/list.html", trans=data)
+        else:
+            self.write_error(403, message="Not found")
 
 class TransaksiByIdHandler(TransaksiBaseHandler):
     @tornado.web.authenticated
     def get(self, tid):
-        data = self.transaction.get(self.transaction.tid == tid)
-        results = data._data
-        self.set_header('Content-Type', 'application/json')
-        self.write(jsonify(results))
+        if tid:
+            #data = self.transaction.get(self.transaction.tid == tid)
+            data = self.get_transaksi_list(self.current_user, model.Transaksi.tid == tid)
+            #results = data._data
+            #self.set_header('Content-Type', 'application/json')
+            self.write(jsonify([item for item in data]))
+        else:
+            data = self.get_transaksi_list(self.current_user)
+            self.write(jsonify([item for item in data]))
 
 
 class TransaksiHandler(TransaksiBaseHandler):
     @tornado.web.authenticated
     def get(self, transid=None):
         transid = self.get_argument('transid', None)
+        active_user= model.User.get(model.User.name == self.current_user)
+            
         if transid:
-            item = self.get_data(transid)
-            self.render("transaksi/detail.html", item=item)
+            try:
+                data = model.Transaksi.get(model.Transaksi.user == active_user.uid, model.Transaksi.tid == transid)
+                self.render("transaksi/detail.html", item=data)
+                return
+            except peewee.DoesNotExist:
+                raise tornado.web.HTTPError(403)
         else:
-            trans = self.get_all_data()
-            self.render("transaksi/list.html", trans=trans)
+            data = model.Transaksi.select().where(model.Transaksi.user == active_user.uid)
+            #trans = [item for item in data]
+            self.render("transaksi/list.html", trans=data)
 
     @tornado.web.authenticated
     def post(self):

@@ -3,23 +3,23 @@
 
 {% block content %}
 
-<form action="#" method="post" xmlns="http://www.w3.org/1999/html">
+<form action="{{ request.path }}" method="post" xmlns="http://www.w3.org/1999/html">
 {% for item in trans %}
-<input type=hidden name="tid" value="{{ item['tid']}}"/>
+<input type=hidden name="tid" value="{{ item.tid }}"/>
 <div class="container">
  <div class="row">
     <div class="list-group">
         <div class="list-group-item">
-            <a href="/trans/{{item['tid']}}" class="pull-right">
+            <a href="/trans/{{ item.tid }}" class="pull-right">
                 <img src="{{ static_url("images/rupiah.png")}}" height=75 width=75 class="media-object" alt="Sample Image">
                 <div class="center">
-                    <b><p class="amount">{{ item['amount'] }}</p></b>
+                    <b><p class="amount">{{ item.amount }}</p></b>
                 </div>
             </a>
             <div class="media-body">
-                <h3 class="media-heading"><a href="/trans?transid={{item['tid']}}">{{ item['info']}}</a> </h3>
-                {{ item['memo'] }}
-                <h6><p><i>Transaksi pada tanggal :</i> {{item['transdate']}}</p></h6>
+                <h3 class="media-heading"><a href="/trans/all?transid={{ item.tid }}">{{ item.info }}</a> </h3>
+                {{ item.memo }}
+                <h6><p><i>Transaksi oleh: {{ item.user.realname }} pada tanggal :</i> {{ item.transdate }}</p></h6>
             </div>
         </div> <!-- end list-group-item block -->
     </div> <!-- end list-group block -->
