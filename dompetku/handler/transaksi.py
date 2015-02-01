@@ -4,6 +4,7 @@
 #
 
 """Module to handle daily transaction activities."""
+
 import peewee
 import tornado.web
 
@@ -42,6 +43,8 @@ class TransaksiBaseHandler(base.BaseHandler):
 
 
 class ListTransaksiHandler(TransaksiBaseHandler):
+    """Class untuk menampilkan data transaksi"""
+
     @tornado.web.authenticated
     def get(self):
         #trans = self.get_all_data()
@@ -56,6 +59,8 @@ class ListTransaksiHandler(TransaksiBaseHandler):
             self.write_error(403, message="Not found")
 
 class TransaksiByIdHandler(TransaksiBaseHandler):
+    """Class untuk menghandle data transaksi individual"""
+
     @tornado.web.authenticated
     def get(self, tid):
         if tid:
@@ -70,6 +75,7 @@ class TransaksiByIdHandler(TransaksiBaseHandler):
 
 
 class TransaksiHandler(TransaksiBaseHandler):
+    
     @tornado.web.authenticated
     def get(self, transid=None):
         transid = self.get_argument('transid', None)
@@ -89,7 +95,6 @@ class TransaksiHandler(TransaksiBaseHandler):
 
     @tornado.web.authenticated
     def post(self):
-        """Post new data to our rpest service as a JSON"""
         form = TransaksiForm(self.request.arguments)
         if form.validate():
             post = self.transaction.create(info=form.data['info'],
@@ -102,6 +107,8 @@ class TransaksiHandler(TransaksiBaseHandler):
 
 
 class CreateTransaksiHandler(TransaksiBaseHandler):
+    """Class untuk menghandle create data transaksi, menggunakan peewee model.create """
+
     @tornado.web.authenticated
     def get(self):
         form = TransaksiForm(self.request.arguments)
@@ -126,6 +133,8 @@ class CreateTransaksiHandler(TransaksiBaseHandler):
 
 
 class InsertTransaksiHandler(TransaksiBaseHandler):
+    """Class untuk menghandle data transaksi menggunakan peewee model insert()"""
+
     @tornado.web.authenticated
     def get(self):
         form = TransaksiForm(self.request.arguments)
@@ -149,27 +158,9 @@ class InsertTransaksiHandler(TransaksiBaseHandler):
         self.render('transaksi/create.html', form=form)
 
 
-class NewTransaksiHandler(TransaksiBaseHandler):
-    @tornado.web.authenticated
-    def get(self):
-        form = TransaksiForm(self.request.arguments)
-        self.render("transaksi/new.html", form=form)
-
-    @tornado.web.authenticated
-    def post(self):
-        """Post new data to our rpest service as a JSON"""
-        form = TransaksiForm(self.request.arguments)
-        if form.validate():
-            post = self.transaction.create(info=form.data['info'],
-                                           amount=form.data['amount'],
-                                           user=self.user.uid,
-                                           memo=form.data['memo'])
-            post.save()
-            return
-        self.render("transaksi/new.html", form=form)
-
-
 class EditTransaksiHandler(TransaksiBaseHandler):
+    """Class untuk menghandle edit data transaksi"""
+
     @tornado.web.authenticated
     def get(self, transid):
         post = model.Transaksi.get(model.Transaksi.tid == transid)
@@ -191,6 +182,7 @@ class EditTransaksiHandler(TransaksiBaseHandler):
 
 
 class DeleteTransaksiHandler(TransaksiBaseHandler):
+    """Class untuk menghandle delete data transaksi"""
     @tornado.web.authenticated
     def get(self, tid):
         trans_id = model.Transaksi.get(model.Transaksi.tid == int(tid))

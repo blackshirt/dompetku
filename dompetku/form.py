@@ -94,3 +94,27 @@ class LoginForm(Form):
             self.name.errors.append('User not exists')
             return False
         return True
+
+
+class UserForm(Form):
+    """Form registrasi user"""
+    name = StringField('Username', [Length(min=3, max=25)])
+    password = PasswordField('Password', [
+        DataRequired(),
+        EqualTo('confirm', message='Passwords must match')
+    ])
+    confirm = PasswordField('Repeat Password')
+
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+
+    def validate(self):
+        rv = Form.validate(self)
+        if not rv:
+            return False
+
+        user = model.User.select().where(model.User.name == self.name.data)
+        if not user.exists():
+            self.name.errors.append('User not exists')
+            return False
+        return True

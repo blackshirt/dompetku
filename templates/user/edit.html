@@ -10,9 +10,14 @@
             <div class="form-group">
                 {{ field.label(class_="control-label") }} {{ field(class_="form-control", rows="3") }}
             </div>
+            {% if field.errors %}
+                   {% for error in field.errors %}
+                      <div class="form-group help-block has-warning"><span style="color: red;"> {{error}} </span> </div>
+                   {% end %}
+            {% end %}    
         {% end %}
         <p>
-           <button type=submit class="btn btn-link btn-sm"><i class="glyphicon glyphicon-star">Save</i></button>
+           <button type=submit class="btn btn-link btn-md">Save</button>
         </p>
     </div>
     </form>
