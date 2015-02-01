@@ -21,7 +21,7 @@ class MessageForm(Form):
 
 
 class TipeTransaksiForm(Form):
-    type = StringField(validators=[DataRequired()])
+    tipe = StringField(validators=[DataRequired()])
     desc = StringField(validators=[DataRequired()])
 
     def __unicode__(self):
@@ -43,7 +43,7 @@ class TransaksiForm(Form):
 class TransaksiDetailForm(Form):
     item = StringField(validators=[DataRequired()])
     prices = DecimalField()
-    times = DateTimeField
+    times = DateTimeField()
     notes = TextAreaField()
 
     def __unicode__(self):

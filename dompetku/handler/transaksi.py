@@ -47,13 +47,11 @@ class ListTransaksiHandler(TransaksiBaseHandler):
 
     @tornado.web.authenticated
     def get(self):
-        #trans = self.get_all_data()
         active_user= model.User.get(model.User.name == self.current_user)
         # self.curent_user was available, because this method was decorated
         data = model.Transaksi.select().where(model.Transaksi.user == active_user.uid)
         
         if data:
-            #trans = data._data
             self.render("transaksi/list.html", trans=data)
         else:
             self.write_error(403, message="Not found")
@@ -64,10 +62,7 @@ class TransaksiByIdHandler(TransaksiBaseHandler):
     @tornado.web.authenticated
     def get(self, tid):
         if tid:
-            #data = self.transaction.get(self.transaction.tid == tid)
             data = self.get_transaksi_list(self.current_user, model.Transaksi.tid == tid)
-            #results = data._data
-            #self.set_header('Content-Type', 'application/json')
             self.write(jsonify([item for item in data]))
         else:
             data = self.get_transaksi_list(self.current_user)
@@ -90,19 +85,18 @@ class TransaksiHandler(TransaksiBaseHandler):
                 raise tornado.web.HTTPError(403)
         else:
             data = model.Transaksi.select().where(model.Transaksi.user == active_user.uid)
-            #trans = [item for item in data]
             self.render("transaksi/list.html", trans=data)
 
     @tornado.web.authenticated
     def post(self):
         form = TransaksiForm(self.request.arguments)
         if form.validate():
-            post = self.transaction.create(info=form.data['info'],
+            item = self.transaction.create(info=form.data['info'],
                                            amount=form.data['amount'],
                                            tipe=2,
                                            user=self.user.uid,
                                            memo=form.data['memo'], )
-            post.save()
+            item.save()
             self.write({'result': 'OK'})
 
 
@@ -119,12 +113,12 @@ class CreateTransaksiHandler(TransaksiBaseHandler):
         """Post data transaksi baru ke database"""
         form = TransaksiForm(self.request.arguments)
         if form.validate():
-            post = self.transaction.create(info=form.data['info'],
+            item = self.transaction.create(info=form.data['info'],
                                            amount=form.data['amount'],
                                            tipe=10,
                                            user=self.user.uid,
                                            memo=form.data['memo'], )
-            post.save()
+            item.save()
             # self.write({'result': 'OK'})
             self.redirect('/trans')
             return
@@ -150,7 +144,6 @@ class InsertTransaksiHandler(TransaksiBaseHandler):
                                             user=self.user.uid,
                                             memo=form.data['memo'])
             query.execute()
-
             # self.write({'result': 'OK'})
             self.redirect('/trans')
             return
@@ -163,22 +156,22 @@ class EditTransaksiHandler(TransaksiBaseHandler):
 
     @tornado.web.authenticated
     def get(self, transid):
-        post = model.Transaksi.get(model.Transaksi.tid == transid)
-        form = TransaksiForm(obj=post)
+        item = model.Transaksi.get(model.Transaksi.tid == transid)
+        form = TransaksiForm(obj=item)
         self.render('transaksi/edit.html', form=form)
 
     @tornado.web.authenticated
     def post(self, transid):
-        post = model.Transaksi.get(model.Transaksi.tid == transid)
-        if post:
-            form = TransaksiForm(self.request.arguments, obj=post)
+        item = model.Transaksi.get(model.Transaksi.tid == transid)
+        if item:
+            form = TransaksiForm(self.request.arguments, obj=item)
             if form.validate():
-                form.populate_obj(post)
-                post.save()
+                form.populate_obj(item)
+                item.save()
                 return self.redirect('/trans')
         else:
-            form = TransaksiForm(obj=post)
-        self.render('transaksi/edit.html', form=form, obj=post)
+            form = TransaksiForm(obj=item)
+        self.render('transaksi/edit.html', form=form, obj=item)
 
 
 class DeleteTransaksiHandler(TransaksiBaseHandler):
