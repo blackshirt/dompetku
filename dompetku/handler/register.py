@@ -21,13 +21,15 @@ class RegistrasiBaseHandler(base.BaseHandler):
 
 
 class RegistrasiHandler(RegistrasiBaseHandler):
+    """Class untuk menghandle registrasi user"""
+
     def get(self):
         """Render form registrasi"""
         form = RegistrasiForm(self.request.arguments)
         self.render("register.html", form=form)
 
     def post(self):
-        """Post new data to our rpest service as a JSON"""
+        """Post new inputed data from registration form to database"""
         form = RegistrasiForm(self.request.arguments)
 
         if form.validate():

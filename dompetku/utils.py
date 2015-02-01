@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # Copyright @2014 blackshirtmuslim@yahoo.com
-#
+# Licensed: see Python license
 
 """Utility module"""
 

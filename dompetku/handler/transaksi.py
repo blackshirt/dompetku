@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # Copyright @2014 blackshirtmuslim@yahoo.com
-#
+# Licensed: see Python license
 
 """Module to handle daily transaction activities."""
 
@@ -183,6 +183,7 @@ class EditTransaksiHandler(TransaksiBaseHandler):
 
 class DeleteTransaksiHandler(TransaksiBaseHandler):
     """Class untuk menghandle delete data transaksi"""
+
     @tornado.web.authenticated
     def get(self, tid):
         trans_id = model.Transaksi.get(model.Transaksi.tid == int(tid))

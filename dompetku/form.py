@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # Copyright @2014 blackshirtmuslim@yahoo.com
-#
+# Licensed: see Python license
 
 """Form model for various purpose."""
 
@@ -97,13 +97,13 @@ class LoginForm(Form):
 
 
 class UserForm(Form):
-    """Form registrasi user"""
+    """Form profile user"""
     name = StringField('Username', [Length(min=3, max=25)])
-    password = PasswordField('Password', [
+    password = PasswordField('New Password', [
         DataRequired(),
         EqualTo('confirm', message='Passwords must match')
     ])
-    confirm = PasswordField('Repeat Password')
+    confirm = PasswordField('Repeat New Password')
 
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)

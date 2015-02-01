@@ -11,11 +11,11 @@ import tornado.web
 from dompetku import model
 from dompetku.handler import base
 from dompetku.form import UserForm
-from dompetku.utils import jsonify, generate_hash, verify_password
+from dompetku.utils import generate_hash
 
 
 class UserHandler(base.BaseHandler):
-    """ Class untuk menghandle login process """
+    """ Class untuk menghandle profile user"""
     
     @tornado.web.authenticated
     def get(self, userid):
@@ -39,7 +39,8 @@ class UserHandler(base.BaseHandler):
                     password=hashed_password[0],
                     passkey=hashed_password[1]).where(model.User.name == self.current_user)
                 user_entry.execute()
-                return self.redirect('/trans')
+                self.redirect('/trans')
+                return
         else:
             form = UserForm(obj=user)
         self.render('user/edit.html', form=form, obj=user)
