@@ -43,7 +43,7 @@
 <script type="text/javascript">
   $(document).ready(function() {
      $('div.jumlah').priceFormat({ prefix: 'Rp. ', thousandsSeparator: '.',  centsSeparator: ',', centsLimit: 0});
-     $('p.amount').autoNumeric({aDec: ',', aSep: '.'});
+     $('p.amount').priceFormat({ prefix: '', thousandsSeparator: '.',  centsSeparator: ',', centsLimit: 0});
   });
 </script>
 
