@@ -2,9 +2,10 @@
 
 
 {% block content %}
-<h2 class="total"> {{ total }} </h2>
+
 
 <form action="{{ request.path }}" method="post">
+<h2><div class="jumlah">  {{ total }} </div></h2>
 {% for item in trans %}
 <input type=hidden name="tid" value="{{ item.tid }}"/>
 <div class="container">
@@ -41,8 +42,8 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-     $('h2.total').autoNumeric({aDec: ',', aSep: '.', vMax: '999999999999999.99'});
-     $('p.amount').autoNumeric({aDec: ',', aSep: '.', vMax: '999999999999999.99'});
+     $('div.jumlah').priceFormat({ prefix: 'Rp. ', thousandsSeparator: '.',  centsSeparator: ',', centsLimit: 0});
+     $('p.amount').autoNumeric({aDec: ',', aSep: '.'});
   });
 </script>
 
