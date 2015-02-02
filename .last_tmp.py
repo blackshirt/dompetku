@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # Copyright @2014 blackshirtmuslim@yahoo.com
-#
+# Licensed: see Python license
 
 """Main entry for Application"""
 
@@ -35,8 +35,7 @@ class Application(tornado.wsgi.WSGIApplication):
             (r"/trans/([0-9]*)/delete", transaksi.DeleteTransaksiHandler),
             (r"/auth/login", login.LoginHandler),
             (r"/auth/logout", login.LogoutHandler),
-            (r"/user/([0-9]*)/edit", user.UserHandler),
-        
+            (r"/user/([0-9]*)/edit", user.UserHandler),        
             (r"/register", register.RegistrasiHandler),
             (r"/api/check/user", login.CheckUserExistHandler),
             (r"/api/check/user/available", login.CheckIfUserAvailable),
@@ -51,7 +50,7 @@ class Application(tornado.wsgi.WSGIApplication):
             xsrf_cookies=True,
             cookie_secret=base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
             login_url="/auth/login",
-            debug=False,
+            debug=True,
         )
 
         tornado.wsgi.WSGIApplication.__init__(self, handler, **settings)

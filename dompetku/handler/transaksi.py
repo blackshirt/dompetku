@@ -8,6 +8,8 @@
 import peewee
 import tornado.web
 
+from peewee import fn
+
 from dompetku import model
 from dompetku.handler import base
 from dompetku.utils import jsonify
@@ -50,9 +52,10 @@ class ListTransaksiHandler(TransaksiBaseHandler):
         active_user= model.User.get(model.User.name == self.current_user)
         # self.curent_user was available, because this method was decorated
         data = model.Transaksi.select().where(model.Transaksi.user == active_user.uid)
-        
+        #total = data.select(fn.sum(model.Transaksi.amount)).scalar()
+        total = data.aggregate(fn.sum(model.Transaksi.amount))
         if data:
-            self.render("transaksi/list.html", trans=data)
+            self.render("transaksi/list.html", trans=data, total=total)
         else:
             self.write_error(403, message="Not found")
 
