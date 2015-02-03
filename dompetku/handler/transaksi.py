@@ -159,6 +159,7 @@ class EditTransaksiHandler(TransaksiBaseHandler):
 
     @tornado.web.authenticated
     def get(self, transid):
+        """get data with id 'transid' and populate form with that data"""
         item = model.Transaksi.get(model.Transaksi.tid == transid)
         form = TransaksiForm(obj=item)
         self.render('transaksi/edit.html', form=form)

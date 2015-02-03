@@ -1,4 +1,10 @@
-# /usr/bin/env python3.4
+#!/usr/bin/env python
+#
+# Copyright @2014 blackshirtmuslim@yahoo.com
+# Licensed: see Python license
+
+"""Config file on top of root dir"""
+
 import os
 
 _data_path = os.path.join(os.path.dirname(__file__), 'data')  # relatif ke main script

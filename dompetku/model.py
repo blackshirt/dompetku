@@ -25,6 +25,7 @@ class BaseModel(peewee.Model):
 
 class User(BaseModel):
     """Model merepresentasikan user"""
+
     uid = peewee.PrimaryKeyField()
     name = peewee.CharField(max_length=255, unique=True)
     realname = peewee.CharField(max_length=255, default='guest')
@@ -41,6 +42,8 @@ class User(BaseModel):
 
 # UserForm = model_form(User, base_class=Form)
 class Account(BaseModel):
+    """Model untuk account"""
+
     acid = peewee.PrimaryKeyField()
     name = peewee.CharField()
     amount = peewee.DecimalField()
@@ -48,6 +51,8 @@ class Account(BaseModel):
 
 
 class Hutang(BaseModel):
+    """Model untuk hutang"""
+
     hid = peewee.PrimaryKeyField()
     tanggal = peewee.DateField(default=datetime.date.today)
     tempo = peewee.DateField(default=datetime.date.today)
@@ -61,6 +66,8 @@ class Hutang(BaseModel):
 
 
 class Piutang(BaseModel):
+    """Model untuk piutang"""
+
     pid = peewee.PrimaryKeyField()
     tanggal = peewee.DateTimeField()
     tempo = peewee.DateTimeField()
@@ -75,6 +82,7 @@ class Piutang(BaseModel):
 
 class Investasi(BaseModel):
     """Model untuk investasi"""
+
     invid = peewee.PrimaryKeyField()
     jenis = peewee.CharField()
     amount = peewee.DecimalField()
@@ -82,6 +90,8 @@ class Investasi(BaseModel):
 
 
 class Aset(BaseModel):
+    """Model buat aset"""
+
     asid = peewee.PrimaryKeyField()
     name = peewee.CharField()
     jenis = peewee.CharField()
@@ -90,6 +100,7 @@ class Aset(BaseModel):
 
 class Message(BaseModel):
     """Buat pesan dan info"""
+
     mid = peewee.PrimaryKeyField()
     title = peewee.CharField()
     body = peewee.TextField()
@@ -103,12 +114,16 @@ class Message(BaseModel):
 # MessageForm = model_form(Message, base_class=Form)
 
 class Category(BaseModel):
+    """Category model untuk pengklasifikasian"""
+
     cid = peewee.PrimaryKeyField()
     category = peewee.CharField(unique=True)
     desc = peewee.CharField(default='Deskripsi')
 
 
 class TipeTransaksi(BaseModel):
+    """Tipe transaksi model"""
+
     ttid = peewee.PrimaryKeyField()
     tipe = peewee.CharField(default='Not defined')
     desc = peewee.TextField()
@@ -118,6 +133,7 @@ class TipeTransaksi(BaseModel):
 
 class Transaksi(BaseModel):
     """Core model untuk aktifitas transaksi"""
+
     tid = peewee.PrimaryKeyField()
     user = peewee.ForeignKeyField(rel_model=User)
     tipe = peewee.ForeignKeyField(rel_model=TipeTransaksi, default=10)
@@ -135,6 +151,7 @@ class Transaksi(BaseModel):
 
 class TransaksiDetail(BaseModel):
     """Detail dari sebuah transaksi"""
+
     tdid = peewee.PrimaryKeyField()
     transid = peewee.ForeignKeyField(rel_model=Transaksi)
     item_transaksi = peewee.CharField()
@@ -150,5 +167,6 @@ all_model = [User, Message, Category, TipeTransaksi, Transaksi, TransaksiDetail,
 
 
 def init():
+    """utility function to initialize tables and database"""
     database.connect()
     peewee.create_model_tables(all_model, fail_silently=False)

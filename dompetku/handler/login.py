@@ -15,6 +15,7 @@ class LoginHandler(base.BaseHandler):
     """ Class untuk menghandle login process """
 
     def get(self):
+        """Render form login"""
         form = LoginForm()
         self.render('login.html', form=form)
 
@@ -42,12 +43,10 @@ class LoginHandler(base.BaseHandler):
     @staticmethod
     def _authenticate(uname, passwd):
         """check jika user dan passwordnya match dengan db"""
-        try:
-            user = model.User.get(model.User.name == uname)
-        except model.User.DoesNotExist:
-            user = None
-
-        if user:
+        user_exists = model.User.select().where(model.User.name == uname).exists()
+        if user_exists:  
+            # get user instance                  
+            user = model.User.get(model.User.name == uname)               
             # verify dengan password dan key yang ada di database
             if verify_password(passwd, user.password, user.passkey):
                 return True
@@ -59,6 +58,7 @@ class LogoutHandler(base.BaseHandler):
     """Class untuk menghandle logout process """
 
     def get(self):
+        """just clear all cookies and redirect to login page"""
         self.clear_all_cookies()
         self.redirect("/auth/login")
 
