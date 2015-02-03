@@ -5,6 +5,8 @@
 
 """Module to handle daily transaction activities."""
 
+import datetime
+
 import peewee
 import tornado.web
 
@@ -19,17 +21,18 @@ from dompetku.form import TransaksiForm
 class TransaksiBaseHandler(base.BaseHandler):
     """ Class dasar untuk Transaksi"""
 
-    def initialize(self, transaction=model.Transaksi):
-        self.transaction = transaction
+    def initialize(self):
+        self.transaction = model.Transaksi
         self.user = self.get_user_object()
 
-    def get_transaksi_list(self, user, *filter):
+    @staticmethod
+    def get_transaksi_list(user, *query):
         """Get transaksi data for current user with some filter"""
         active_user = model.User.get(model.User.name == user)
-        data = model.Transaksi.select().where(model.Transaksi.user == active_user.uid, filter).dicts()
-        
+        data = model.Transaksi.select().where(model.Transaksi.user == active_user.uid, query).dicts()
+
         return data
-    
+
     def get_data(self, id_data):
         if id_data:
             try:
@@ -48,16 +51,22 @@ class ListTransaksiHandler(TransaksiBaseHandler):
     """Class untuk menampilkan data transaksi"""
 
     @tornado.web.authenticated
-    def get(self):
-        active_user= model.User.get(model.User.name == self.current_user)
+    def get(self, d=0):
+        d = self.get_argument('d', None)
+        active_user = model.User.get(model.User.name == self.current_user)
         # self.curent_user was available, because this method was decorated
-        data = model.Transaksi.select().where(model.Transaksi.user == active_user.uid)
-        #total = data.select(fn.sum(model.Transaksi.amount)).scalar()
-        total = data.aggregate(fn.sum(model.Transaksi.amount))
+        if d:
+            last_ago = datetime.date.today() - datetime.timedelta(days=int(d))
+            data = model.Transaksi.select().where((model.Transaksi.user == active_user.uid) & (model.Transaksi.transdate > last_ago))
+        else:
+            data = model.Transaksi.select().where(model.Transaksi.user == active_user.uid)
+
+        total = data.select(fn.sum(model.Transaksi.amount)).scalar()
         if data:
             self.render("transaksi/list.html", trans=data, total=total)
         else:
             self.write_error(403, message="Not found")
+
 
 class TransaksiByIdHandler(TransaksiBaseHandler):
     """Class untuk menghandle data transaksi individual"""
@@ -73,12 +82,11 @@ class TransaksiByIdHandler(TransaksiBaseHandler):
 
 
 class TransaksiHandler(TransaksiBaseHandler):
-    
     @tornado.web.authenticated
     def get(self, transid=None):
         transid = self.get_argument('transid', None)
-        active_user= model.User.get(model.User.name == self.current_user)
-            
+        active_user = model.User.get(model.User.name == self.current_user)
+
         if transid:
             try:
                 data = model.Transaksi.get(model.Transaksi.user == active_user.uid, model.Transaksi.tid == transid)

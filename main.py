@@ -50,7 +50,7 @@ class Application(tornado.wsgi.WSGIApplication):
             xsrf_cookies=True,
             cookie_secret=base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
             login_url="/auth/login",
-            debug=False,
+            debug=True,
         )
 
         tornado.wsgi.WSGIApplication.__init__(self, handler, **settings)
