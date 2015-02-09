@@ -47,6 +47,10 @@ class TransaksiBaseHandler(base.BaseHandler):
         return [item for item in all_item]
 
 
+class ListTrans(TransaksiBaseHandler):
+    def get(self, *args, **kwargs):
+        self.render('transaksi/ko-list.html')
+
 class ListTransaksiHandler(TransaksiBaseHandler):
     """Class untuk menampilkan data transaksi"""
 
