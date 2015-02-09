@@ -1,0 +1,50 @@
+{% extends "../base.html" %}
+
+
+{% block content %}
+
+
+<form action="{{ request.path }}" method="post">
+<h2><div class="jumlah">  {{ total }} </div></h2>
+{% for item in trans %}
+<input type=hidden name="tid" value="{{ item.tid }}"/>
+<div class="container">
+ <div class="row">
+    <div class="list-group">
+        <div class="list-group-item">
+            <a href="/trans/{{ item.tid }}" class="pull-right">
+                <img src="{{ static_url("images/rupiah.png")}}" height=75 width=75 class="media-object" alt="Sample Image">
+                <div class="text-center">
+                    <b><p class="amount">{{ item.amount }}</p></b>
+                </div>
+            </a>
+            <div class="media-body">
+                <h3 class="media-heading"><a href="/trans/all?transid={{ item.tid }}">{{ item.info }}</a> </h3>
+                {{ item.memo }}
+                <h6><p><i>Transaksi oleh: {{ item.user.realname }} pada tanggal :</i> {{ item.transdate }}</p></h6>
+            </div>
+        </div> <!-- end list-group-item block -->
+    </div> <!-- end list-group block -->
+ </div>  <!-- end row block -->
+</div>
+
+
+{% end %} <!-- end for block -->
+{% module xsrf_form_html() %}
+</form>
+
+
+{% end %} <!-- end content block -->
+
+
+
+{% block script %}
+
+<script type="text/javascript">
+  $(document).ready(function() {
+     $('div.jumlah').priceFormat({ prefix: 'Rp. ', thousandsSeparator: '.',  centsSeparator: ',', centsLimit: 0});
+     $('p.amount').priceFormat({ prefix: '', thousandsSeparator: '.',  centsSeparator: ',', centsLimit: 0});
+  });
+</script>
+
+{% end %} <!-- end script block -->
