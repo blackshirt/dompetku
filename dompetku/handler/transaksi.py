@@ -48,7 +48,7 @@ class TransaksiBaseHandler(base.BaseHandler):
 
 
 class ListTrans(TransaksiBaseHandler):
-    def get(self, *args, **kwargs):
+    def get(self):
         self.render('transaksi/ko-list.html')
 
 class ListTransaksiHandler(TransaksiBaseHandler):
@@ -59,15 +59,15 @@ class ListTransaksiHandler(TransaksiBaseHandler):
         d = self.get_argument('d', None)
         active_user = model.User.get(model.User.name == self.current_user)
         # self.curent_user was available, because this method was decorated
+        today = datetime.date.today()
+            
         if d:
-            last_ago = datetime.date.today() - datetime.timedelta(days=int(d))
-            data = model.Transaksi.select().where((model.Transaksi.user == active_user.uid) & (model.Transaksi.transdate > last_ago))
+            days_ago = today - datetime.timedelta(days=int(d))
+            data = model.Transaksi.select().where((model.Transaksi.user == active_user.uid) & (model.Transaksi.transdate > days_ago))
         else:
-            today = datetime.date.today()
-            month = today.month
-            data = model.Transaksi.select().where(model.Transaksi.user == active_user.uid)
-            #data  = model.Transaksi.select(model.Transaksi.transdate.month == month)
-
+            current_month = today.month
+            data = model.Transaksi.select().where((model.Transaksi.user == active_user.uid) & (model.Transaksi.transdate.month == current_month))
+          
         total = data.select(fn.sum(model.Transaksi.amount)).scalar()
         if data:
             self.render("transaksi/list.html", trans=data, total=total)
