@@ -3,6 +3,7 @@ function transaksiEntri(data) {
     self.info = data.info;
     self.amount = data.amount;
     self.memo = data.memo;
+    
 };
 
 
@@ -11,6 +12,7 @@ function transaksiViewModel() {
     self.info = ko.observable('');
     self.amount = ko.observable(0);
     self.memo = ko.observable('');
+    
 
     self.addText = ko.observable('Add');
     self.resetText = ko.observable('Reset');
@@ -22,7 +24,8 @@ function transaksiViewModel() {
         var entry = new transaksiEntri({
             info : self.info(),
             amount : self.amount(),
-            memo : self.memo()
+            memo : self.memo(),
+            
         });
 
         self.transaksiEntries.push(entry);

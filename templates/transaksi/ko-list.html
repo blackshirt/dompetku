@@ -2,58 +2,26 @@
 
 
 {% block content %}
-<div class="container-narrow">
-    <div class="row">
-        <h1>Telephone Directory</h1>
-    </div>
-    <div class="row shaded padded">
 
-        <div class="col-sm-3">
-            <label for="info">Last Name</label>
-            <input id="info" name="info" type="text" data-bind="value: info" class="form-control" required="required" />
-        </div>
-
-        <div class="col-sm-3">
-            <label for="amount">amount</label>
-            <input id="amount" name="amount" data-bind="value: amount" type="text" class="form-control" required="required" />
-        </div>
-
-        <div class="col-sm-3">
-            <label for="memo">memo</label>
-            <input id="memo" name="memo" type="text" data-bind="value: memo" class="form-control" required="required" />
-        </div>
-        <div class="col-sm-12">
-            <button id="add" name="add" data-bind="click: add" type="submit">Add</button>
-            <button id="reset" name="reset" type="reset">Reset</button>
-        </div>
-    </div>
+<div class="container">
+ <div class="row" data-bind="foreach: transaksiEntries">
+    <div class="list-group">
+        <div class="list-group-item">
+            <a href="#" class="pull-right">
+                <img src="{{ static_url("images/rupiah.png")}}" height=60 width=60 class="media-object" alt="Sample Image">
+                <div class="text-center">
+                    <b><span class="amount" data-bind="text: amount"></span></b>
+                </div>
+            </a>
+            <div class="media-body">
+                <h3 class="media-heading"><span data-bind="text: info"></span></h3>
+                <span data-bind="text: memo"></span>
+                <h6><p><i>Transaksi oleh: pada tanggal :</i> </p></h6>
+            </div>
+        </div> <!-- end list-group-item block -->
+    </div> <!-- end list-group block -->
+ </div>  <!-- end row block -->
 </div>
-<div class="container-narrow">
-    <div class="row">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Phone Number</th>
-                    <th>&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody data-bind="foreach: transaksiEntries">
-                <tr>
-                    <td><span data-bind="text: info"></span></td>
-                    <td><span data-bind="text: amount"></span></td>
-                    <td><span data-bind="text: memo"></span></td>
-
-                    <td>
-                        <a href="#" data-bind="click: $parent.edit">Edit</a>&nbsp;<a href="#" data-bind="click: $parent.delete">Delete</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
 
 
 {% end %} <!-- end content block -->
@@ -62,13 +30,12 @@
 
 {% block script %}
 
+<script src="{{ static_url("Transaksi.js")}}"></script>
+
 <script type="text/javascript">
   $(document).ready(function() {
      $('div.jumlah').priceFormat({ prefix: 'Rp. ', thousandsSeparator: '.',  centsSeparator: ',', centsLimit: 0});
-     $('p.amount').priceFormat({ prefix: '', thousandsSeparator: '.',  centsSeparator: ',', centsLimit: 0});
+     $('span.amount').priceFormat({ prefix: '', thousandsSeparator: '.',  centsSeparator: ',', centsLimit: 0});
   });
 </script>
-
-<script src="{{ static_url("Transaksi.js")}}"></script>
-
 {% end %} <!-- end script block -->

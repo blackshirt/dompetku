@@ -4,13 +4,14 @@
 # Licensed: see Python license
 
 """Module to handle json services."""
+import tornado.web
 
-from tornado.web import RequestHandler
-from dompetku.model import Transaksi
+from dompetku.model import Transaksi, User
 from dompetku.utils import jsonify
 
-class Transactions(RequestHandler):
-    def get(self, *args, **kwargs):
+class Transactions(tornado.web.RequestHandler):
+    
+    def get(self):
         all_item = Transaksi.select().dicts()
         self.write(jsonify([item for item in all_item]))
 

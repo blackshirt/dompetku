@@ -63,7 +63,10 @@ class ListTransaksiHandler(TransaksiBaseHandler):
             last_ago = datetime.date.today() - datetime.timedelta(days=int(d))
             data = model.Transaksi.select().where((model.Transaksi.user == active_user.uid) & (model.Transaksi.transdate > last_ago))
         else:
+            today = datetime.date.today()
+            month = today.month
             data = model.Transaksi.select().where(model.Transaksi.user == active_user.uid)
+            #data  = model.Transaksi.select(model.Transaksi.transdate.month == month)
 
         total = data.select(fn.sum(model.Transaksi.amount)).scalar()
         if data:

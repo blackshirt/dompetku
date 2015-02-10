@@ -17,7 +17,7 @@ import tornado.httpserver
 from tornado.options import define, options
 
 from dompetku.handler import transaksi, login, register, home, user
-
+from dompetku.handler import services
 
 define("port", default=8888, help="run on the given port", type=int)
 
@@ -28,6 +28,8 @@ class Application(tornado.wsgi.WSGIApplication):
             (r"/", home.HomeHandler),
             (r"/trans", transaksi.ListTransaksiHandler),
             (r"/trans/all", transaksi.TransaksiHandler),
+            (r"/transactions", transaksi.ListTrans),
+            (r"/services/trans", services.Transactions),
             (r"/trans/([0-9]*)", transaksi.TransaksiByIdHandler),
             (r"/trans/create", transaksi.CreateTransaksiHandler),
             (r"/trans/insert", transaksi.InsertTransaksiHandler),
@@ -50,7 +52,7 @@ class Application(tornado.wsgi.WSGIApplication):
             xsrf_cookies=True,
             cookie_secret=base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
             login_url="/auth/login",
-            debug=False,
+            debug=True,
         )
 
         tornado.wsgi.WSGIApplication.__init__(self, handler, **settings)
