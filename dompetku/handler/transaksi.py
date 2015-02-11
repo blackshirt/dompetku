@@ -9,66 +9,70 @@ import datetime
 
 import peewee
 import tornado.web
+from tornado.web import HTTPError
 
 from peewee import fn
 
-from dompetku import model
 from dompetku.handler import base
 from dompetku.utils import jsonify
 from dompetku.form import TransaksiForm
-
+from dompetku.model import Transaksi, User
 
 class TransaksiBaseHandler(base.BaseHandler):
     """ Class dasar untuk Transaksi"""
 
-    def initialize(self):
-        self.transaction = model.Transaksi
-        self.user = self.get_user_object()
-
     @staticmethod
     def get_transaksi_list(user, *query):
         """Get transaksi data for current user with some filter"""
-        active_user = model.User.get(model.User.name == user)
-        data = model.Transaksi.select().where(model.Transaksi.user == active_user.uid, query).dicts()
+        active_user = User.get(User.name == user)
+        data = Transaksi.select().where(Transaksi.user == active_user.uid, query).dicts()
 
         return data
 
-    def get_data(self, id_data):
+    @staticmethod
+    def get_data(id_data):
         if id_data:
             try:
-                item = self.transaction.get(self.transaction.tid == id_data)
+                item = Transaksi.get(Transaksi.tid == id_data)
                 results = item._data
                 return results
-            except self.transaction.DoesNotExist:
+            except peewee.DoesNotExist:
                 pass
 
-    def get_all_data(self):
-        all_item = self.transaction.select().dicts()
+    @staticmethod
+    def get_all_data():
+        all_item = Transaksi.select().where(Transaksi.user == user).dicts()
         return [item for item in all_item]
 
 
 class ListTrans(TransaksiBaseHandler):
-    def get(self, *args, **kwargs):
+    def get(self):
         self.render('transaksi/ko-list.html')
+
 
 class ListTransaksiHandler(TransaksiBaseHandler):
     """Class untuk menampilkan data transaksi"""
 
     @tornado.web.authenticated
-    def get(self, d=0):
-        d = self.get_argument('d', None)
-        active_user = model.User.get(model.User.name == self.current_user)
-        # self.curent_user was available, because this method was decorated
-        if d:
-            last_ago = datetime.date.today() - datetime.timedelta(days=int(d))
-            data = model.Transaksi.select().where((model.Transaksi.user == active_user.uid) & (model.Transaksi.transdate > last_ago))
-        else:
-            today = datetime.date.today()
-            month = today.month
-            data = model.Transaksi.select().where(model.Transaksi.user == active_user.uid)
-            #data  = model.Transaksi.select(model.Transaksi.transdate.month == month)
+    def get(self):
+        today = datetime.date.today()
+        current_day = today.day
+        current_month = today.month
 
-        total = data.select(fn.sum(model.Transaksi.amount)).scalar()
+        d = self.get_argument('d', None)
+        tot = self.get_argument('total', False)
+        active_user = User.get(User.name == self.current_user)
+        transaksi = Transaksi.select().where(Transaksi.user == active_user.uid)
+        if tot:
+            data = transaksi
+
+            if d:
+                days_ago = today - datetime.timedelta(days=int(d))
+                data = transaksi.select().where(Transaksi.transdate > days_ago)
+        else:
+            data = transaksi.select().where(Transaksi.transdate.month == current_month)
+
+        total = data.select(fn.sum(Transaksi.amount)).scalar()
         if data:
             self.render("transaksi/list.html", trans=data, total=total)
         else:
@@ -81,7 +85,7 @@ class TransaksiByIdHandler(TransaksiBaseHandler):
     @tornado.web.authenticated
     def get(self, tid):
         if tid:
-            data = self.get_transaksi_list(self.current_user, model.Transaksi.tid == tid)
+            data = self.get_transaksi_list(self.current_user, Transaksi.tid == tid)
             self.write(jsonify([item for item in data]))
         else:
             data = self.get_transaksi_list(self.current_user)
@@ -92,28 +96,27 @@ class TransaksiHandler(TransaksiBaseHandler):
     @tornado.web.authenticated
     def get(self, transid=None):
         transid = self.get_argument('transid', None)
-        active_user = model.User.get(model.User.name == self.current_user)
-
+        active_user = User.get(User.name == self.current_user)
         if transid:
             try:
-                data = model.Transaksi.get(model.Transaksi.user == active_user.uid, model.Transaksi.tid == transid)
+                data = Transaksi.get(Transaksi.user == active_user.uid, Transaksi.tid == transid)
                 self.render("transaksi/detail.html", item=data)
                 return
             except peewee.DoesNotExist:
                 raise tornado.web.HTTPError(403)
         else:
-            data = model.Transaksi.select().where(model.Transaksi.user == active_user.uid)
+            data = Transaksi.select().where(Transaksi.user == active_user.uid)
             self.render("transaksi/list.html", trans=data)
 
     @tornado.web.authenticated
     def post(self):
         form = TransaksiForm(self.request.arguments)
         if form.validate():
-            item = self.transaction.create(info=form.data['info'],
-                                           amount=form.data['amount'],
-                                           tipe=2,
-                                           user=self.user.uid,
-                                           memo=form.data['memo'], )
+            item = Transaksi.create(info=form.data['info'],
+                                    amount=form.data['amount'],
+                                    tipe=2,
+                                    user=self.user.uid,
+                                    memo=form.data['memo'], )
             item.save()
             self.write({'result': 'OK'})
 
@@ -131,11 +134,11 @@ class CreateTransaksiHandler(TransaksiBaseHandler):
         """Post data transaksi baru ke database"""
         form = TransaksiForm(self.request.arguments)
         if form.validate():
-            item = self.transaction.create(info=form.data['info'],
-                                           amount=form.data['amount'],
-                                           tipe=10,
-                                           user=self.user.uid,
-                                           memo=form.data['memo'], )
+            item = Transaksi.create(info=form.data['info'],
+                                    amount=form.data['amount'],
+                                    tipe=10,
+                                    user=self.user.uid,
+                                    memo=form.data['memo'], )
             item.save()
             # self.write({'result': 'OK'})
             self.redirect('/trans')
@@ -157,10 +160,10 @@ class InsertTransaksiHandler(TransaksiBaseHandler):
         """Insert data transaksi baru ke database"""
         form = TransaksiForm(self.request.arguments)
         if form.validate():
-            query = self.transaction.insert(info=form.data['info'],
-                                            amount=form.data['amount'],
-                                            user=self.user.uid,
-                                            memo=form.data['memo'])
+            query = Transaksi.insert(info=form.data['info'],
+                                     amount=form.data['amount'],
+                                     user=self.user.uid,
+                                     memo=form.data['memo'])
             query.execute()
             # self.write({'result': 'OK'})
             self.redirect('/trans')
@@ -175,13 +178,13 @@ class EditTransaksiHandler(TransaksiBaseHandler):
     @tornado.web.authenticated
     def get(self, transid):
         """get data with id 'transid' and populate form with that data"""
-        item = model.Transaksi.get(model.Transaksi.tid == transid)
+        item = Transaksi.get(Transaksi.tid == transid)
         form = TransaksiForm(obj=item)
         self.render('transaksi/edit.html', form=form)
 
     @tornado.web.authenticated
     def post(self, transid):
-        item = model.Transaksi.get(model.Transaksi.tid == transid)
+        item = Transaksi.get(Transaksi.tid == transid)
         if item:
             form = TransaksiForm(self.request.arguments, obj=item)
             if form.validate():
@@ -198,21 +201,21 @@ class DeleteTransaksiHandler(TransaksiBaseHandler):
 
     @tornado.web.authenticated
     def get(self, tid):
-        trans_id = model.Transaksi.get(model.Transaksi.tid == int(tid))
+        trans_id = Transaksi.get(Transaksi.tid == int(tid))
         if trans_id:
             try:
                 trans_id.delete_instance()
-            except model.Transaksi.DoesNotExist:
+            except peewee.DoesNotExist:
                 return
         self.redirect('/trans')
 
     @tornado.web.authenticated
     def post(self, tid):
         trans_to_delete = self.get_argument('tid')
-        trans_id = model.Transaksi.get(model.Transaksi.tid == int(trans_to_delete))
+        trans_id = Transaksi.get(Transaksi.tid == int(trans_to_delete))
         if trans_id:
             try:
                 trans_id.delete_instance()
-            except model.Transaksi.DoesNotExist:
+            except peewee.DoesNotExist:
                 return
         self.redirect('/trans')

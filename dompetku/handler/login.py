@@ -36,7 +36,7 @@ class LoginHandler(base.BaseHandler):
                 #based on this, https://github.com/tornadoweb/tornado/issues/1315
                 return # thanks ben darnell
             else:
-                self.clear_cookie('user')
+                return
 
         self.render('login.html', form=form)
 
