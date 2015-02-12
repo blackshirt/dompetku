@@ -28,18 +28,18 @@ class TransaksiContainer(object):
 
         return None
 
-    def find_data(self, *kondisi):
+    def find_data(self, *expr):
         cur_user = User.select().where(User.name == self.user)
         if cur_user.exists():
             user = cur_user.get()
-            trn = Transaksi.select().where(Transaksi.user == user.uid, *kondisi)
-            if trn.exists():
-                return trn # Transaksi QueryResultWrapper
+            trn = Transaksi.select().where(Transaksi.user == user.uid, *expr)
+            
+            return trn # Transaksi QueryResultWrapper
 
         return None
 
 
-class DataResponse(TransaksiContainer):
+class DataSources(TransaksiContainer):
     def __init__(self, user):
         self.user = user
         super().__init__(self.user)
@@ -47,7 +47,10 @@ class DataResponse(TransaksiContainer):
     def get_one(self, tid):
         data = self.find_one(tid)
         if data is not None:
-            results = {'tid': data.tid, 'user': data.user.name, 'info': data.info,
+            results = {
+                'tid': data.tid, 
+                'user': data.user.name, 
+                'info': data.info,
                 'amount': data.amount,
                 'transdate': data.transdate,
                 'memo': data.memo
@@ -55,17 +58,20 @@ class DataResponse(TransaksiContainer):
 
             return results # dict of transaksi item
 
-    def get_data(self, *kondisi):
+    def get_data(self, *expr):
         temporary = {}
         results = []
-        data = self.find_data(*kondisi)
+        data = self.find_data(*expr)
+        
         for item in data:
-            temporary['tid'] = item.tid
-            temporary['user'] = item.user.name  # !! remember!, this set to name, not uid
-            temporary['info'] = item.info
-            temporary['amount'] = item.amount
-            temporary['transdate'] = item.transdate
-            temporary['memo'] = item.memo
+            temporary = {
+                  'tid': item.tid,
+                  'user': item.user.name,
+                  'info': item.info,
+                  'transdate': item.transdate,
+                  'amount': item.amount,
+                  'memo': item.memo
+                 }                
             results.append(temporary)
 
         return results # list of dict of transaksi item
@@ -73,17 +79,19 @@ class DataResponse(TransaksiContainer):
 
 class ApiTransactions(base.BaseHandler):
     def initialize(self):
-        self.dsc = DataResponse(self.current_user)
+        self.dsc = DataSources(self.current_user)
 
     @tornado.web.authenticated
     def get(self, *kondisi):
         if kondisi:
             data = self.dsc.get_data(*kondisi)
         else:
+            # get data bulan sekarang
             today = datetime.date.today()
             cur_month = today.month
-            kondisi = (Transaksi.transdate.month == cur_month)
-            data = self.dsc.get_data(kondisi)
+            expr = (Transaksi.transdate.month == cur_month,)
+            data = self.dsc.get_data(expr)
+        
         self.write(jsonify(data))
 
     def post(self, *args, **kwargs):
