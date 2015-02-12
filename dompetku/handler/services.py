@@ -20,7 +20,8 @@ class TransaksiContainer(object):
     def find_one(self, tid):
         cur_user = User.select().where(User.name == self.user)
         if cur_user.exists():
-            trn = Transaksi.select().where(Transaksi.tid == tid)
+            user = cur_user.get()
+            trn = Transaksi.select().where(Transaksi.user == user.uid, Transaksi.tid == tid)
             if trn.exists():
                 data = trn.get() # Transaksi instance
                 return data
@@ -30,7 +31,8 @@ class TransaksiContainer(object):
     def find_data(self, *kondisi):
         cur_user = User.select().where(User.name == self.user)
         if cur_user.exists():
-            trn = Transaksi.select().where(*kondisi)
+            user = cur_user.get()
+            trn = Transaksi.select().where(Transaksi.user == user.uid, *kondisi)
             if trn.exists():
                 return trn # Transaksi QueryResultWrapper
 
