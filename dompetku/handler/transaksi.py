@@ -19,9 +19,7 @@ from dompetku.form import TransaksiForm
 from dompetku.model import Transaksi, User
 
 
-
 class TransaksiContainer(object):
-
     def __init__(self, user):
         self.user = user
 
@@ -35,26 +33,47 @@ class TransaksiContainer(object):
 
         return None
 
-    def find_data(self, kondisi):
+    def find_data(self, *kondisi):
         cur_user = User.select().where(User.name == self.user)
         if cur_user.exists():
-            trn = Transaksi.select().where(kondisi)
+            trn = Transaksi.select().where(*kondisi)
             if trn.exists():
                 return trn
 
         return None
 
-    def find_all(self):
-        cur_user = User.select().where(User.name == self.user)
-        if cur_user.exists():
-            user = cur_user.get()
-            kondisi = (Transaksi.user == user.uid)
-            data = self.find_data(kondisi)
-            
-            if data:
-                return data
 
-        return None
+class DataResponse(TransaksiContainer):
+    def __init__(self, user):
+        self.user = user
+        super().__init__(self.user)
+
+    def get_one(self, tid):
+        data = self.find_one(tid)
+        if data is not None:
+            results = {'tid': data.tid, 'user': data.user.name, 'info': data.info,
+                'amount': data.amount,
+                'transdate': data.transdate,
+                'memo': data.memo
+            }
+
+            return results
+
+    def get_data(self, *kondisi):
+        temporary = {}
+        results = []
+        data = self.find_data(*kondisi)
+        for item in data:
+            temporary['tid'] = item.tid
+            temporary['user'] = item.user.name  # !! remember!, this set to name, not uid
+            temporary['info'] = item.info
+            temporary['amount'] = item.amount
+            temporary['transdate'] = item.transdate
+            temporary['memo'] = item.memo
+            results.append(temporary)
+
+        return results
+
 
 class TransaksiBaseHandler(base.BaseHandler):
     """ Class dasar untuk Transaksi"""
@@ -67,15 +86,11 @@ class TransaksiBaseHandler(base.BaseHandler):
 
         return data
 
-    @staticmethod
-    def get_data(id_data):
+    def get_data(self, id_data):
         if id_data:
-            try:
-                item = Transaksi.get(Transaksi.tid == id_data)
-                results = item._data
-                return results
-            except peewee.DoesNotExist:
-                pass
+            data = DataResponse(self.current_user)
+            result = data.get_one(id_data)
+            self.write(jsonify(result))
 
     def get_all_data(self):
         active_user = User.get(User.name == self.current_user)
@@ -186,6 +201,11 @@ class CreateTransaksiHandler(TransaksiBaseHandler):
             return
 
         self.render('transaksi/create.html', form=form)
+
+
+class ReadTransaksiHandler(TransaksiBaseHandler):
+    def get(self, tid)
+        pass
 
 
 class InsertTransaksiHandler(TransaksiBaseHandler):
