@@ -18,6 +18,7 @@ from dompetku.utils import jsonify
 from dompetku.form import TransaksiForm
 from dompetku.model import Transaksi, User
 
+
 class TransaksiBaseHandler(base.BaseHandler):
     """ Class dasar untuk Transaksi"""
 
@@ -39,9 +40,9 @@ class TransaksiBaseHandler(base.BaseHandler):
             except peewee.DoesNotExist:
                 pass
 
-    @staticmethod
-    def get_all_data():
-        all_item = Transaksi.select().where(Transaksi.user == user).dicts()
+    def get_all_data(self):
+        active_user = User.get(User.name == self.current_user)
+        all_item = Transaksi.select().where(Transaksi.user == active_user.uid).dicts()
         return [item for item in all_item]
 
 
@@ -56,10 +57,10 @@ class ListTransaksiHandler(TransaksiBaseHandler):
     @tornado.web.authenticated
     def get(self):
         today = datetime.date.today()
-        current_day = today.day
         current_month = today.month
 
         d = self.get_argument('d', None)
+
         tot = self.get_argument('total', False)
         active_user = User.get(User.name == self.current_user)
         transaksi = Transaksi.select().where(Transaksi.user == active_user.uid)
@@ -73,6 +74,7 @@ class ListTransaksiHandler(TransaksiBaseHandler):
             data = transaksi.select().where(Transaksi.transdate.month == current_month)
 
         total = data.select(fn.sum(Transaksi.amount)).scalar()
+
         if data:
             self.render("transaksi/list.html", trans=data, total=total)
         else:
@@ -111,11 +113,12 @@ class TransaksiHandler(TransaksiBaseHandler):
     @tornado.web.authenticated
     def post(self):
         form = TransaksiForm(self.request.arguments)
+        active_user = User.get(User.name == self.current_user)
         if form.validate():
             item = Transaksi.create(info=form.data['info'],
                                     amount=form.data['amount'],
                                     tipe=2,
-                                    user=self.user.uid,
+                                    user=active_user.uid,
                                     memo=form.data['memo'], )
             item.save()
             self.write({'result': 'OK'})
@@ -133,11 +136,12 @@ class CreateTransaksiHandler(TransaksiBaseHandler):
     def post(self):
         """Post data transaksi baru ke database"""
         form = TransaksiForm(self.request.arguments)
+        active_user = User.get(User.name == self.current_user)
         if form.validate():
             item = Transaksi.create(info=form.data['info'],
                                     amount=form.data['amount'],
                                     tipe=10,
-                                    user=self.user.uid,
+                                    user=active_user.uid,
                                     memo=form.data['memo'], )
             item.save()
             # self.write({'result': 'OK'})
@@ -159,10 +163,11 @@ class InsertTransaksiHandler(TransaksiBaseHandler):
     def post(self):
         """Insert data transaksi baru ke database"""
         form = TransaksiForm(self.request.arguments)
+        active_user = User.get(User.name == self.current_user)
         if form.validate():
             query = Transaksi.insert(info=form.data['info'],
                                      amount=form.data['amount'],
-                                     user=self.user.uid,
+                                     user=active_user.uid,
                                      memo=form.data['memo'])
             query.execute()
             # self.write({'result': 'OK'})
