@@ -1,7 +1,10 @@
 function transaksiEntri(data) {
     var self = this;
+    self.tid = data.tid;
+    self.user = data.user;
     self.info = data.info;
     self.amount = data.amount;
+    self.transdate = data.transdate;
     self.memo = data.memo;
     
 };
@@ -9,6 +12,9 @@ function transaksiEntri(data) {
 
 function transaksiViewModel() {
     var self = this;
+    self.tid = ko.observable('');
+    self.user = ko.observable('');
+    self.transdate = ko.observable('');
     self.info = ko.observable('');
     self.amount = ko.observable(0);
     self.memo = ko.observable('');

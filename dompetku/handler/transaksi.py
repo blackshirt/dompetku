@@ -19,62 +19,6 @@ from dompetku.form import TransaksiForm
 from dompetku.model import Transaksi, User
 
 
-class TransaksiContainer(object):
-    def __init__(self, user):
-        self.user = user
-
-    def find_one(self, tid):
-        cur_user = User.select().where(User.name == self.user)
-        if cur_user.exists():
-            trn = Transaksi.select().where(Transaksi.tid == tid)
-            if trn.exists():
-                data = trn.get()
-                return data
-
-        return None
-
-    def find_data(self, *kondisi):
-        cur_user = User.select().where(User.name == self.user)
-        if cur_user.exists():
-            trn = Transaksi.select().where(*kondisi)
-            if trn.exists():
-                return trn
-
-        return None
-
-
-class DataResponse(TransaksiContainer):
-    def __init__(self, user):
-        self.user = user
-        super().__init__(self.user)
-
-    def get_one(self, tid):
-        data = self.find_one(tid)
-        if data is not None:
-            results = {'tid': data.tid, 'user': data.user.name, 'info': data.info,
-                'amount': data.amount,
-                'transdate': data.transdate,
-                'memo': data.memo
-            }
-
-            return results
-
-    def get_data(self, *kondisi):
-        temporary = {}
-        results = []
-        data = self.find_data(*kondisi)
-        for item in data:
-            temporary['tid'] = item.tid
-            temporary['user'] = item.user.name  # !! remember!, this set to name, not uid
-            temporary['info'] = item.info
-            temporary['amount'] = item.amount
-            temporary['transdate'] = item.transdate
-            temporary['memo'] = item.memo
-            results.append(temporary)
-
-        return results
-
-
 class TransaksiBaseHandler(base.BaseHandler):
     """ Class dasar untuk Transaksi"""
 
@@ -204,7 +148,7 @@ class CreateTransaksiHandler(TransaksiBaseHandler):
 
 
 class ReadTransaksiHandler(TransaksiBaseHandler):
-    def get(self, tid)
+    def get(self, tid):
         pass
 
 
