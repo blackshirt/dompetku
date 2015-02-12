@@ -19,6 +19,43 @@ from dompetku.form import TransaksiForm
 from dompetku.model import Transaksi, User
 
 
+
+class TransaksiContainer(object):
+
+    def __init__(self, user):
+        self.user = user
+
+    def find_one(self, tid):
+        cur_user = User.select().where(User.name == self.user)
+        if cur_user.exists():
+            trn = Transaksi.select().where(Transaksi.tid == tid)
+            if trn.exists():
+                data = trn.get()
+                return data
+
+        return None
+
+    def find_data(self, kondisi):
+        cur_user = User.select().where(User.name == self.user)
+        if cur_user.exists():
+            trn = Transaksi.select().where(kondisi)
+            if trn.exists():
+                return trn
+
+        return None
+
+    def find_all(self):
+        cur_user = User.select().where(User.name == self.user)
+        if cur_user.exists():
+            user = cur_user.get()
+            kondisi = (Transaksi.user == user.uid)
+            data = self.find_data(kondisi)
+            
+            if data:
+                return data
+
+        return None
+
 class TransaksiBaseHandler(base.BaseHandler):
     """ Class dasar untuk Transaksi"""
 
