@@ -8,9 +8,9 @@
 import datetime
 import tornado.web
 
-from dompetku.model import Transaksi, User
-from dompetku.utils import jsonify
 from dompetku.handler import base
+from dompetku.utils import jsonify
+from dompetku.model import Transaksi, User
 
 
 class TransaksiContainer(object):
@@ -94,5 +94,5 @@ class ApiTransactions(base.BaseHandler):
         
         self.write(jsonify(data))
 
-    def post(self, *args, **kwargs):
+    def post(self):
         pass

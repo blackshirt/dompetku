@@ -35,8 +35,6 @@ class LoginHandler(base.BaseHandler):
                 self.redirect(self.get_argument('next', '/'))
                 #based on this, https://github.com/tornadoweb/tornado/issues/1315
                 return # thanks ben darnell
-            else:
-                return
 
         self.render('login.html', form=form)
 

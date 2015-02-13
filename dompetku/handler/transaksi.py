@@ -9,9 +9,9 @@ import datetime
 
 import peewee
 import tornado.web
-from tornado.web import HTTPError
 
 from peewee import fn
+from tornado.web import HTTPError
 
 from dompetku.handler import base
 from dompetku.utils import jsonify
