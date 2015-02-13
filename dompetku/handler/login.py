@@ -35,18 +35,16 @@ class LoginHandler(base.BaseHandler):
                 self.redirect(self.get_argument('next', '/'))
                 #based on this, https://github.com/tornadoweb/tornado/issues/1315
                 return # thanks ben darnell
-            else:
-                self.clear_cookie('user')
 
         self.render('login.html', form=form)
 
     @staticmethod
     def _authenticate(uname, passwd):
         """check jika user dan passwordnya match dengan db"""
-        user_exists = model.User.select().where(model.User.name == uname).exists()
-        if user_exists:  
+        query = model.User.select().where(model.User.name == uname) # name was unique in User model
+        if query.exists():  
             # get user instance                  
-            user = model.User.get(model.User.name == uname)               
+            user = query.get()         
             # verify dengan password dan key yang ada di database
             if verify_password(passwd, user.password, user.passkey):
                 return True

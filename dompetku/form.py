@@ -10,6 +10,7 @@ from wtforms.validators import DataRequired, Email, EqualTo, Length
 from wtforms import StringField, DateTimeField, TextAreaField, DecimalField, PasswordField
 
 from dompetku import model
+from dompetku.utils import verify_password
 
 __all__ = ["MessageForm", "TipeTransaksiForm", "TransaksiForm", "TransaksiDetailForm"]
 
@@ -92,6 +93,11 @@ class LoginForm(Form):
         user = model.User.select().where(model.User.name == self.name.data)
         if not user.exists():
             self.name.errors.append('User not exists')
+            return False
+
+        cu = user.get()
+        if not verify_password(self.password.data, cu.password, cu.passkey):
+            self.password.errors.append('Password not match')
             return False
         return True
 
