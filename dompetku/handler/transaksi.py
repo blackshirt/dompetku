@@ -54,11 +54,17 @@ class ListTransaksiHandler(TransaksiBaseHandler):
     def get(self):
         today = datetime.datetime.now()
         current_month = today.month
-        jml = self.get_argument('jml', False)
+        m = self.get_argument('m', None)
         active_user = User.get(User.name == self.current_user)
         transaksi = Transaksi.select().where(Transaksi.user == active_user.uid)
+        if m:
+            if not (1 <= int(m) <= 12):
+                data = transaksi.where(Transaksi.transdate.month == current_month)
+            else:
+                data = transaksi.where(Transaksi.transdate.month == int(m))
+        else:
+            data = transaksi
 
-        data = transaksi.where(Transaksi.transdate.month == current_month)
         total = data.select(fn.sum(Transaksi.amount)).scalar()
 
         if data:
