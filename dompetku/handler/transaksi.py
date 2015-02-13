@@ -52,23 +52,13 @@ class ListTransaksiHandler(TransaksiBaseHandler):
 
     @tornado.web.authenticated
     def get(self):
-        today = datetime.date.today()
+        today = datetime.datetime.now()
         current_month = today.month
-
-        d = self.get_argument('d', None)
-
-        tot = self.get_argument('total', False)
+        jml = self.get_argument('jml', False)
         active_user = User.get(User.name == self.current_user)
         transaksi = Transaksi.select().where(Transaksi.user == active_user.uid)
-        if tot:
-            data = transaksi
 
-            if d:
-                days_ago = today - datetime.timedelta(days=int(d))
-                data = transaksi.select().where(Transaksi.transdate > days_ago)
-        else:
-            data = transaksi.select().where(Transaksi.transdate.month == current_month)
-
+        data = transaksi.where(Transaksi.transdate.month == current_month)
         total = data.select(fn.sum(Transaksi.amount)).scalar()
 
         if data:
