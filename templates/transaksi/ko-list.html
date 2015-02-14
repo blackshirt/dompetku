@@ -4,7 +4,8 @@
 {% block content %}
 
 <div class="container">
- <div class="row" data-bind="foreach: transaksiEntries">
+ <div class="jumlah" data-bind="text: total"></div>
+ <div class="row" data-bind="foreach: transaksiEntries, visible: transaksiEntries().length > 0 ">
     <div class="list-group">
         <div class="list-group-item">
             <a href="#" class="pull-right">
@@ -21,8 +22,36 @@
         </div> <!-- end list-group-item block -->
     </div> <!-- end list-group block -->
  </div>  <!-- end row block -->
+
+
+<div class="pull-right">
+    <a id="new-transaksi" class="btn btn-success"
+       data-toggle="modal" data-target="#transaksi-modal">Add transaksi</a>
+<hr>
 </div>
 
+</div>
+
+ <!-- Modal --> 
+<div class="modal fade" id="transaksi-modal" tabindex="-1" role="dialog"  aria-labelledby="transaksi-modal-Label" aria-hidden="true"> 
+  <div class="modal-dialog"> 
+    <div class="modal-content"> 
+      <div class="modal-header"> 
+        <button type="button" class="close"  data-dismiss="modal" aria-hidden="true"> &times; </button> 
+        <h3 class="modal-title" id="transaksi-modal-Label"> Transaksi entri </h3> 
+      </div> 
+
+      <div class="modal-body"> 
+          Add some text here
+      </div>
+
+      <div class="modal-footer"> 
+        <button type="button" class="btn btn-default"  data-dismiss="modal">Close </button>
+        <button type="button" class="btn btn-default btn-success"> Submit changes </button> 
+      </div>
+
+   </div><!-- /.modal-content --> 
+</div><!-- /.modal --> 
 
 {% end %} <!-- end content block -->
 

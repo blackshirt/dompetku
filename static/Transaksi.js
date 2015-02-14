@@ -25,6 +25,14 @@ function transaksiViewModel() {
     self.selectedIndex = -1;
 
     self.transaksiEntries = ko.observableArray([]);
+    
+    self.total = ko.computed(function() {
+        var tot = 0;
+        for (var i = 0; i < self.transaksiEntries().length; i++)  {
+               tot += self.transaksiEntries()[i]["amount"]
+        }
+        return tot;
+    });
 
     self.add = function () {
         var entry = new transaksiEntri({
