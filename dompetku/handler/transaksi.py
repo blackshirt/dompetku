@@ -44,7 +44,8 @@ class TransaksiBaseHandler(base.BaseHandler):
 
 class ListTrans(TransaksiBaseHandler):
     def get(self):
-        self.render('transaksi/ko-list.html')
+        form = TransaksiForm(self.request.arguments)
+        self.render('transaksi/ko-list.html', form=form)
 
 
 class ListTransaksiHandler(TransaksiBaseHandler):

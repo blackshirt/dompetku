@@ -41,8 +41,28 @@
         <h3 class="modal-title" id="transaksi-modal-Label"> Transaksi entri </h3> 
       </div> 
 
-      <div class="modal-body"> 
-          Add some text here
+      <div class="modal-body">
+        <form role="form form-vertical" id="transaksi-form-modal">
+        {% autoescape None %}
+          {% for field in form %}
+            <div class="form-group">
+                {{ field.label(class_="control-label") }}
+                <div class="input-group-lg">
+                {% if field.name == 'amount' %}
+                    {{field(id="amount", class_="form-control number")}}
+                {% else %}
+                    {{ field(class_="form-control", rows="3") }}
+                {% end %}
+                </div>
+                {% if field.errors %}
+                   {% for error in field.errors %}
+                      <div class="form-group help-block has-warning"><span style="color: magenta;"> {{error}} </span> </div>
+                   {% end %}
+                {% end %}
+            </div>
+        {% end %}
+      </form>
+          
       </div>
 
       <div class="modal-footer"> 
