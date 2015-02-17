@@ -49,7 +49,7 @@ class Application(tornado.wsgi.WSGIApplication):
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             # ui_modules={"Entry": EntryModule},
-            xsrf_cookies=True,
+            xsrf_cookies=False,
             cookie_secret=base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
             login_url="/auth/login",
             debug=True,

@@ -6,7 +6,9 @@
 """Module to handle json services."""
 
 import datetime
+import json
 import tornado.web
+import tornado.escape
 
 from dompetku.handler import base
 from dompetku.utils import jsonify
@@ -95,4 +97,12 @@ class ApiTransactions(base.BaseHandler):
         self.write(jsonify(data))
 
     def post(self):
-        pass
+        data = tornado.escape.json_decode(self.request.body)
+        for row in data:
+            info = data.get('info')
+            amount = data.get('amount')
+            memo = data.get('memo')
+
+        user = self.current_user
+        data.update({'user':user})
+        self.write(jsonify(data))

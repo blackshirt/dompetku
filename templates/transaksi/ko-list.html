@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<div class="container">
+<div class="container" xmlns="http://www.w3.org/1999/html">
  <div class="jumlah" data-bind="text: total"></div>
  <div class="row" data-bind="foreach: transaksiEntries, visible: transaksiEntries().length > 0 ">
     <div class="list-group">
@@ -43,31 +43,32 @@
 
       <div class="modal-body">
         <form role="form form-vertical" id="transaksi-form-modal">
-        {% autoescape None %}
-          {% for field in form %}
-            <div class="form-group">
-                {{ field.label(class_="control-label") }}
-                <div class="input-group-lg">
-                {% if field.name == 'amount' %}
-                    {{field(id="amount", class_="form-control number")}}
-                {% else %}
-                    {{ field(class_="form-control", rows="3") }}
-                {% end %}
+        {% module xsrf_form_html() %}
+            <div class="control-group">
+                <label>Info</label>
+                <div class="input-group">
+                        <input data-bind="value: info"></input>
                 </div>
-                {% if field.errors %}
-                   {% for error in field.errors %}
-                      <div class="form-group help-block has-warning"><span style="color: magenta;"> {{error}} </span> </div>
-                   {% end %}
-                {% end %}
             </div>
-        {% end %}
-      </form>
+            <div class="control-group">
+                <div class="input-group">
+                <label>amount</label>
+                <input data-bind="value: amount"></input>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="input-group">
+                <label>memo</label>
+                <input data-bind="value: memo"></input>
+                </div>
+            </div>
+        </form>
           
       </div>
 
       <div class="modal-footer"> 
         <button type="button" class="btn btn-default"  data-dismiss="modal">Close </button>
-        <button type="button" class="btn btn-default btn-success"> Submit changes </button> 
+        <button type="button" class="btn btn-default btn-success" data-bind="click: addTransaksitoServer"> Submit changes </button>
       </div>
 
    </div><!-- /.modal-content --> 

@@ -9,6 +9,18 @@ function transaksiEntri(data) {
     
 };
 
+function getCookie(name) {
+    var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+    return r ? r[1] : undefined;
+}
+
+jQuery.postJSON = function(url, args, callback) {
+    args._xsrf = getCookie("_xsrf");
+    $.ajax({url: url, data: $.param(args), dataType: "text", type: "POST",
+    success: function(response) {
+    callback(eval("(" + response + ")"));
+    }});
+};
 
 function transaksiViewModel() {
     var self = this;
@@ -43,6 +55,25 @@ function transaksiViewModel() {
         });
 
         self.transaksiEntries.push(entry);
+    };
+
+    self.addTransaksitoServer = function(){
+        $.ajax({
+            url: "/services/trans",
+            type: "post",
+            data: ko.toJSON({
+                info : self.info(),
+                amount : self.amount(),
+                memo : self.memo()
+            }),
+            contentType: "application/json",
+            success: function(data){
+                self.add(data);
+             },
+             error:function(jqXHR, textStatus, errorThrown) {
+                alert(textStatus);
+             }
+       });
     };
 
     self.edit = function (transaksiEntri) {
