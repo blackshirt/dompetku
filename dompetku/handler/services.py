@@ -7,13 +7,14 @@
 
 import datetime
 import json
+import peewee
 import tornado.web
 import tornado.escape
 
 from dompetku.handler import base
 from dompetku.utils import jsonify
 from dompetku.model import Transaksi, User
-
+from dompetku.form import TransaksiForm
 
 class TransaksiContainer(object):
     def __init__(self, user):
@@ -98,11 +99,26 @@ class ApiTransactions(base.BaseHandler):
 
     def post(self):
         data = tornado.escape.json_decode(self.request.body)
-        for row in data:
-            info = data.get('info')
-            amount = data.get('amount')
-            memo = data.get('memo')
+        info = data.get('info')
+        amount = data.get('amount')
+        memo = data.get('memo')
+        try:
+            active_user = User.get(User.name == self.current_user)
+        except peewee.DoesNotExist:
+            active_user = None
+            return
 
-        user = self.current_user
-        data.update({'user':user})
-        self.write(jsonify(data))
+        item = Transaksi.insert(info = info,
+                                    amount=amount,
+                                    tipe=10,
+                                    user=active_user.uid,
+                                    memo=memo )
+        last_id = item.execute()
+        transaksi = Transaksi.get(Transaksi.tid == last_id)
+        response = {'info': transaksi.info,
+                    'user': transaksi.user.name,
+                    'amount': transaksi.amount,
+                    'memo': transaksi.memo,
+                    'transdate': transaksi.transdate}
+        self.write(jsonify(response))
+

@@ -42,12 +42,12 @@
       </div> 
 
       <div class="modal-body">
-        <form role="form form-vertical" id="transaksi-form-modal">
+        <form role="form form-vertical" id="transaksi-form-modal" data-bind="submit: addTransaksitoServer">
         {% module xsrf_form_html() %}
             <div class="form-group">
                 <label>Info</label>
                 <div class="input-group-lg">
-                        <input class="form-control" data-bind="value: info"></input>
+                        <input class="form-control" data-fv-notempty="true" data-fv-notempty-message="The first name is required and cannot be empty" data-bind="value: info"></input>
                 </div>
             </div>
             <div class="form-group">
@@ -80,12 +80,51 @@
 
 {% block script %}
 
-<script src="{{ static_url("Transaksi.js")}}"></script>
+
 
 <script type="text/javascript">
   $(document).ready(function() {
      $('div.jumlah').priceFormat({ prefix: 'Rp. ', thousandsSeparator: '.',  centsSeparator: ',', centsLimit: 0});
      $('span.amount').priceFormat({ prefix: '', thousandsSeparator: '.',  centsSeparator: ',', centsLimit: 0});
+     $('#transaksi-modal').on('shown.bs.modal', function() {
+        $('#transaksi-form-modal').formValidation('resetForm', true);
+     });
+
+
+     $('#transaksi-form-modal').formValidation({
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+        },
+    fields: {
+        info: {
+            validators: {
+                notEmpty: {
+                    message: 'Info dan kegunaan diperlukan'
+                    }
+                }
+            },
+        amount: {
+            validators: {
+                notEmpty: {
+                    message: 'Jumlah nominal diperlukan'
+                }
+            }
+        },
+        memo: {
+            validators: {
+                notEmpty: {
+                    message: 'Catatan tentang transaksi'
+                }
+
+            }
+        },
+    }
+    });
+
   });
 </script>
+
+<script src="{{ static_url("Transaksi.js")}}"></script>
 {% end %} <!-- end script block -->

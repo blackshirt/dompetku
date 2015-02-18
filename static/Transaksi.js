@@ -28,7 +28,7 @@ function transaksiViewModel() {
     self.user = ko.observable('');
     self.transdate = ko.observable('');
     self.info = ko.observable('');
-    self.amount = ko.observable(0);
+    self.amount = ko.observable('');
     self.memo = ko.observable('');
     
 
@@ -58,23 +58,27 @@ function transaksiViewModel() {
     };
 
     self.addTransaksitoServer = function(){
-        $.ajax({
-            url: "/services/trans",
-            type: "post",
-            data: ko.toJSON({
-                info : self.info(),
-                amount : self.amount(),
-                memo : self.memo()
-            }),
-            contentType: "application/json",
-            success: function(response){
-                self.add(response);
-             },
+
+            $.ajax({
+                url: "/services/trans",
+                type: "post",
+                data: ko.toJSON({
+                    info : self.info(),
+                    amount : self.amount(),
+                    memo : self.memo()
+                }),
+                contentType: "application/json",
+                success: function(response){
+                    console.log(response);
+                    data = $.parseJSON(response)
+                    self.transaksiEntries.push(new transaksiEntri(data));
+
+                },
              error:function(jqXHR, textStatus, errorThrown) {
-                alert(textStatus);
+                console.log(errorThrown);
              }
-       });
-    };
+        })
+     };
 
     self.edit = function (transaksiEntri) {
         self.info(transaksiEntri.info);
