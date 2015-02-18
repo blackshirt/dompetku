@@ -67,8 +67,8 @@ function transaksiViewModel() {
                 memo : self.memo()
             }),
             contentType: "application/json",
-            success: function(data){
-                self.add(data);
+            success: function(response){
+                self.add(response);
              },
              error:function(jqXHR, textStatus, errorThrown) {
                 alert(textStatus);

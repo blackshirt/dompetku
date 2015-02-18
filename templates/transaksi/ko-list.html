@@ -44,22 +44,22 @@
       <div class="modal-body">
         <form role="form form-vertical" id="transaksi-form-modal">
         {% module xsrf_form_html() %}
-            <div class="control-group">
+            <div class="form-group">
                 <label>Info</label>
-                <div class="input-group">
-                        <input data-bind="value: info"></input>
+                <div class="input-group-lg">
+                        <input class="form-control" data-bind="value: info"></input>
                 </div>
             </div>
-            <div class="control-group">
-                <div class="input-group">
+            <div class="form-group">
+                <div class="input-group-lg">
                 <label>amount</label>
-                <input data-bind="value: amount"></input>
+                <input class="form-control" data-bind="value: amount"></input>
                 </div>
             </div>
-            <div class="control-group">
-                <div class="input-group">
+            <div class="form-group">
+                <div class="input-group-lg">
                 <label>memo</label>
-                <input data-bind="value: memo"></input>
+                <input class="form-control" data-bind="value: memo"></input>
                 </div>
             </div>
         </form>
