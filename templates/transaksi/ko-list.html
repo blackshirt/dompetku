@@ -26,28 +26,30 @@
 
 <div class="pull-right">
     <a id="new-transaksi" class="btn btn-success"
-       data-toggle="modal" data-target="#transaksi-modal">Add transaksi</a>
+       data-toggle="modal" data-target="#transaksi-modal" data-bind="click: resetForm.bind($data, 'transaksi-form-modal')">Add transaksi</a>
 <hr>
 </div>
 
 </div>
 
- <!-- Modal --> 
+ <!-- Modal -->
+        <form role="form form-vertical" id="transaksi-form-modal" data-bind="submit: function(form) { postTransaksi(form, 'transaksi-modal') }">
 <div class="modal fade" id="transaksi-modal" tabindex="-1" role="dialog"  aria-labelledby="transaksi-modal-Label" aria-hidden="true"> 
   <div class="modal-dialog"> 
-    <div class="modal-content"> 
+    <div class="modal-content">
+
       <div class="modal-header"> 
         <button type="button" class="close"  data-dismiss="modal" aria-hidden="true"> &times; </button> 
         <h3 class="modal-title" id="transaksi-modal-Label"> Transaksi entri </h3> 
       </div> 
 
       <div class="modal-body">
-        <form role="form form-vertical" id="transaksi-form-modal" data-bind="submit: addTransaksitoServer">
+
         {% module xsrf_form_html() %}
             <div class="form-group">
                 <label>Info</label>
                 <div class="input-group-lg">
-                        <input class="form-control" data-fv-notempty="true" data-fv-notempty-message="The first name is required and cannot be empty" data-bind="value: info"></input>
+                        <input class="form-control" data-bind="value: info"></input>
                 </div>
             </div>
             <div class="form-group">
@@ -62,18 +64,18 @@
                 <input class="form-control" data-bind="value: memo"></input>
                 </div>
             </div>
-        </form>
+
           
       </div>
 
       <div class="modal-footer"> 
         <button type="button" class="btn btn-default"  data-dismiss="modal">Close </button>
-        <button type="button" class="btn btn-default btn-success" data-bind="click: addTransaksitoServer"> Submit changes </button>
+        <button type="submit" class="btn btn-default btn-success"> Submit changes </button>
       </div>
 
    </div><!-- /.modal-content --> 
 </div><!-- /.modal --> 
-
+</form>
 {% end %} <!-- end content block -->
 
 
@@ -81,50 +83,13 @@
 {% block script %}
 
 
-
+<script src="{{ static_url("Transaksi.js")}}"></script>
 <script type="text/javascript">
   $(document).ready(function() {
      $('div.jumlah').priceFormat({ prefix: 'Rp. ', thousandsSeparator: '.',  centsSeparator: ',', centsLimit: 0});
      $('span.amount').priceFormat({ prefix: '', thousandsSeparator: '.',  centsSeparator: ',', centsLimit: 0});
-     $('#transaksi-modal').on('shown.bs.modal', function() {
-        $('#transaksi-form-modal').formValidation('resetForm', true);
-     });
-
-
-     $('#transaksi-form-modal').formValidation({
-    feedbackIcons: {
-        valid: 'glyphicon glyphicon-ok',
-        invalid: 'glyphicon glyphicon-remove',
-        validating: 'glyphicon glyphicon-refresh'
-        },
-    fields: {
-        info: {
-            validators: {
-                notEmpty: {
-                    message: 'Info dan kegunaan diperlukan'
-                    }
-                }
-            },
-        amount: {
-            validators: {
-                notEmpty: {
-                    message: 'Jumlah nominal diperlukan'
-                }
-            }
-        },
-        memo: {
-            validators: {
-                notEmpty: {
-                    message: 'Catatan tentang transaksi'
-                }
-
-            }
-        },
-    }
-    });
-
   });
 </script>
 
-<script src="{{ static_url("Transaksi.js")}}"></script>
+
 {% end %} <!-- end script block -->
