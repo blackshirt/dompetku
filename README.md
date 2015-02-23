@@ -20,6 +20,9 @@ Dibuat dengan menggunakan beberapa stack python untuk web,
 >**Notes**: Beberapa fitur ini masih terbatas basic saja dan masih banyak kekurangannya.
 *****
 
+Beberapa screenshot
+-------------------
+
 * Register 
 ![register](https://raw.githubusercontent.com/blackshirt/dompetku/pythonanywhere/data/pockets/register.PNG)
 ![register-sesuatu](https://raw.githubusercontent.com/blackshirt/dompetku/pythonanywhere/data/pockets/register-sesuatu.PNG)
