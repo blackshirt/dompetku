@@ -1,7 +1,7 @@
 Dompetku
 ========
 
-'Dompetku <https://github.com/blackshirt/dompetku>'_ adalah aplikasi sederhana berbasis python yang dimaksudkan sebagai
+`Dompetku <https://github.com/blackshirt/dompetku>`_ adalah aplikasi sederhana berbasis python yang dimaksudkan sebagai
 pencatat aktivitas keuangan pribadi (terutama pengeluaran, dan begitulah keadaannya :( .. ). Pada awalnya digunakan 
 untuk keperluan pribadi di situs `Dompetku Online <http://blackshirt.pythonanywhere.com/>`_ 
 Dibuat dengan menggunakan beberapa python stack untuk web, `Tornado web <https://tornadoweb.org/>`_ Python web framework dan 
