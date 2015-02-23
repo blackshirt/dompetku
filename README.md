@@ -20,6 +20,16 @@ Dibuat dengan menggunakan beberapa stack python untuk web,
 >**Notes**: Beberapa fitur ini masih terbatas basic saja dan masih banyak kekurangannya.
 *****
 
+* Register 
+![register](https://raw.githubusercontent.com/blackshirt/dompetku/pythonanywhere/data/pockets/register.PNG)
+![register-sesuatu](https://raw.githubusercontent.com/blackshirt/dompetku/pythonanywhere/data/pockets/register-sesuatu.PNG)
+
+* Transaksi baru
+![register](https://raw.githubusercontent.com/blackshirt/dompetku/pythonanywhere/data/pockets/insert-new.PNG)
+
+* Daftar transaksi (default bulan ini)
+![register](https://raw.githubusercontent.com/blackshirt/dompetku/pythonanywhere/data/pockets/rekap.PNG)
+
 Penggunaan
 ----------
 
