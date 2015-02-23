@@ -16,8 +16,8 @@ Dibuat dengan menggunakan beberapa stack python untuk web,
 
 - `wtf-peewee <https://pypi.python.org/pypi/wtf-peewee>`_, untuk kemudahan menggunakan peewee model dalam wtforms.
 
-.. todo::  
-Beberapa fitur ini masih terbatas basic saja dan masih banyak kekurangannya.
+.. note:: Beberapa fitur ini masih terbatas basic saja dan masih banyak kekurangannya.
+
 
 Penggunaan
 ----------
