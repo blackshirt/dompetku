@@ -2,8 +2,8 @@ Dompetku
 ========
 
 
-[Dompetku](https://github.com/blackshirt/dompetku/ "Dompetku") adalah aplikasi berbasis web sederhana yang dibangun menggunakan python yang dimaksudkan sebagai  ***pencatat aktivitas keuangan pribadi*** (terutama pengeluaran pribadi, dan begitulah keadaannya :-( ). Pada awalnya digunakan 
-untuk keperluan pribadi di situs . 
+[Dompetku](http://blackshirt.pythonanywhere.com/ "Dompetku") adalah aplikasi berbasis web sederhana yang dibangun menggunakan python yang pada dimaksudkan sebagai  ***pencatat aktivitas keuangan pribadi*** (terutama pengeluaran pribadi, dan begitulah keadaannya :-( ). Pada awalnya digunakan 
+untuk keperluan pribadi di halaman web [dompetku](http://blackshirt.pythonanywhere.com/ "your online pocket"). 
 Dibuat dengan menggunakan beberapa stack python untuk web, 
 
 * [Tornado web](https://tornadoweb.org/ "Tornado web framework"), Python web framework dan asynchronous networking library, yang dikembangkan oleh [FriendFeed](http://friendfeed.com/ "Online friendship sosial media") dan diakuisi oleh [Facebook](https://facebook.com/ "facebook"). 
