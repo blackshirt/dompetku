@@ -2,19 +2,19 @@ Dompetku
 ========
 
 
-`Dompetku <http://github.com/blackshirt/dompetku>`_ adalah aplikasi berbasis web sederhana yang dibangun menggunakan python yang dimaksudkan sebagai  *pencatat aktivitas keuangan pribadi* (terutama pengeluaran pribadi, dan begitulah keadaannya :-( ). Pada awalnya digunakan 
-untuk keperluan pribadi di situs `Dompetku Online <http://blackshirt.pythonanywhere.com/>`_ . 
+[Dompetku](https://github.com/blackshirt/dompetku/ "Dompetku") adalah aplikasi berbasis web sederhana yang dibangun menggunakan python yang dimaksudkan sebagai  ***pencatat aktivitas keuangan pribadi*** (terutama pengeluaran pribadi, dan begitulah keadaannya :-( ). Pada awalnya digunakan 
+untuk keperluan pribadi di situs . 
 Dibuat dengan menggunakan beberapa stack python untuk web, 
 
-- `Tornado web <https://tornadoweb.org/>`_, Python web framework dan asynchronous networking library, yang dikembangkan oleh `FriendFeed <http://friendfeed.com>`_ dan diakuisi oleh `Facebook <https://facebook.com>`_. Kemudian juga menggunakan, 
+- [Tornado web](https://tornadoweb.org/ "Tornado web framework"), Python web framework dan asynchronous networking library, yang dikembangkan oleh [FriendFeed](http://friendfeed.com/ "Online friendship sosial media") dan diakuisi oleh [Facebook](https://facebook.com/ "facebook"). 
 
-- `Peewee ORM <http://docs.peewee-orm.com/en/latest/>`_ , Python based ORM, simpel dan mudah, yang support sqlite, mysql, dan postgre database. 
+- [Peewee ORM](http://docs.peewee-orm.com/en/latest/ "peewee"), Python based ORM, simpel dan mudah, yang support sqlite, mysql, dan postgres database. 
 
-- `Wtforms library, <https://wtforms.readthedocs.org/en/latest/>`_, Library untuk rendering dan validasi form berbasis python yang fleksibel. dan beberapa library lain, 
+- [Wtforms library](https://wtforms.readthedocs.org/en/latest/ "wtforms"), Library untuk rendering dan validasi form berbasis python yang fleksibel. dan beberapa library lain, 
 
-- `wtforms-tornado <https://pypi.python.org/pypi/wtforms-tornado/0.0.2>`_, untuk kemudahan integrasi wtforms dan tornado.
+- [wtforms-tornado](https://pypi.python.org/pypi/wtforms-tornado/ "wtforms for tornado"), untuk kemudahan integrasi wtforms dan tornado.
 
-- `wtf-peewee <https://pypi.python.org/pypi/wtf-peewee>`_, untuk kemudahan menggunakan peewee model dalam wtforms.
+- [wtf-peewee](https://pypi.python.org/pypi/wtf-peewee/ "wtforms peewee"), untuk kemudahan menggunakan peewee model dalam wtforms.
 
 .. note:: Beberapa fitur ini masih terbatas basic saja dan masih banyak kekurangannya.
 
@@ -22,7 +22,7 @@ Dibuat dengan menggunakan beberapa stack python untuk web,
 Penggunaan
 ----------
 
-**Penggunaan manual**: Download source code dari `Account github blackshirt <https://github.com/blackshirt/dompetku.git>`_, dan pastikan git tools terinstall.
+**Penggunaan manual**: Download source code dari [Account blackshirt](https://github.com/blackshirt/dompetku.git "blackshirt"), dan pastikan git tools terinstall.
 
 .. parsed-literal::
 
@@ -34,6 +34,6 @@ Penggunaan
 
 **Prerequisites**: Dompetku ditulis menggunakan Python 3, dan sama sekali belum dicoba dengan Python 2.
 
-**Platforms**: Aplikasi ini seharusnya bisa jalan di any Unix-like platform yang support python, Windows, ataupun BSD
+**Platforms**: Aplikasi ini seharusnya bisa jalan di any ***Unix-like platform*** yang support python, Windows, ataupun BSD
 
-**Contact**: Saran dan ide silahkan contact ke <``blackshirtmuslim@yahoo.com``> 
+**Contact**: Saran dan ide silahkan contact ke <blackshirtmuslim@yahoo.com>
