@@ -2,8 +2,8 @@ Dompetku
 ========
 
 
-[Dompetku](http://blackshirt.pythonanywhere.com/ "Dompetku") adalah aplikasi berbasis web sederhana yang dibangun menggunakan python yang pada dimaksudkan sebagai  ***pencatat aktivitas keuangan pribadi*** (terutama pengeluaran pribadi, dan begitulah keadaannya :-( ). Pada awalnya digunakan 
-untuk keperluan pribadi di halaman web [dompetku](http://blackshirt.pythonanywhere.com/ "your online pocket"). 
+[Dompetku](http://blackshirt.pythonanywhere.com/ "Dompetku") adalah aplikasi berbasis web sederhana yang dibangun menggunakan python yang dimaksudkan sebagai  ***pencatat aktivitas keuangan pribadi*** (terutama pengeluaran pribadi, dan begitulah keadaannya :-( ). Pada awalnya digunakan 
+untuk keperluan pribadi di halaman web [dompetku](http://blackshirt.pythonanywhere.com/ "your online pocket") . 
 Dibuat dengan menggunakan beberapa stack python untuk web, 
 
 * [Tornado web](https://tornadoweb.org/ "Tornado web framework"), Python web framework dan asynchronous networking library, yang dikembangkan oleh [FriendFeed](http://friendfeed.com/ "Online friendship sosial media") dan diakuisi oleh [Facebook](https://facebook.com/ "facebook"). 
@@ -25,15 +25,11 @@ Penggunaan
 
 **Penggunaan manual**: Download source code dari [Account blackshirt](https://github.com/blackshirt/dompetku.git "blackshirt"), dan pastikan git tools terinstall.
 
-<code>
-
     $sudo apt-get install git-core (for debian based)
     $git clone https://github.com/blackshirt/dompetku.git
     $cd dompetku
     $python main.py
     
-</code>
-
 **Prerequisites**: Dompetku ditulis menggunakan Python 3, dan sama sekali belum dicoba dengan Python 2.
 
 **Platforms**: Aplikasi ini seharusnya bisa jalan di any ***Unix-like platform*** yang support python, Windows, ataupun BSD
