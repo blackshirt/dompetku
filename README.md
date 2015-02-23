@@ -1,4 +1,4 @@
-dompetku
+Dompetku
 ========
 
 `Dompetku <https://github.com/blackshirt/dompetku>`_ adalah aplikasi sederhana berbasis python yang dimaksudkan sebagai
