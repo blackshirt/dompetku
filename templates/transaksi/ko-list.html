@@ -26,14 +26,15 @@
 
 <div class="pull-right">
     <a id="new-transaksi" class="btn btn-success"
-       data-toggle="modal" data-target="#transaksi-modal" data-bind="click: resetForm.bind($data, 'transaksi-form-modal')">Add transaksi</a>
+       data-toggle="modal" data-target="#transaksi-modal">Add transaksi</a>
 <hr>
 </div>
 
 </div>
 
  <!-- Modal -->
-        <form role="form form-vertical" id="transaksi-form-modal" data-bind="submit: function(form) { postTransaksi(form, 'transaksi-modal') }">
+        <form role="form form-vertical" id="transaksi-form-modal" data-bind="submit: addTransaksi">
+                                 <div class="alert alert-success" style="display: none;"></div>
 <div class="modal fade" id="transaksi-modal" tabindex="-1" role="dialog"  aria-labelledby="transaksi-modal-Label" aria-hidden="true"> 
   <div class="modal-dialog"> 
     <div class="modal-content">
@@ -49,19 +50,19 @@
             <div class="form-group">
                 <label>Info</label>
                 <div class="input-group-lg">
-                        <input class="form-control" data-bind="value: info"></input>
+                        <input class="form-control" data-bind="value: info" required="required">
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group-lg">
                 <label>amount</label>
-                <input class="form-control" data-bind="value: amount"></input>
+                <input class="form-control required number" data-bind="value: amount" required="required">
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group-lg">
                 <label>memo</label>
-                <input class="form-control" data-bind="value: memo"></input>
+                <input class="form-control" data-bind="value: memo" required="required">
                 </div>
             </div>
 
@@ -74,7 +75,8 @@
       </div>
 
    </div><!-- /.modal-content --> 
-</div><!-- /.modal --> 
+</div><!-- /.modal -->
+    </div>
 </form>
 {% end %} <!-- end content block -->
 
@@ -83,11 +85,119 @@
 {% block script %}
 
 
-<script src="{{ static_url("Transaksi.js")}}"></script>
+
+
 <script type="text/javascript">
-  $(document).ready(function() {
-     $('div.jumlah').priceFormat({ prefix: 'Rp. ', thousandsSeparator: '.',  centsSeparator: ',', centsLimit: 0});
-     $('span.amount').priceFormat({ prefix: '', thousandsSeparator: '.',  centsSeparator: ',', centsLimit: 0});
+$(document).ready(function() {
+
+    function transaksiEntri(data) {
+        var self = this;
+        self.tid = data.tid;
+        self.user = data.user;
+        self.info = data.info;
+        self.amount = data.amount;
+        self.transdate = data.transdate;
+        self.memo = data.memo;
+        };
+
+    var TransaksiModel = function(entries) {
+        var self = this;
+        self.tid = ko.observable('');
+        self.user = ko.observable('');
+        self.transdate = ko.observable('');
+        self.info = ko.observable('');
+        self.amount = ko.observable('');
+        self.memo = ko.observable('');
+
+        self.transaksiEntries = ko.observableArray(entries);
+        self.total = ko.computed(function() {
+            var tot = 0;
+            for (var i = 0; i < self.transaksiEntries().length; i++)  {
+               tot += self.transaksiEntries()[i]["amount"]
+            }
+            return tot;
+        });
+
+        self.addTransaksi = function() {
+            var entry = new transaksiEntri({
+                info : self.info(),
+                amount : self.amount(),
+                memo : self.memo()
+            });
+            self.transaksiEntries.push(entry);
+        };
+
+        self.removeTransaksi = function(entry) {
+            self.transaksiEntries.remove(entry);
+        };
+
+        self.save = function(form) {
+            alert("Could now transmit to server: " + ko.utils.stringifyJson(self.gifts));
+            // To actually transmit to server as a regular form post, write this: ko.utils.postJson($("form")[0], self.gifts);
+            };
+
+
+        self.load = function () {
+            $.getJSON("/services/trans", function(allData) {
+                var mappedEntri = $.map(allData, function(entry) { return new transaksiEntri(entry) });
+                    self.transaksiEntries(mappedEntri);
+                });
+            };
+
+        self.load();
+
+    };
+
+
+    var viewModel = new TransaksiModel();
+
+
+    ko.applyBindings(viewModel);
+
+    // Activate jQuery Validation
+    $('#transaksi-form-modal').formValidation({
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+        },
+    fields: {
+        info: {
+            validators: {
+                notEmpty: {
+                    message: 'Info dan kegunaan diperlukan'
+                    }
+                }
+            },
+        amount: {
+            validators: {
+                notEmpty: {
+                    message: 'Jumlah nominal diperlukan'
+                }
+            }
+        },
+        memo: {
+            validators: {
+                notEmpty: {
+                    message: 'Catatan tentang transaksi'
+                }
+
+            }
+        },
+    }
+}).on('success.form.fv', function(e) {
+            // Prevent submit form
+            e.preventDefault();
+            var $form     = $(e.target),
+                validator = $form.data('formValidation');
+            $form.find('.alert').html('Thanks for signing up. Now you can sign in as ' + validator.getFieldElements('info').val()).show();
+        });
+
+
+
+
+
+
   });
 </script>
 

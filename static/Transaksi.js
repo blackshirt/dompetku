@@ -1,34 +1,48 @@
-var options = {
-    feedbackIcons: {
-        valid: 'glyphicon glyphicon-ok',
-        invalid: 'glyphicon glyphicon-remove',
-        validating: 'glyphicon glyphicon-refresh'
-        },
-    fields: {
-        info: {
-            validators: {
-                notEmpty: {
-                    message: 'Info dan kegunaan diperlukan'
-                    }
-                }
-            },
-        amount: {
-            validators: {
-                notEmpty: {
-                    message: 'Jumlah nominal diperlukan'
-                }
-            }
-        },
-        memo: {
-            validators: {
-                notEmpty: {
-                    message: 'Catatan tentang transaksi'
-                }
+var TransaksiNamespace = {};
 
-            }
+TransaksiNamespace.initTransactionEntryViewModel = function(transaction){
+    var transactionViewModel = ko.validatedObservable({
+        tid: ko.observable(transaction.tid),
+        user: ko.observable(transaction.user),
+        info: ko.observable(transaction.info).extend({ required: true }),
+        amount: ko.observable(transaction.amount).extend({ required: true }).extend({ number: true }),
+        transdate: ko.observable(transaction.transdate),
+        memo: ko.observable(transaction.memo).extend({ required: true }),
+
+    });
+
+    var validationOptions =
+      { insertMessages: true, decorateElement: true, errorElementClass: 'help-inline' };
+    ko.validation.init(validationOptions);
+
+    return transactionViewModel;
+}
+
+TransaksiNamespace.bindData = function(transaction) {
+
+
+    // Create the view model
+    TransaksiNamespace.viewModel =
+      TransaksiNamespace.initTransactionEntryViewModel(transaction);
+    ko.applyBindings(this.viewModel);
+}
+
+TransaksiNamespace.getTransactionEntries = function(user) {
+    $.ajax({
+        url: "/services/trans",
+        type: 'post',
+        data: "{'user':'1' }",
+        contentType: 'application/json',
+        cache: false,
+        success: function (result) {
+            TransaksiNamespace.bindData(result);
         },
-    }
-    };
+        error: function (jqXHR, textStatus, errorThrown) {
+            var errorMessage = '';
+            $('#message').html(jqXHR.responseText);
+        }
+    });
+}
 
 
 function transaksiEntri(data) {
@@ -60,8 +74,11 @@ function transaksiViewModel() {
     self.tid = ko.observable('');
     self.user = ko.observable('');
     self.transdate = ko.observable('');
-    self.info = ko.observable('');
-    self.amount = ko.observable('');
+    self.info = ko.observable('').extend({required: true});
+    self.amount = ko.observable('').extend({
+                required: true,
+                number: true
+                });
     self.memo = ko.observable('');
     
 
@@ -113,47 +130,27 @@ function transaksiViewModel() {
         })
      };
 
-    self.postTransaksi = function(form, modalID) {
+    self.postTransaksi = function() {
         console.log('process form post to server');
 
 
         console.log('formValidation validate ');
 
 
-        var json = JSON.stringify(this._getdatafromForm(form));
-
         var self = this;
+        console.log(ko.toJSON(self))
         $.ajax({
             url: '/services/trans',
             type: 'post',
-            data: json,
+            data: ko.toJSON(self),
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
             success: function (jsondata) {
                 self.transaksiEntries.push(new transaksiEntri(jsondata));
-                $('#' + modalId).modal('hide');
+
             }
         })
     };
-
-    self.resetForm =  function (formId) {
-        console.log('reset form');
-        var frm = $('#'+formId)
-        console.log('reset form lagi');
-        frm.formValidation(options).resetForm();
-        console.log('reset form lagi resetForm');
-        return;
-    };
-
-    self._getdatafromForm = function (form) {
-            console.log('get data from from')
-            form = $(form).data('formValidation');
-            var transaksientri = {};
-            form.find('input[type!=submit],select').each(function () {
-                transaksientri[this.name] = $(this).val();
-            });
-            return transaksientri;
-        };
 
     self.edit = function (transaksiEntri) {
         self.info(transaksiEntri.info);

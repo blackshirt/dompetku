@@ -7,7 +7,8 @@
 
 from wtforms_tornado import Form
 from wtforms.validators import DataRequired, Email, EqualTo, Length
-from wtforms import StringField, DateTimeField, TextAreaField, DecimalField, PasswordField
+from wtforms import StringField, DateTimeField, TextAreaField, DecimalField, PasswordField, FloatField
+from wtforms import ValidationError
 
 from dompetku import model
 from dompetku.utils import verify_password
@@ -31,11 +32,25 @@ class TipeTransaksiForm(Form):
 
 class TransaksiForm(Form):
     """Form untuk input transaksi"""
+    def __init__(self, message=None):
+        if not message:
+            self.message = "Must be numeric"
+        self.message = message
+        super().__init__(self.message)
+
     info = StringField("Kegunaan", validators=[DataRequired(), Length(min=10, max=100,
-                                                                      message="Isi dengan kalimat lebih dari 10 huruf yang bermakna")])
-    amount = DecimalField("Jumlah", validators=[DataRequired()])
+                                                    message="Isi dengan kalimat lebih dari 10 huruf yang bermakna")])
+    amount = FloatField("Jumlah", validators=[DataRequired()])
+
+    def validate_amount(self, form, field):
+        if field.data:
+            try:
+                field.data = float(field.data)
+            except ValueError as e:
+                raise ValidationError(self.message)
+
     memo = TextAreaField("Catatan transaksi", validators=[DataRequired(), Length(min=5, max=255,
-                                                                                 message="Isi dengan kalimat penjelasan yang bermakna")])
+                                                                message="Isi dengan kalimat penjelasan yang bermakna")])
 
     def __unicode__(self):
         return self.info
